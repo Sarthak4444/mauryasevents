@@ -11,7 +11,7 @@ function Header() {
       <div className="w-full flex justify-start items-center md:px-14 px-5 py-5 bg-black">
         <div>
           <Link href="/">
-          <Image src= {Logo} className="cursor-pointer w-28 h-auto" alt="Logo" width="112" height="250" />
+          <Image src= {Logo} className="cursor-pointer w-36 p-5 px-10 h-auto" alt="Logo" width="112" height="250" />
 
           </Link>
         </div>
