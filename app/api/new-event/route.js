@@ -1,33 +1,41 @@
-import nodemailer from 'nodemailer';
+import nodemailer from "nodemailer";
 import { NextResponse } from "next/server";
-import dbConnect from "../../../lib/dbConnect";
 import Booking from "../../../models/Booking";
 
 export async function POST(req) {
-    try {
-        await dbConnect();
-        const { firstName, lastName, email, phone, people, date, time, note } = await req.json();
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
 
-        if (!firstName || !lastName || !email || !phone || !people || !date || !time) {
-            return NextResponse.json({ error: "All fields except 'note' are required." }, { status: 400 });
-        }
+    const { bookingInfo } = await req.json();
 
-        const newBooking = new Booking({ firstName, lastName, email, phone, people, date, time, note });
-        await newBooking.save();
+    const { firstName, lastName, email, phone, people, date, time, note } =
+      bookingInfo;
 
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.GMAIL_USER,
-                pass: process.env.GMAIL_APP_PASSWORD,
-            },
-        });
+    const newBooking = new Booking({
+      firstName,
+      lastName,
+      email,
+      phone,
+      people,
+      date,
+      time,
+      note,
+    });
+    await newBooking.save();
 
-        const mailOptions = {
-            from: process.env.GMAIL_USER,
-            to: email,
-            subject: 'Booking Confirmation',
-            text: `
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.GMAIL_USER,
+      to: email,
+      subject: "Booking Confirmation",
+      text: `
                 Dear ${firstName} ${lastName},
                 
                 Your booking has been confirmed!
@@ -44,19 +52,27 @@ export async function POST(req) {
                 Best regards,
                 Maurya's Private Dining
             `,
-        };
+    };
 
-        try {
-            await transporter.sendMail(mailOptions);
-        } catch (emailError) {
-            console.error("Email sending failed:", emailError);
-            return NextResponse.json({ error: "Booking saved, but email sending failed." }, { status: 500 });
-        }
-
-        return NextResponse.json({ message: "Booking saved and email sent successfully!" }, { status: 200 });
-    
-    } catch (error) {
-        console.error("Server error:", error);
-        return NextResponse.json({ error: "An internal server error occurred." }, { status: 500 });
+    try {
+      await transporter.sendMail(mailOptions);
+    } catch (emailError) {
+      console.error("Email sending failed:", emailError);
+      return NextResponse.json(
+        { error: "Booking saved, but email sending failed." },
+        { status: 500 }
+      );
     }
+
+    return NextResponse.json(
+      { message: "Booking saved and email sent successfully!" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Server error:", error);
+    return NextResponse.json(
+      { error: "An internal server error occurred." },
+      { status: 500 }
+    );
+  }
 }

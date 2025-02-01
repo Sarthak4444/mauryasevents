@@ -18,8 +18,6 @@ function SuccessContent() {
     const time = searchParams.get("time");
     const note = searchParams.get("note");
 
-    console.log(firstName, lastName, email, phone, people, date, time, note);
-
     const bookingInfo = { firstName, lastName, email, phone, people, date, time, note };
 
     console.log(bookingInfo);
