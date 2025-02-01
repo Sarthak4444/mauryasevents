@@ -5,10 +5,10 @@ export default function Success() {
           <h1 className="text-3xl font-bold text-green-500">Payment Successful!</h1>
           <p className="mt-4 text-gray-300">Thank you for your payment. Your reservation has been placed successfully. Please check you email for more information. We will be waiting for you!</p>
           <a
-            href="/dashboard"
+            href="/"
             className="mt-6 inline-block bg-green-500 text-black px-6 py-2 rounded-xl font-medium hover:bg-green-600 transition"
           >
-            Go to Dashboard
+            Go to Home
           </a>
         </div>
       </div>
