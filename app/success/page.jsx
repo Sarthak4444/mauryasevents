@@ -3,35 +3,41 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 function SuccessContent() {
-  const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
-
-  const firstName = searchParams.get("firstName");
-  const lastName = searchParams.get("lastName");
-  const email = searchParams.get("email");
-  const phone = searchParams.get("phone");
-  const people = searchParams.get("people");
-  const date = searchParams.get("date");
-  const time = searchParams.get("time");
-  const note = searchParams.get("note");
+  const [loading, setLoading] = useState(true);
+  const [bookingData, setBookingData] = useState(null);
 
   useEffect(() => {
+    if (!searchParams) return; // Prevent running on first render
+
+    const firstName = searchParams.get("firstName");
+    const lastName = searchParams.get("lastName");
+    const email = searchParams.get("email");
+    const phone = searchParams.get("phone");
+    const people = searchParams.get("people");
+    const date = searchParams.get("date");
+    const time = searchParams.get("time");
+    const note = searchParams.get("note");
+
+    // Ensure values exist before proceeding
+    if (!firstName || !lastName || !email || !phone || !people || !date || !time) return;
+
+    const bookingInfo = { firstName, lastName, email, phone, people, date, time, note };
+    setBookingData(bookingInfo);
+    
+    console.log(bookingInfo); // Now this will correctly log values
+
     const sendRequest = async () => {
-      console.log(firstName, lastName, email, phone, people, date, time, note);
       try {
         const response = await fetch("/api/new-event", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ firstName, lastName, email, phone, people, date, time, note }),
+          body: JSON.stringify(bookingInfo),
         });
-        
 
-        if (!response.ok) {
-          throw new Error("Failed to send data");
-        }
-
+        if (!response.ok) throw new Error("Failed to send data");
         console.log(await response.json());
       } catch (error) {
         console.error(error);
@@ -41,7 +47,7 @@ function SuccessContent() {
     };
 
     sendRequest();
-  }, []);
+  }, [searchParams]); // Runs when searchParams update
 
   return (
     <div className="flex flex-col items-center justify-center h-[70vh] bg-white text-black">
