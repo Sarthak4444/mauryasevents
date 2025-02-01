@@ -18,10 +18,6 @@ function SuccessContent() {
     const time = searchParams.get("time");
     const note = searchParams.get("note");
 
-    const bookingInfo = { firstName, lastName, email, phone, people, date, time, note };
-
-    console.log(bookingInfo);
-
     const sendRequest = async () => {
       try {
         const response = await fetch("/api/new-event", {
@@ -29,7 +25,16 @@ function SuccessContent() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(bookingInfo),
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            email,
+            phone,
+            people,
+            date,
+            time,
+            note,
+          }),
         });
 
         if (!response.ok) throw new Error("Failed to send data");

@@ -5,10 +5,7 @@ import mongoose from "mongoose";
 
 export async function POST(req) {
   try {
-    const { bookingInfo } = await req.json();
-    const { firstName, lastName, email, phone, people, date, time, note } = bookingInfo;
-
-    console.log(firstName, lastName, email, phone, people, date, time, note);
+    const { firstName, lastName, email, phone, people, date, time, note } = await req.json();
     
     await mongoose.connect(process.env.MONGODB_URI);
 
