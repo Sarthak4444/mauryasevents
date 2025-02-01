@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
+import Food from "../public/Images/Food.jpg";
 import React, { useState, useRef } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 
@@ -113,7 +114,7 @@ export default function Home() {
         </div>
         <div className="md:w-1/2 w-full">
           <img
-            src="/Images/Food.jpg"
+            src={Food}
             alt="food"
             width={500}
             height={500}
