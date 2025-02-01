@@ -2,7 +2,6 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Pattern from "/Images/Pattern.png";
 
 function Footer() {
 
@@ -10,7 +9,7 @@ function Footer() {
     <div className="py-10 bg-black text-white">
       <div className="flex md:flex-row flex-col gap-6 md:gap-10 justify-center items-center">
         <Image
-          src={Pattern}
+          src="/Images/Pattern.png"
           alt="Pattern"
           loading="lazy"
           width={200}

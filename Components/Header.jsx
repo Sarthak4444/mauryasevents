@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import Logo from "/Images/Logo.png";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -14,7 +13,7 @@ function Header() {
           <Link href="/">
             <Image
               loading="lazy"
-              src={Logo}
+              src="Images/Logo.png"
               alt="Logo"
               width={112}
               height={250}

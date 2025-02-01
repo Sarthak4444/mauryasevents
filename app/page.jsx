@@ -1,6 +1,5 @@
 "use client";
 import Image from "next/image";
-import Food from "/Images/Food.jpg";
 import Link from "next/link";
 import { useState, useRef } from "react";
 import { loadStripe } from "@stripe/stripe-js";
@@ -112,7 +111,7 @@ export default function Home() {
         </div>
         <div className="md:w-1/2 w-full">
           <Image
-            src={Food}
+            src="/Images/Food.jpg"
             alt="food"
             width={500}
             height={500}
