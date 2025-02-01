@@ -11,8 +11,6 @@ function Footer() {
       <div className="flex md:flex-row flex-col gap-6 md:gap-10 p-10 justify-center items-center">
         <Image
           src={Pattern}
-          width={200}
-          height={200}
           alt="Pattern"
           className="w-[120px] md:w-[200px] h-auto"
         />
