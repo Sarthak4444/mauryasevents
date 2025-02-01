@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import Logo from "../Public/Images/Logo.png";
+import Logo from "../public/Images/Logo.png";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -16,6 +16,8 @@ function Header() {
               loading="lazy"
               src={Logo}
               alt="Logo"
+              width={112}
+              height={250}
               className="w-28 h-auto sm:w-36"
             />
           </Link>

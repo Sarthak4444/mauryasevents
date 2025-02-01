@@ -2,7 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Pattern from "../Public/Images/Pattern.png";
+import Pattern from "../public/Images/Pattern.png";
 
 function Footer() {
 
