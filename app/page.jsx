@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import Food from "../public/images/Food.jpg";
+import Food from "../public/Images/Food.jpg";
 import Link from "next/link";
 import { useState, useRef } from "react";
 import { loadStripe } from "@stripe/stripe-js";

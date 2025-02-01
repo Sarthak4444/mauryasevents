@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import Logo from "../public/images/Logo.png";
+import Logo from "../public/Images/Logo.png";
 import Image from "next/image";
 import Link from "next/link";
 
