@@ -44,7 +44,7 @@ function SuccessContent() {
     };
 
     sendRequest();
-  }, [searchParams]); // Dependencies should be searchParams, not window.location
+  }, []); 
 
   return (
     <div className="flex flex-col items-center justify-center h-[70vh] bg-white text-black">
