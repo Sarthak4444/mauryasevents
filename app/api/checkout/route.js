@@ -22,7 +22,7 @@ export async function POST(req) {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/success?session_id={CHECKOUT_SESSION_ID},firstName=${firstName},lastName=${lastName},email=${email},phone=${phone},people=${people},date=${date},time=${time},note=${note}`,
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/success?firstName=${firstName},lastName=${lastName},email=${email},phone=${phone},people=${people},date=${date},time=${time},note=${note}`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cancel`,
       customer_email: email,
     });
