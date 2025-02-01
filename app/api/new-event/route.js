@@ -1,18 +1,27 @@
 import nodemailer from "nodemailer";
 import { NextResponse } from "next/server";
 import Booking from "../../../models/Booking";
-import mongoose from 'mongoose';
-
+import mongoose from "mongoose";
 
 export async function POST(req) {
   try {
-    await mongoose.connect(process.env.MONGODB_URI);
-
+    // Ensure the body is parsed correctly
     const { bookingInfo } = await req.json();
+
+    if (!bookingInfo) {
+      return NextResponse.json(
+        { error: "Booking information is missing in the request." },
+        { status: 400 }
+      );
+    }
+
+    // Connect to MongoDB
+    await mongoose.connect(process.env.MONGODB_URI);
 
     const { firstName, lastName, email, phone, people, date, time, note } =
       bookingInfo;
 
+    // Save booking to the database
     const newBooking = new Booking({
       firstName,
       lastName,
@@ -25,6 +34,7 @@ export async function POST(req) {
     });
     await newBooking.save();
 
+    // Set up the email transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -33,29 +43,31 @@ export async function POST(req) {
       },
     });
 
+    // Mail options
     const mailOptions = {
       from: process.env.GMAIL_USER,
       to: email,
       subject: "Booking Confirmation",
       text: `
-                Dear ${firstName} ${lastName},
-                
-                Your booking has been confirmed!
-                - Name: ${firstName} ${lastName}
-                - Email: ${email}
-                - Number: ${phone}
-                - People: ${people}
-                - Date: ${date}
-                - Time: ${time}
-                - Notes: ${note || "None"}
-    
-                Thank you for your reservation!
-    
-                Best regards,
-                Maurya's Private Dining
-            `,
+        Dear ${firstName} ${lastName},
+        
+        Your booking has been confirmed!
+        - Name: ${firstName} ${lastName}
+        - Email: ${email}
+        - Number: ${phone}
+        - People: ${people}
+        - Date: ${date}
+        - Time: ${time}
+        - Notes: ${note || "None"}
+  
+        Thank you for your reservation!
+  
+        Best regards,
+        Maurya's Private Dining
+      `,
     };
 
+    // Send email
     try {
       await transporter.sendMail(mailOptions);
     } catch (emailError) {
