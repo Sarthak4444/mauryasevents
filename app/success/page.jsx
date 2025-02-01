@@ -9,8 +9,6 @@ function SuccessContent() {
   useEffect(() => {
     if (!searchParams) return console.log("no search params");
 
-    console.log(searchParams);
-
     const firstName = searchParams.get("firstName");
     const lastName = searchParams.get("lastName");
     const email = searchParams.get("email");
@@ -21,8 +19,6 @@ function SuccessContent() {
     const note = searchParams.get("note");
 
     console.log(firstName, lastName, email, phone, people, date, time, note);
-
-    if (!firstName || !lastName || !email || !phone || !people || !date || !time) return;
 
     const bookingInfo = { firstName, lastName, email, phone, people, date, time, note };
 

@@ -7,6 +7,8 @@ export async function POST(req) {
   try {
     const { firstName, lastName, email, phone, people, date, time, note } = await req.json();
 
+    if ( note === "" ) note = "None";
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
