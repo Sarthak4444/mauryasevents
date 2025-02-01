@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 
 
@@ -11,14 +10,8 @@ function Header() {
       <div className="w-full flex justify-between items-center md:px-14 px-5 py-5 bg-black">
         <div>
           <Link href="/">
-            <Image
-              loading="lazy"
-              src="Images/Logo.png"
-              alt="Logo"
-              width={112}
-              height={250}
-              className="w-28 h-auto sm:w-36"
-            />
+          <img src="/Images/Logo.png" alt="Logo" width="112" height="250" />
+
           </Link>
         </div>
         <div>

@@ -1,7 +1,6 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 
 const stripePromise = loadStripe(
@@ -110,7 +109,7 @@ export default function Home() {
           </button>
         </div>
         <div className="md:w-1/2 w-full">
-          <Image
+          <img
             src="/Images/Food.jpg"
             alt="food"
             width={500}
