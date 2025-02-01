@@ -12,7 +12,8 @@ function Footer() {
         <Image
           src={Pattern}
           alt="Pattern"
-          className="w-[120px] md:w-[200px] h-auto"
+          width={150}
+          height={150}
         />
         <div className="flex text-center md:text-left flex-col gap-8 md:gap-16">
           <Link className="text-sm underline" href="/terms-and-conditions">
