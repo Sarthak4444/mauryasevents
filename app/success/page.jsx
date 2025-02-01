@@ -3,11 +3,11 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 function SuccessContent() {
-  const searchParams = useSearchParams(window.location.search);
+  const searchParams = useSearchParams(); // No need to use window.location.search
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!searchParams) return(console.log("no search params"));
+    if (!searchParams) return console.log("no search params");
 
     const firstName = searchParams.get("firstName");
     const lastName = searchParams.get("lastName");
@@ -21,8 +21,8 @@ function SuccessContent() {
     if (!firstName || !lastName || !email || !phone || !people || !date || !time) return;
 
     const bookingInfo = { firstName, lastName, email, phone, people, date, time, note };
-    
-    console.log(bookingInfo); 
+
+    console.log(bookingInfo);
 
     const sendRequest = async () => {
       try {
@@ -44,7 +44,7 @@ function SuccessContent() {
     };
 
     sendRequest();
-  }, [searchParams]);
+  }, [searchParams]); // Dependencies should be searchParams, not window.location
 
   return (
     <div className="flex flex-col items-center justify-center h-[70vh] bg-white text-black">
