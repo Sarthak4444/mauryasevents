@@ -5,9 +5,10 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(req) {
   try {
-    const { firstName, lastName, email, phone, people, date, time, note } = await req.json();
+    const { firstName, lastName, email, phone, people, date, time, note } =
+      await req.json();
 
-    if ( note === "" ) note = "None";
+    if (note === "") note = "None";
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -24,7 +25,18 @@ export async function POST(req) {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/success?firstName=${firstName},lastName=${lastName},email=${email},phone=${phone},people=${people},date=${date},time=${time},note=${note}`,
+      success_url: `${
+        process.env.NEXT_PUBLIC_SITE_URL
+      }/success?firstName=${encodeURIComponent(
+        firstName
+      )}&lastName=${encodeURIComponent(lastName)}&email=${encodeURIComponent(
+        email
+      )}&phone=${encodeURIComponent(phone)}&people=${encodeURIComponent(
+        people
+      )}&date=${encodeURIComponent(date)}&time=${encodeURIComponent(
+        time
+      )}&note=${encodeURIComponent(note)}`,
+
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cancel`,
       customer_email: email,
     });
