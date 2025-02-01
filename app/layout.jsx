@@ -1,8 +1,5 @@
 
 import "./globals.css";
-import Header from "../Components/Header";
-import Footer from "../Components/Footer";
-
 export const metadata = {
   title: "Maurya's Events",
   description:
@@ -36,9 +33,7 @@ export default function RootLayout({ children }) {
       </head>
 
       <body>
-         <Header />
-        {children} 
-         <Footer />
+        {children}
       </body>
     </html>
   );

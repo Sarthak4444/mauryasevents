@@ -1,5 +1,7 @@
 "use client";
 import Link from "next/link";
+import Header from "../Components/Header";
+import Footer from "../Components/Footer";
 import React, { useState, useRef } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 
@@ -90,6 +92,7 @@ export default function Home() {
 
   return (
     <div>
+      <Header />
       <section className="h-fit max-w-[1300px] mx-auto md:p-20 p-6 pt-20 flex flex-col md:flex-row justify-center items-center gap-10">
         <div className="flex flex-col justify-center items-start gap-6 md:gap-10 w-full md:w-1/2">
           <p className="text-4xl md:text-5xl tracking-wide font-extrabold">
@@ -321,6 +324,7 @@ export default function Home() {
           </div>
         </form>
       </section>
+      <Footer />
     </div>
   );
 }
