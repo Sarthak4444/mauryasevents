@@ -17,12 +17,16 @@ function SuccessContent() {
 
   useEffect(() => {
     const sendRequest = async () => {
+      console.log(firstName, lastName, email, phone, people, date, time, note);
       try {
         const response = await fetch("/api/new-event", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({ firstName, lastName, email, phone, people, date, time, note }),
         });
+        
 
         if (!response.ok) {
           throw new Error("Failed to send data");
