@@ -1,7 +1,7 @@
 
 import "./globals.css";
 import Header from "../Components/Header";
-import Footer from "../components/Footer";
+import Footer from "../Components/Footer";
 
 export const metadata = {
   title: "Maurya's Private Dining",
