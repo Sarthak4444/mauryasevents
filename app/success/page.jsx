@@ -1,8 +1,8 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function Success() {
+function SuccessContent() {
   const [loading, setLoading] = useState(true);
   const searchParams = useSearchParams();
 
@@ -57,5 +57,13 @@ export default function Success() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function Success() {
+  return (
+    <Suspense fallback={<div className="text-center text-white">Loading...</div>}>
+      <SuccessContent />
+    </Suspense>
   );
 }
