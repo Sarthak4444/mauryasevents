@@ -3,12 +3,11 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 function SuccessContent() {
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams(window.location.search);
   const [loading, setLoading] = useState(true);
-  const [bookingData, setBookingData] = useState(null);
 
   useEffect(() => {
-    if (!searchParams) return; // Prevent running on first render
+    if (!searchParams) return(console.log("no search params"));
 
     const firstName = searchParams.get("firstName");
     const lastName = searchParams.get("lastName");
@@ -19,13 +18,11 @@ function SuccessContent() {
     const time = searchParams.get("time");
     const note = searchParams.get("note");
 
-    // Ensure values exist before proceeding
     if (!firstName || !lastName || !email || !phone || !people || !date || !time) return;
 
     const bookingInfo = { firstName, lastName, email, phone, people, date, time, note };
-    setBookingData(bookingInfo);
     
-    console.log(bookingInfo); // Now this will correctly log values
+    console.log(bookingInfo); 
 
     const sendRequest = async () => {
       try {
@@ -47,7 +44,7 @@ function SuccessContent() {
     };
 
     sendRequest();
-  }, [searchParams]); // Runs when searchParams update
+  }, [searchParams]);
 
   return (
     <div className="flex flex-col items-center justify-center h-[70vh] bg-white text-black">
