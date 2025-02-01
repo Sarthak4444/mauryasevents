@@ -14,6 +14,7 @@ function Footer() {
           alt="Pattern"
           width={150}
           height={150}
+          className="m-5"
         />
         <div className="flex text-center md:text-left flex-col gap-8 md:gap-16">
           <Link className="text-sm underline" href="/terms-and-conditions">
