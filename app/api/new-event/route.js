@@ -1,6 +1,8 @@
 import nodemailer from "nodemailer";
 import { NextResponse } from "next/server";
 import Booking from "../../../models/Booking";
+import mongoose from 'mongoose';
+
 
 export async function POST(req) {
   try {
