@@ -109,7 +109,7 @@ export default function Home() {
                     className="m-5 absolute -top-24 right-[44%] -z-20"
                   />
           <p className="text-4xl md:text-5xl tracking-wide font-bold">
-            One dish. One drink. <br /> One unforgettable <br /> moment at a
+            One dish. One drink. <br className="md:block hidden" /> One unforgettable <br className="md:block hidden" /> moment at a
             time.
           </p>
           <p className="text-lg md:text-xl">
