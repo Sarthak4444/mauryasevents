@@ -10,8 +10,16 @@ export default function EventsPage() {
   const [passcode, setPasscode] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [filter, setFilter] = useState("all");
+  const [expandedNotes, setExpandedNotes] = useState({});
 
   const correctPasscode = "123456";
+
+    const toggleNote = (id) => {
+      setExpandedNotes((prev) => ({
+        ...prev,
+        [id]: !prev[id],
+      }));
+    };
 
   const fetchEvents = async () => {
     try {
@@ -97,7 +105,11 @@ export default function EventsPage() {
                   <td className="border px-6 py-3">{event.people}</td>
                   <td className="border px-6 py-3">{event.date}</td>
                   <td className="border px-6 py-3">{event.time}</td>
-                  <td className="border px-6 py-3">{event.note}</td>
+                  <td className="border px-6 py-3 cursor-pointer" onClick={() => toggleNote(event._id)}>
+          {expandedNotes[event._id] || event.note.length <= 20 
+            ? event.note 
+            : `${event.note.substring(0, 20)}...`}
+        </td>
                   <td className="border px-6 py-3">$15 x {event.people} = ${15 * event.people}</td>
                 </tr>
               ))}
@@ -108,11 +120,11 @@ export default function EventsPage() {
     </div>
   ) : (
     <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+      <form onSubmit={handlePasscodeSubmit} className="bg-white p-6 rounded-lg shadow-lg text-center">
         <h2 className="text-2xl font-bold mb-4">Enter Passcode</h2>
         <input type="password" maxLength={6} value={passcode} onChange={(e) => setPasscode(e.target.value)} className="border px-4 py-2 rounded-lg w-full text-center mb-4" />
-        <button onClick={handlePasscodeSubmit} className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Submit</button>
-      </div>
+        <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Submit</button>
+      </form>
     </div>
   );
 }

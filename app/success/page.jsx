@@ -1,10 +1,11 @@
 "use client";
 import React, { useState, useEffect, Suspense } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import Header from "../../Components/Header"
+import Header from "../../Components/Header";
 
 function SuccessContent() {
-  const searchParams = useSearchParams(); 
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -48,25 +49,42 @@ function SuccessContent() {
     };
 
     sendRequest();
-  }, []); 
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center h-[70vh] bg-white text-black">
-      <div className="bg-gray-900 p-8 rounded-2xl shadow-lg text-center max-w-md">
-        <h1 className="text-3xl font-bold text-green-500">Payment Successful!</h1>
+      <div className="bg-black p-6 rounded-2xl shadow-lg text-center max-w-md">
+        <h1 className="text-3xl font-bold text-[#d88728]">
+          Payment Successful!
+        </h1>
         <p className="mt-4 text-gray-300">
-          Thank you for your payment. Your reservation has been placed successfully. Please check your email for more information. We will be waiting for you!
+          Thank you for your payment. Your reservation has been confirmed.
+          Please check your email for further details. We will look forward to
+          serve you soon. <br /> <br />
+          If you have any questions please feel free to contact us at{" "}
+          <Link className="text-blue-500" href="tel:2503774969">
+            250 377 4969
+          </Link>{" "}
+          or{" "}
+          <Link
+            className="text-blue-500"
+            href="mailto:comments@mauryascuisine.com"
+          >
+            comments@mauryascuisine.com
+          </Link>
         </p>
         <button
-          onClick={() => window.location.href = "/"}
+          onClick={() => (window.location.href = "/")}
           disabled={loading}
-          className={`mt-6 inline-block px-6 py-2 rounded-xl font-medium transition ${
-            loading ? "bg-gray-400 cursor-not-allowed" : "bg-green-500 hover:bg-green-600 text-black"
-          }`}
+          className="mt-6 inline-block px-6 py-2 font-medium transition bg-[#d88728] hover:bg-[#df8e31] text-white"
         >
           {loading ? "Loading..." : "Go Back Home"}
-        </button>\<div className="text-red-500 mt-4">
-        {loading ? "Please do not close the website until it is loading " : ""}</div>
+        </button>
+        <div className="text-red-500 mt-4">
+          {loading
+            ? "Please do not close the website until it is loading "
+            : ""}
+        </div>
       </div>
     </div>
   );
@@ -74,7 +92,9 @@ function SuccessContent() {
 
 export default function Success() {
   return (
-    <Suspense fallback={<div className="text-center text-white">Loading...</div>}>
+    <Suspense
+      fallback={<div className="text-center text-white">Loading...</div>}
+    >
       <Header />
       <SuccessContent />
     </Suspense>

@@ -3,8 +3,8 @@ import Link from "next/link";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import Image from "next/image";
-import HeartR from "./HeartR.png"
-import HeartL from "./HeartL.png"
+import HeartR from "./HeartR.png";
+import HeartL from "./HeartL.png";
 import React, { useState, useRef } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 
@@ -101,16 +101,16 @@ export default function Home() {
       <Header />
       <section className="h-fit max-w-[1300px] mx-auto md:p-20 p-6 pt-20 flex flex-col md:flex-row justify-center items-center gap-10">
         <div className="flex flex-col justify-center relative items-start gap-6 md:gap-10 w-full md:w-1/2">
-           <Image
-                    src={HeartR}
-                    alt="Heart"
-                    width={120}
-                    height={120}
-                    className="m-5 absolute -top-24 right-[44%] -z-20"
-                  />
+          <Image
+            src={HeartR}
+            alt="Heart"
+            width={120}
+            height={120}
+            className="m-5 absolute -top-24 right-[44%] -z-20"
+          />
           <p className="text-4xl md:text-5xl tracking-wide font-bold">
-            One dish. One drink. <br className="md:block hidden" /> One unforgettable <br className="md:block hidden" /> moment at a
-            time.
+            One dish. One drink. <br className="md:block hidden" /> One
+            unforgettable <br className="md:block hidden" /> moment at a time.
           </p>
           <p className="text-lg md:text-xl">
             This <span className="text-red-500">Valentine's Day,</span> let
@@ -148,17 +148,19 @@ export default function Home() {
             </p>
             <p>
               Join this culinary experience for just $85 per person. <br />{" "}
-              Question about the menu? Call 250-377-4696
+              Question about the menu? Call  <Link className="text-blue-500" href="tel:2503774969">
+            250 377 4969
+          </Link>
             </p>
           </div>
           <div className="flex flex-col justify-start gap-6 w-full md:w-1/2 relative">
-          <Image
-                    src={HeartL}
-                    alt="Heart"
-                    width={120}
-                    height={120}
-                    className="m-5 absolute -top-24 right-[6%] -z-20"
-                  />
+            <Image
+              src={HeartL}
+              alt="Heart"
+              width={120}
+              height={120}
+              className="m-5 absolute -top-24 right-[6%] -z-20"
+            />
             <p className="text-2xl tracking-wide font-bold">
               Garden of Love champagne
             </p>
@@ -170,8 +172,8 @@ export default function Home() {
             </p>
             <p className="leading-tight">
               # 4 Course Menu <br /> # House made Champagne / sparkling wine{" "}
-              <br /> # Alchmest style cocktails house made <br /> # Zero-proof
-              cocktails "why mis the fun!" <br />{" "}
+              <br /> # Alchemist style cocktails house made <br /> # Zero-proof
+              cocktails "why miss the fun!" <br />{" "}
               <span className="text-red-500">
                 Special dietary options available upon request in advance
               </span>
@@ -255,21 +257,20 @@ export default function Home() {
             </select>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-          <div>
-  <label className="block text-2xl font-bold">Date</label>
-  <select
-    className="w-full border-2 border-[#d88728] p-2 mt-2"
-    required
-    value={date}
-    onChange={(e) => setDate(e.target.value)}
-  >
-    <option value="">Select a date</option>
-    <option value="2025-02-13">13th Feb, 2025</option>
-    <option value="2025-02-14">14th Feb, 2025</option>
-    <option value="2025-02-15">15th Feb, 2025</option>
-  </select>
-</div>
-
+            <div>
+              <label className="block text-2xl font-bold">Date</label>
+              <select
+                className="w-full border-2 border-[#d88728] p-2 mt-2"
+                required
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              >
+                <option value="">Select a date</option>
+                <option value="2025-02-13">13th Feb, 2025</option>
+                <option value="2025-02-14">14th Feb, 2025</option>
+                <option value="2025-02-15">15th Feb, 2025</option>
+              </select>
+            </div>
 
             <div>
               <label className="block text-2xl font-bold">Time</label>
@@ -282,15 +283,12 @@ export default function Home() {
                 <option value="" disabled selected>
                   Select Time
                 </option>
-                {[...Array(22)].map((_, i) => {
-                  const hour = 12 + Math.floor(i / 2);
+                {[...Array(15)].map((_, i) => {
+                  const hour = 4 + Math.floor(i / 2);
                   const minutes = i % 2 === 0 ? "00" : "30";
-                  const formattedHour = hour > 12 ? hour - 12 : hour;
-                  const period = hour >= 12 ? "PM" : "AM";
-
                   return (
                     <option key={i} value={`${hour}:${minutes}`}>
-                      {formattedHour}:{minutes} {period}
+                      {hour}:{minutes}
                     </option>
                   );
                 })}
@@ -333,10 +331,14 @@ export default function Home() {
               I consent to receive communications from Maurya’s via email, text
               message, and/or other electronic means, including social media,
               regarding new menu items, special offers, and other relevant
-              information. I have read the {" "}
-              <Link className="text-blue-500" href="/reservations-and-dining-discreations">
+              information. I have read the{" "}
+              <Link
+                className="text-blue-500"
+                href="/reservations-and-dining-discreations"
+              >
                 Reservations and Dining Discreations
-              </Link> and I am ready to comply with it.
+              </Link>{" "}
+              and I am ready to comply with it.
             </label>
           </div>
 

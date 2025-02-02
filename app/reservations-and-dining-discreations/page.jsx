@@ -7,11 +7,11 @@ function page() {
     <>
       <Header />
       <section className="w-full flex text-white justify-center items-center h-[80vh] bg-[url('https://mauryascuisine.com/wp-content/uploads/2024/01/web-Home-3-Banner-v2.jpg')]">
-        <div className="flex flex-col justify-center items-center gap-6">
-          <p className="text-5xl text-center px-2 tracking-wide font-[600]">
+   
+          <p className="text-5xl text-center -mt-32 px-2 tracking-wide font-[600]">
             Reservations and Dining Discreations
           </p>
-        </div>
+
       </section>
       <section className="h-fit max-w-[1250px] mx-auto md:p-20 p-6 text-left ">
         <p className="text-5xl font-extrabold mb-8 tracking-wider">
