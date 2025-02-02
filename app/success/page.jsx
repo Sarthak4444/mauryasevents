@@ -1,9 +1,10 @@
 "use client";
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Header from "../../Components/Header"
 
 function SuccessContent() {
-  const searchParams = useSearchParams(); // No need to use window.location.search
+  const searchParams = useSearchParams(); 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -64,7 +65,8 @@ function SuccessContent() {
           }`}
         >
           {loading ? "Loading..." : "Go Back Home"}
-        </button>
+        </button>\<div className="text-red-500 mt-4">
+        {loading ? "Please do not close the website until it is loading " : ""}</div>
       </div>
     </div>
   );
@@ -73,6 +75,7 @@ function SuccessContent() {
 export default function Success() {
   return (
     <Suspense fallback={<div className="text-center text-white">Loading...</div>}>
+      <Header />
       <SuccessContent />
     </Suspense>
   );

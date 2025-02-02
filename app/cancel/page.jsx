@@ -1,5 +1,9 @@
+import Header from "./../../Components/Header"
+
 export default function Cancel() {
     return (
+      <>
+      <Header />
       <div className="flex h-[70vh] items-center justify-center bg-white text-blackx">
         <div className="text-center p-6 max-w-md border border-gray-700 rounded-lg shadow-lg">
           <h1 className="text-2xl font-semibold mb-4">Payment Canceled</h1>
@@ -9,5 +13,6 @@ export default function Cancel() {
           </a>
         </div>
       </div>
+      </>
     );
   }

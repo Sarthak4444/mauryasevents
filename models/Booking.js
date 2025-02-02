@@ -1,20 +1,25 @@
-
-
-
-
 import mongoose from 'mongoose';
 
 const BookingSchema = new mongoose.Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  email: { type: String, required: true },
-  phone: { type: String, required: true },
-  people: { type: Number, required: true },
-  date: { type: String, required: true },
-  time: { type: String, required: true },
-  note: { type: String },
-});
+  firstName: { type: String, required: true, trim: true },
+  lastName: { type: String, required: true, trim: true },
+  email: { 
+    type: String, 
+    required: true, 
+    trim: true, 
+    lowercase: true, 
+  },
+  phone: { 
+    type: String, 
+    required: true, 
+    trim: true, 
+  },
+  people: { type: Number, required: true, min: 1 },
+  date: { type: String, required: true, trim: true },
+  time: { type: String, required: true, trim: true },
+  note: { type: String, trim: true },
+}, { timestamps: true });
 
-const Booking = mongoose.models.Booking || mongoose.model('Booking', BookingSchema);
+const Booking = mongoose.connection.models.Booking || mongoose.model('Booking', BookingSchema);
 
 export default Booking;

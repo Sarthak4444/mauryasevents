@@ -23,9 +23,7 @@ function Footer() {
           <Link className="text-sm underline" href="/privacy-policy">
             Privacy Policy
           </Link>
-          <Link className="text-sm underline" href="/reservations-and-dining-discreations">
-            Reservations and Dining Discreations
-          </Link>
+        
         </div>
       </div>
     </div>
