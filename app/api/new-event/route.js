@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 import mongoose from "mongoose";
 import Booking from "../../../models/Booking";
 import { NextResponse } from "next/server";
+import EmailLogo from "./EmailLogo.jpg";
 
 export async function POST(req) {
   try {
@@ -49,25 +50,39 @@ export async function POST(req) {
     const mailOptions = {
       from: process.env.GMAIL_USER,
       to: email,
-      subject: "Booking Confirmation",
-      text: `
-        Dear ${firstName} ${lastName},
-        
-        Your booking has been confirmed!
-        - Name: ${firstName} ${lastName}
-        - Email: ${email}
-        - Number: ${phone}
-        - People: ${people}
-        - Date: ${date}
-        - Time: ${time}
-        - Notes: ${note || "None"}
-  
-        Thank you for your reservation!
-  
-        Best regards,
-        Maurya's Private Dining
+      subject: "Booking Confirmation - Maurya's",
+      html: `
+        <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; max-width: 600px;">
+          <p style="font-size: 18px;">Dear <strong>${firstName}</strong>,</p>
+          
+          <p>Your booking at <strong>Maurya's</strong> has been confirmed! We look forward to welcoming you.</p>
+          
+          <h3 style="color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 5px; display: inline-block;">Reservation Details</h3>
+          <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+          <p><strong>People:</strong> ${people}</p>
+          <p><strong>Date:</strong> <b>${date}</b></p>
+          <p><strong>Time:</strong> <b>${time}</b></p>
+          ${note ? `<p><strong>Note:</strong> ${note}</p>` : ""}
+          
+          <p>Thank you for choosing us! If you have any questions or need assistance, feel free to reach out.</p>
+          
+          <p>Best regards,<br>Maurya's Rest, Bar & Banquet</p>
+
+          <div style="border-top: 2px solid #d32f2f; padding-top: 10px; margin-top: 20px;">
+            <img src="${EmailLogo}" alt="Maurya's Logo" style="width: 120px; height: auto; margin-bottom: 10px;">
+            <p style="margin: 5px 0;"><strong>Maurya's Rest, Bar & Banquet</strong></p>
+            <p style="margin: 5px 0;">📍 165 Victoria St, Kamloops, BC, Canada. V2C 1Z4</p>
+            <p style="margin: 5px 0;">📞 +1 250 377 4969</p>
+            <p style="margin: 5px 0;">📧 comments@mauryascuisine.com</p>
+            <p style="margin: 5px 0;">
+              <a href="https://www.mauryascuisine.com" style="color: #d32f2f; text-decoration: none;">Visit our website</a> | 
+              <a href="https://instagram.com/mauryas.rest.bar.banquet" style="color: #d32f2f; text-decoration: none;">Instagram</a>
+            </p>
+          </div>
+        </div>
       `,
     };
+    
 
     // Send email
     try {
