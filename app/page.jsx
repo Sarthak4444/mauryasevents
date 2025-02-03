@@ -334,6 +334,7 @@ export default function Home() {
               information. I have read the{" "}
               <Link
                 className="text-blue-500"
+                target="_blank"
                 href="/reservations-and-dining-discreations"
               >
                 Reservations and Dining Discreations
