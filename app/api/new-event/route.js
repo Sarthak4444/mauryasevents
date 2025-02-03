@@ -2,13 +2,12 @@ import nodemailer from "nodemailer";
 import mongoose from "mongoose";
 import Booking from "../../../models/Booking";
 import { NextResponse } from "next/server";
-import EmailLogo from "./EmailLogo.jpg";
 
 export async function POST(req) {
   try {
     const { firstName, lastName, email, phone, people, date, time, note } = await req.json();
     
-    const connection = await mongoose.connect('mongodb+srv://SarthakMaurya:Sarthak_12345@cluster0.vxoif.mongodb.net/cluster0?retryWrites=true&w=majority');
+    const connection = await mongoose.connect(process.env.MONGODB_URI);
     
 
     if (!connection) {
@@ -58,11 +57,10 @@ export async function POST(req) {
           <p>Your booking at <strong>Maurya's</strong> has been confirmed! We look forward to welcoming you.</p>
           
           <h3 style="color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 5px; display: inline-block;">Reservation Details</h3>
-          ${"&nbsp"} <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-          ${"&nbsp"} <p><strong>People:</strong> ${people}</p>
-          ${"&nbsp"} <p><strong>Date:</strong> <b>${date}</b></p>
-          ${"&nbsp"} <p><strong>Time:</strong> <b>${time}</b></p>
-          ${"&nbsp"} ${note ? `<p><strong>Note:</strong> ${note}</p>` : ""}
+          <p><strong>Name:</strong> ${firstName} ${lastName} <br />
+          <strong>People:</strong> ${people} <br />
+          <strong>Date:</strong> <b>${date}</b> <br />
+          <strong>Time:</strong> <b>${time}</b></p>
           
           <p>Thank you for choosing us! If you have any questions or need assistance, feel free to reach out.</p>
           
