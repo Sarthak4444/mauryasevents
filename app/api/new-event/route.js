@@ -58,18 +58,17 @@ export async function POST(req) {
           <p>Your booking at <strong>Maurya's</strong> has been confirmed! We look forward to welcoming you.</p>
           
           <h3 style="color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 5px; display: inline-block;">Reservation Details</h3>
-          <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-          <p><strong>People:</strong> ${people}</p>
-          <p><strong>Date:</strong> <b>${date}</b></p>
-          <p><strong>Time:</strong> <b>${time}</b></p>
-          ${note ? `<p><strong>Note:</strong> ${note}</p>` : ""}
+          ${"   "} <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+          ${"   "} <p><strong>People:</strong> ${people}</p>
+          ${"   "} <p><strong>Date:</strong> <b>${date}</b></p>
+          ${"   "} <p><strong>Time:</strong> <b>${time}</b></p>
+          ${"   "} ${note ? `<p><strong>Note:</strong> ${note}</p>` : ""}
           
           <p>Thank you for choosing us! If you have any questions or need assistance, feel free to reach out.</p>
           
           <p>Best regards,<br>Maurya's Rest, Bar & Banquet</p>
 
           <div style="border-top: 2px solid #d32f2f; padding-top: 10px; margin-top: 20px;">
-            <img src=${EmailLogo} alt="Maurya's Logo" style="width: 120px; height: auto; margin-bottom: 10px;">
             <p style="margin: 5px 0;"><strong>Maurya's Rest, Bar & Banquet</strong></p>
             <p style="margin: 5px 0;">📍 165 Victoria St, Kamloops, BC, Canada. V2C 1Z4</p>
             <p style="margin: 5px 0;">📞 +1 250 377 4969</p>
