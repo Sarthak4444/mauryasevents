@@ -58,11 +58,11 @@ export async function POST(req) {
           <p>Your booking at <strong>Maurya's</strong> has been confirmed! We look forward to welcoming you.</p>
           
           <h3 style="color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 5px; display: inline-block;">Reservation Details</h3>
-          ${"   "} <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-          ${"   "} <p><strong>People:</strong> ${people}</p>
-          ${"   "} <p><strong>Date:</strong> <b>${date}</b></p>
-          ${"   "} <p><strong>Time:</strong> <b>${time}</b></p>
-          ${"   "} ${note ? `<p><strong>Note:</strong> ${note}</p>` : ""}
+          ${"&nbsp"} <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+          ${"&nbsp"} <p><strong>People:</strong> ${people}</p>
+          ${"&nbsp"} <p><strong>Date:</strong> <b>${date}</b></p>
+          ${"&nbsp"} <p><strong>Time:</strong> <b>${time}</b></p>
+          ${"&nbsp"} ${note ? `<p><strong>Note:</strong> ${note}</p>` : ""}
           
           <p>Thank you for choosing us! If you have any questions or need assistance, feel free to reach out.</p>
           
