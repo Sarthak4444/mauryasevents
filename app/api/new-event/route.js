@@ -69,7 +69,7 @@ export async function POST(req) {
           <p>Best regards,<br>Maurya's Rest, Bar & Banquet</p>
 
           <div style="border-top: 2px solid #d32f2f; padding-top: 10px; margin-top: 20px;">
-            <img src="${EmailLogo}" alt="Maurya's Logo" style="width: 120px; height: auto; margin-bottom: 10px;">
+            <img src=${EmailLogo} alt="Maurya's Logo" style="width: 120px; height: auto; margin-bottom: 10px;">
             <p style="margin: 5px 0;"><strong>Maurya's Rest, Bar & Banquet</strong></p>
             <p style="margin: 5px 0;">📍 165 Victoria St, Kamloops, BC, Canada. V2C 1Z4</p>
             <p style="margin: 5px 0;">📞 +1 250 377 4969</p>
