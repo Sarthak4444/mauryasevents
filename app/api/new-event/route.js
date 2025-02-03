@@ -7,7 +7,7 @@ export async function POST(req) {
   try {
     const { firstName, lastName, email, phone, people, date, time, note } = await req.json();
     
-    const connection = await mongoose.connect('mongodb://2405:201:6017:e0a0::c0a8:1d01:27017/cluster0');
+    const connection = await mongoose.connect('mongodb+srv://SarthakMaurya:Sarthak_12345@cluster0.vxoif.mongodb.net/cluster0?retryWrites=true&w=majority');
     
 
     if (!connection) {
