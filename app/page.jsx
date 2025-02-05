@@ -266,7 +266,7 @@ export default function Home() {
             <div>
               <label className="block text-2xl font-bold">Date</label>
               <select
-                className="w-full border-2 border-[#d88728] p-2 mt-2"
+                className="w-full border-2 border-[#d88728] p-3 mt-2"
                 required
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
