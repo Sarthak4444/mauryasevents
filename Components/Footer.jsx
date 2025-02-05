@@ -15,10 +15,10 @@ function Footer() {
           width={200}
           height={200}
         />
-        <div className="text-left w-full m-5">
-          <Link className="text-sm underline mr-8" href="/terms-and-conditions">
+        <div className="text-left w-full flex gap-5 ml-10 mb-10">
+          <Link className="text-sm underline" href="/terms-and-conditions">
             Terms & Conditions 
-          </Link>3
+          </Link>
           <Link className="text-sm underline" href="/privacy-policy">
             Privacy Policy
           </Link>

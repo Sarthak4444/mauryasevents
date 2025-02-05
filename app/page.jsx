@@ -167,7 +167,7 @@ export default function Home() {
       alt="Heart"
       width={100} 
       height={100}
-      className="absolute top-1/2 translate-y-[-80%] left-full -ml-32 -z-10"
+      className="absolute top-1/2 translate-y-[-70%] left-full -ml-32 -z-10"
     />
   </p>
   <p>
