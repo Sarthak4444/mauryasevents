@@ -11,13 +11,13 @@ function Footer() {
         <Image src={Pattern} alt="Pattern" width={200} height={200} />
         <div className="text-left w-full mb-8 -mt-4">
           <span className="text-sm text-black">
-            ooooooooooo
+            oooooooo
           </span>
           <Link className="text-sm underline" href="/terms-and-conditions">
             Terms & Conditions
           </Link>
           <span className="text-sm text-black">
-            ooooooooooo
+            ooooo
           </span>
           <Link className="text-sm underline" href="/privacy-policy">
             Privacy Policy
