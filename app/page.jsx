@@ -165,13 +165,13 @@ export default function Home() {
               Garden of Love champagne
             </p>
             <p>
-              A house made champagne / sparkling wine “Garden of Love” where the
+              A house-made champagne / sparkling wine “Garden of Love” where the
               elegance of grapes meet the bold sweetness of house-grown
               tomatoes. Raise your glass to love and let the 'Garden of Love'
               champagne suprise your senses. 'Love has never tasted this good.
             </p>
             <p className="leading-tight">
-              # 4 Course Menu <br /> # House made Champagne / sparkling wine{" "}
+              # 4 Course Menu <br /> # House-made champagne / sparkling wine{" "}
               <br /> # Alchemist style cocktails house made <br /> # Zero-proof
               cocktails "why miss the fun!" <br />{" "}
               <span className="text-red-500">
