@@ -196,7 +196,7 @@ export default function Home() {
         </Link>
       </section>
       <hr className="bg-black mx-auto w-[85%] h-[2px]" />
-      <section className="h-fit max-w-[1300px] mx-auto md:p-20 p-6 justify-center items-center">
+      <section className="h-fit max-w-[1300px] mx-auto md:p-20 p-6 justify-center items-center mb-8">
         <form onSubmit={handleSubmit} className="mx-auto max-w-3xl">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
             <div>
