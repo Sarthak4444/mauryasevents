@@ -181,7 +181,7 @@ export default function Home() {
     # 4 Course Menu <br /> # House-made champagne / sparkling wine <br />
     # Alchemist style cocktails house made <br /> # Zero-proof cocktails "why miss the fun!" <br />
     <span className="text-red-500">
-      #Special dietary options available upon request in advance
+    <span className="text-black">#</span> Special dietary options available upon request in advance
     </span>
   </p>
 </div>
