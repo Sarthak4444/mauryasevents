@@ -9,8 +9,8 @@ function Footer() {
     <div className="bg-black text-white">
       <div className="flex flex-col p-10 justify-center items-center">
         <Image src={Pattern} alt="Pattern" width={200} height={200} className="-mb-10" />
-        <div className="text-center md:text-left w-full mb-8 -mt-10">
-          <span className="text-sm text-black">
+        <div className="text-left w-full mb-8 -mt-10 justify-center items-center md:flex ">
+          <span className="text-sm hidden md:block text-black">
             oooo
           </span>
           <Link className="text-sm underline" href="/terms-and-conditions">
