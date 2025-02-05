@@ -139,7 +139,7 @@ export default function Home() {
           />
         </div>
       </section>
-      <section className="h-fit max-w-[1300px] mx-auto md:p-20 p-6 pb-10 pt-20">
+      <section className="h-fit max-w-[1300px] mx-auto md:p-20 p-6 pb-10 pt-14">
         <div className="flex flex-col md:flex-row gap-10 mb-4">
           <div className="flex flex-col gap-6 w-full md:w-1/2">
             <p className="text-xl tracking-wide font-bold">
