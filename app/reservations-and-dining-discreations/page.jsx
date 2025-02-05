@@ -6,13 +6,12 @@ function page() {
   return (
     <>
       <Header />
-      <section className="w-full flex text-white justify-center items-center h-[80vh] bg-[url('https://mauryascuisine.com/wp-content/uploads/2024/01/web-Home-3-Banner-v2.jpg')]">
-   
-          <p className="text-5xl text-center -mt-32 px-2 tracking-wide font-[600]">
-            Reservations and Dining Discreations
-          </p>
-
+      <section className="w-full flex text-white justify-center items-center h-[80vh] bg-[url('https://mauryascuisine.com/wp-content/uploads/2024/01/web-Home-3-Banner-v2.jpg')] bg-cover bg-no-repeat bg-right md:bg-center">
+        <p className="text-5xl text-center -mt-32 px-2 tracking-wide font-[600]">
+          Reservations and Dining Discreations
+        </p>
       </section>
+
       <section className="h-fit max-w-[1250px] mx-auto md:p-20 p-6 text-left ">
         <p className="text-5xl font-extrabold mb-8 tracking-wider">
           Deposit & Reservation
@@ -52,7 +51,8 @@ function page() {
           guests.
         </p>
         <p className="text-lg font-semibold text-left tracking-wider pt-4 pr-6 leading-10 mb-8">
-        By submitting your booking, you agree to abide by the above terms and conditions.
+          By submitting your booking, you agree to abide by the above terms and
+          conditions.
         </p>
       </section>
       <Footer />
