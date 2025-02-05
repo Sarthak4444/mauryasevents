@@ -5,7 +5,7 @@ import Footer from "../Components/Footer";
 import Image from "next/image";
 import HeartR from "./HeartR.png";
 import HeartL from "./HeartL.png";
-import Item from "./Item.png";
+import Item from "./../Components/Item.png";
 import React, { useState, useRef } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 
