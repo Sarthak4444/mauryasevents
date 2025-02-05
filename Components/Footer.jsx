@@ -15,7 +15,7 @@ function Footer() {
           width={200}
           height={200}
         />
-        <div className="text-left w-full flex gap-5 ml-10 mb-10">
+        <div className="text-left w-full flex gap-5 pl-10 mb-10">
           <Link className="text-sm underline" href="/terms-and-conditions">
             Terms & Conditions 
           </Link>

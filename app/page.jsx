@@ -100,7 +100,7 @@ export default function Home() {
     <div>
       <Header />
       <section className="h-fit max-w-[1300px] mx-auto md:p-20 p-6 pt-20 flex flex-col md:flex-row justify-center items-center gap-10">
-        <div className="flex flex-col justify-center relative items-start gap-8 md:gap-14 w-full md:w-1/2">
+        <div className="flex flex-col justify-center relative items-start gap-14 w-full md:w-1/2">
           <p className="text-3xl md:text-4xl tracking-wide font-bold">
             <span className="relative inline-block">
               One dish.
