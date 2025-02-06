@@ -143,12 +143,12 @@ export default function Home() {
         <div className="flex flex-col md:flex-row gap-10 mb-4">
           <div className="flex flex-col gap-6 w-full md:w-1/2">
             <p className="text-xl tracking-wide font-bold">
-              Welcome to Maurya’s valentine dining experience!
+              Welcome to Maurya’s Valentine dining experience!
             </p>
             <p>
               Experience the artistry of our culinary team this Valentine's Day
               with a specially curated 4-course menu. Savor handcrafted dishes,
-              sip on our house-made champagne, and indulge in expertly mixed
+              sip on our house made Champagne, and indulge in expertly mixed
               cocktails. Every detail is crafted with passion, creating perfect
               setting for romance.
             </p>
@@ -162,7 +162,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col justify-start gap-6 w-full md:w-1/2 relative">
   <p className="text-xl tracking-wide font-bold relative inline-block">
-    Garden of Love champagne
+    Garden of Love Champagne
     <Image
       src={HeartL}
       alt="Heart"
@@ -172,13 +172,13 @@ export default function Home() {
     />
   </p>
   <p>
-    A house made champagne / sparkling wine “Garden of Love” A surprising blend,
+    A house made Champagne / sparkling wine “Garden of Love” A surprising blend,
     a garden’s own art, a welcome gesture, enchanting the heart. “Tomato & Grape”.
-    Raise your glass to love and let the ‘‘Garden of Love’’ champagne surprise your senses.
+    Raise your glass to love and let the ‘‘Garden of Love’’ Champagne surprise your senses.
     ‘Love has never tasted this good’.
   </p>
   <p className="leading-tight">
-    # 4 Course Menu <br /> # House-made champagne / sparkling wine <br />
+    # 4 Course Menu <br /> # House made champagne / sparkling wine <br />
     # Alchemist style cocktails house made <br /> # Zero-proof cocktails "why miss the fun!" <br />
     <span className="text-red-500">
     <span className="text-black">#</span> Special dietary options available upon request in advance
@@ -344,7 +344,7 @@ export default function Home() {
                 target="_blank"
                 href="/reservations-and-dining-discreations"
               >
-                Reservations and Dining Discreations
+                Reservations and Dining Discretions
               </Link>{" "}
               and I am ready to comply with it.
             </label>

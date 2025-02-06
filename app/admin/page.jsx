@@ -12,7 +12,7 @@ export default function EventsPage() {
   const [filter, setFilter] = useState("all");
   const [expandedNotes, setExpandedNotes] = useState({});
 
-  const correctPasscode = "123456";
+  const correctPasscode = "140225";
 
     const toggleNote = (id) => {
       setExpandedNotes((prev) => ({
