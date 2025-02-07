@@ -1,6 +1,5 @@
 
 import "./globals.css";
-import Item from "./../Components/Item.png";
 
 export const metadata = {
   title: "Maurya's Events",
@@ -18,7 +17,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "/Item.png",
+        url: "mauryasevents.com/Item.png",
         width: 800,
         height: 600,
         alt: "Maurya's Events",
