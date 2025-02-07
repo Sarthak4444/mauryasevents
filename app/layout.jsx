@@ -17,7 +17,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "mauryasevents.com/Item.png",
+        url: "https://mauryasevents.com/Item.png",
         width: 800,
         height: 600,
         alt: "Maurya's Events",
