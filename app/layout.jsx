@@ -1,6 +1,6 @@
 
 import "./globals.css";
-import Item from "./Item.png";
+import Item from "./../Components/Item.png";
 
 export const metadata = {
   title: "Maurya's Events",
