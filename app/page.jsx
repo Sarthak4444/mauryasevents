@@ -130,7 +130,7 @@ export default function Home() {
           </button>
         </div>
 
-        <div className="md:w-1/2 w-full">
+        <div className="md:w-1/2 w-full md:my-0 my-10">
           <Image
             src={Item}
             alt="food"
