@@ -1,8 +1,10 @@
+"use client"
+
 import React from 'react'
 import Link from "next/link"
 import Header from '@/Components/Header'
 
-function Page() {  // Renamed from `page` to `Page`
+function Page() {  
   return (
     <>
       <Header />
