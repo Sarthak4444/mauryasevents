@@ -28,8 +28,7 @@ function page() {
         onClick={() => (window.location.href = "/")}
         disabled={loading}
         className="mt-6 inline-block px-14 py-4 font-medium transition bg-[#d88728] hover:bg-[#df8e31] text-white"
-      >
-        {loading ? "Loading..." : "Go Back Home"}
+      >Go Back Home
       </button>
     </div>
   </div>
