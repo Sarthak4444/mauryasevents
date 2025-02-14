@@ -1,8 +1,11 @@
 import React from 'react'
 import Link from "next/link"
+import Header from '@/Components/Header'
 
 function page() {
   return (
+    <>
+    <Header />
     <div className="flex flex-col items-center justify-center h-[70vh] bg-white text-black">
     <div className="bg-black p-6 shadow-lg text-center max-w-md m-5">
       <h1 className="text-3xl font-bold text-[#d88728]">
@@ -32,6 +35,7 @@ function page() {
       </button>
     </div>
   </div>
+    </> 
   )
 }
 
