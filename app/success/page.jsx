@@ -1,15 +1,18 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 
-export default function Success() {
+function SuccessComponent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!searchParams) return console.log("No search params");
+    if (!searchParams) {
+      console.log("No search params");
+      return;
+    }
 
     const firstName = searchParams.get("firstName");
     const lastName = searchParams.get("lastName");
@@ -40,19 +43,17 @@ export default function Success() {
         });
 
         if (!response.ok) throw new Error("Failed to send data");
-        
-        const result = await response.json();
+
+        await response.json();
         router.push("/payment-successful");
       } catch (error) {
         console.error(error);
-        router.push("/cancel");
-      } finally {
-        setLoading(false);
+        router.push("/payment-failed");
       }
     };
 
     sendRequest();
-  }, []);
+  }, [searchParams, router]);
 
   return (
     <div className="h-screen w-screen flex justify-center items-center bg-black">
@@ -60,5 +61,13 @@ export default function Success() {
         <div className="w-16 h-16 border-4 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
       )}
     </div>
+  );
+}
+
+export default function Success() {
+  return (
+    <Suspense fallback={<div className="h-screen w-screen flex justify-center items-center bg-black">Loading...</div>}>
+      <SuccessComponent />
+    </Suspense>
   );
 }
