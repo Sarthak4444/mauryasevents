@@ -3,8 +3,8 @@ import Link from "next/link";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import Image from "next/image";
-import HeartR from "./HeartR.png";
-import HeartL from "./HeartL.png";
+// import HeartR from "./HeartR.png";
+// import HeartL from "./HeartL.png";
 import Item from "./../Components/Item.png";
 import React, { useState, useRef } from "react";
 import { loadStripe } from "@stripe/stripe-js";
@@ -105,13 +105,13 @@ export default function Home() {
           <p className="text-3xl md:text-4xl tracking-wide font-bold">
             <span className="relative inline-block">
               One dish.
-              <Image
+              {/* <Image
                 src={HeartR}
                 alt="Heart"
                 width={100}
                 height={100}
                 className="absolute top-1/2 translate-y-[-85%] left-full -ml-12 -z-10"
-              />
+              /> */}
             </span>
             One drink. <br className="lg:block hidden" />
             One unforgettable <br className="lg:block hidden" /> moment at a
@@ -163,13 +163,13 @@ export default function Home() {
           <div className="flex flex-col justify-start gap-6 w-full md:w-1/2 relative">
   <p className="text-xl tracking-wide font-bold relative inline-block">
     Garden of Love Champagne
-    <Image
+    {/* <Image
       src={HeartL}
       alt="Heart"
       width={100} 
       height={100}
       className="absolute top-1/2 translate-y-[-70%] left-full -ml-32 -z-10"
-    />
+    /> */}
   </p>
   <p>
     A house made Champagne / sparkling wine “Garden of Love” A surprising blend,
