@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Change the color of the calendar icon */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(58%) sepia(70%) saturate(500%) hue-rotate(30deg);
+    cursor: pointer;
+  }
+  
+  /* Remove the default arrow in some browsers */
+  input[type="date"]::-webkit-inner-spin-button,
+  input[type="date"]::-webkit-clear-button {
+    display: none;
+  }
+  
