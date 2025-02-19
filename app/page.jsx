@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import Image from "next/image";
@@ -7,11 +8,11 @@ import Image from "next/image";
 // import HeartL from "./HeartL.png";
 import Item from "./../Components/Item.png";
 import React, { useState, useRef } from "react";
-import { loadStripe } from "@stripe/stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-);
+// const stripePromise = loadStripe(
+//   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+// );
 
 export default function Home() {
   const [firstName, setFirstName] = useState("");
@@ -24,6 +25,8 @@ export default function Home() {
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const router = useRouter();
 
   const sectionRef = useRef(null);
   const handleScrollToSection = () => {
@@ -68,33 +71,48 @@ export default function Home() {
     setLoading(true);
     setError("");
 
-    const stripe = await stripePromise;
-    try {
-      const response = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          phone,
-          people,
-          date,
-          time,
-          note,
-        }),
-      });
+    // const stripe = await stripePromise;
+    // try {
+    //   const response = await fetch("/api/checkout", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({
+    //       firstName,
+    //       lastName,
+    //       email,
+    //       phone,
+    //       people,
+    //       date,
+    //       time,
+    //       note,
+    //     }),
+    //   });
 
-      const data = await response.json();
-      if (data.sessionId) {
-        stripe.redirectToCheckout({ sessionId: data.sessionId });
-      }
+    //   const data = await response.json();
+    //   // if (data.sessionId) {
+    //   //   stripe.redirectToCheckout({ sessionId: data.sessionId });
+    //   // }
 
-      setLoading(false);
-    } catch (error) {
-      setError(error.message);
-      setLoading(false);
-    }
+    //   setLoading(false);
+    // } catch (error) {
+    //   setError(error.message);
+    //   setLoading(false);
+    // }
+
+    const success_url = `${
+      process.env.NEXT_PUBLIC_SITE_URL
+    }/success?firstName=${encodeURIComponent(
+      firstName
+    )}&lastName=${encodeURIComponent(lastName)}&email=${encodeURIComponent(
+      email
+    )}&phone=${encodeURIComponent(phone)}&people=${encodeURIComponent(
+      people
+    )}&date=${encodeURIComponent(date)}&time=${encodeURIComponent(
+      time
+    )}&note=${encodeURIComponent(note)}`;
+
+    router.push(success_url);
+    setLoading(false);
   };
 
   return (
@@ -118,9 +136,9 @@ export default function Home() {
             time.
           </p>
           <p className="text-lg tracking-wide md:text-xl">
-            This <span className="text-red-500">Valentine's Day,</span> let
-            Maurya's curate your perfect evening. Our special menu and
-            handcrafted cocktails are designed to create lasting memories.
+            Find your perfect pairing at Maurya's. Our curated menu and
+            handcrafted cocktails are designed for{" "}
+            <span className="text-red-500">unforgettable moments.</span>
           </p>
           <button
             onClick={handleScrollToSection}
@@ -131,26 +149,19 @@ export default function Home() {
         </div>
 
         <div className="md:w-1/2 w-full md:my-0 my-10">
-          <Image
-            src={Item}
-            alt="food"
-            width={500}
-            height={500}
-          />
+          <Image src={Item} alt="food" width={500} height={500} />
         </div>
       </section>
       <section className="h-fit max-w-[1300px] mx-auto md:p-20 p-6 pb-10 pt-4">
         <div className="flex flex-col md:flex-row gap-10 mb-4">
           <div className="flex flex-col gap-6 w-full md:w-1/2">
             <p className="text-xl tracking-wide font-bold">
-              Welcome to Maurya’s Valentine dining experience!
+              Welcome to Maurya’s dining experience!
             </p>
             <p>
-              Experience the artistry of our culinary team this Valentine's Day
-              with a specially curated 4-course menu. Savor handcrafted dishes,
-              sip on our house made Champagne, and indulge in expertly mixed
-              cocktails. Every detail is crafted with passion, creating perfect
-              setting for romance.
+              Unwind and savor the artistry of Maurya's. Our specially curated
+              four-course menu, house-made sparkling wine, and expertly mixed
+              cocktails offer an escape from the ordinary.
             </p>
             <p>
               Join this culinary experience for just $85 per person. <br />{" "}
@@ -161,31 +172,32 @@ export default function Home() {
             </p>
           </div>
           <div className="flex flex-col justify-start gap-6 w-full md:w-1/2 relative">
-  <p className="text-xl tracking-wide font-bold relative inline-block">
-    Garden of Love Champagne
-    {/* <Image
+            <p className="text-xl tracking-wide font-bold relative inline-block">
+              Garden of Love Champagne
+              {/* <Image
       src={HeartL}
       alt="Heart"
       width={100} 
       height={100}
       className="absolute top-1/2 translate-y-[-70%] left-full -ml-32 -z-10"
     /> */}
-  </p>
-  <p>
-    A house made Champagne / sparkling wine “Garden of Love” A surprising blend,
-    a garden’s own art, a welcome gesture, enchanting the heart. “Tomato & Grape”.
-    Raise your glass to love and let the ‘‘Garden of Love’’ Champagne surprise your senses.
-    ‘Love has never tasted this good’.
-  </p>
-  <p className="leading-tight">
-    # 4 Course Menu <br /> # House made champagne / sparkling wine <br />
-    # Alchemist style cocktails house made <br /> # Zero-proof cocktails "why miss the fun!" <br />
-    <span className="text-red-500">
-    <span className="text-black">#</span> Special dietary options available upon request in advance
-    </span>
-  </p>
-</div>
-
+            </p>
+            <p>
+              Garden of Love: One perfect sip at a time. Our house-made
+              sparkling wine, a surprising blend of grape and tomato, is a
+              garden's own creation. Raise your glass and savor the moment.
+            </p>
+            <p className="leading-tight">
+              # 4 Course Menu <br /> # House made champagne / sparkling wine{" "}
+              <br />
+              # Alchemist style cocktails house made <br /> # Zero-proof
+              cocktails "why miss the fun!" <br />
+              <span className="text-red-500">
+                <span className="text-black">#</span> Special dietary options
+                available upon request in advance
+              </span>
+            </p>
+          </div>
         </div>
         <Link
           href="/menu"
@@ -313,7 +325,7 @@ export default function Home() {
             ></textarea>
           </div>
 
-          <hr className="bg-black mx-auto w-[100%] mb-14 h-[2px]" />
+          {/* <hr className="bg-black mx-auto w-[100%] mb-14 h-[2px]" />
           <div className="bg-orange-100 p-4 border-2 border-[#d88728] mb-10">
             <p className="text-sm">
               A $10 per person non-refundable fee is required to secure your
@@ -326,7 +338,7 @@ export default function Home() {
               effectively refunding the reservation fee and allowing you to
               experience the unique craftsmanship of Maurya’s.
             </p>
-          </div>
+          </div> */}
           <div className="flex items-center mb-10">
             <input
               type="checkbox"
