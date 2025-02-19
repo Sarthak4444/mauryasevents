@@ -115,6 +115,9 @@ export default function Home() {
     setLoading(false);
   };
 
+  const today = new Date().toISOString().split("T")[0];
+  const maxDate = "2025-03-30";
+
   return (
     <div>
       <Header />
@@ -276,20 +279,18 @@ export default function Home() {
             </select>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-            <div>
-              <label className="block text-2xl font-bold">Date</label>
-              <select
-                className="w-full border-2 border-[#d88728] p-3 mt-2"
-                required
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-              >
-                <option value="">Select a date</option>
-                <option value="2025-02-13">13th Feb, 2025</option>
-                <option value="2025-02-14">14th Feb, 2025</option>
-                <option value="2025-02-15">15th Feb, 2025</option>
-              </select>
-            </div>
+          <div>
+      <label className="block text-2xl font-bold">Date</label>
+      <input
+        type="date"
+        className="w-full border-2 border-[#d88728] p-3 mt-2"
+        required
+        value={date}
+        onChange={(e) => setDate(e.target.value)}
+        min={today}
+        max={maxDate}
+      />
+    </div>
 
             <div>
               <label className="block text-2xl font-bold">Time</label>
