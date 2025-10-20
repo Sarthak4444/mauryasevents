@@ -9,17 +9,7 @@ export default function EventsPage() {
   const [error, setError] = useState(null);
   const [passcode, setPasscode] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [filter, setFilter] = useState("all");
-  const [expandedNotes, setExpandedNotes] = useState({});
-
-  const correctPasscode = "140225";
-
-    const toggleNote = (id) => {
-      setExpandedNotes((prev) => ({
-        ...prev,
-        [id]: !prev[id],
-      }));
-    };
+  const correctPasscode = "311025";
 
   const fetchEvents = async () => {
     try {
@@ -45,20 +35,10 @@ export default function EventsPage() {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    const today = moment().startOf("day");
-    let filtered = [...events];
-
-    if (filter === "13th Feb") {
-      filtered = filtered.filter((event) => moment(event.date).isSame("2025-02-13", "day"));
-    } else if (filter === "14th Feb") {
-      filtered = filtered.filter((event) => moment(event.date).isSame("2025-02-14", "day"));
-    } else if (filter === "15th Feb") {
-      filtered = filtered.filter((event) => moment(event.date).isSame("2025-02-15", "day"));
-    }
-
-    filtered.sort((a, b) => moment(a.time, "HH:mm").diff(moment(b.time, "HH:mm"))); // Sort by time
-    setFilteredEvents(filtered);
-  }, [filter, events]);
+    // Sort bookings by creation date (newest first)
+    const sorted = [...events].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    setFilteredEvents(sorted);
+  }, [events]);
 
   const handlePasscodeSubmit = () => {
     if (passcode === correctPasscode) {
@@ -70,47 +50,52 @@ export default function EventsPage() {
 
   return isAuthenticated ? (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">Event List</h1>
-      <div className="mb-4 text-center">
-        <select value={filter} onChange={(e) => setFilter(e.target.value)} className="border px-4 py-2 rounded-lg">
-          <option value="all">All Events</option>
-          <option value="13th Feb">13th Feb</option>
-          <option value="14th Feb">14th Feb</option>
-          <option value="15th Feb">15th Feb</option>
-        </select>
-      </div>
-      {loading && <p className="text-center text-lg">Loading events...</p>}
+      <h1 className="text-3xl font-bold mb-6 text-center">Ticket Bookings</h1>
+      {loading && <p className="text-center text-lg">Loading bookings...</p>}
       {error && <p className="text-center text-red-500 text-lg">{error}</p>}
       {!loading && !error && (
         <div className="overflow-x-auto shadow-lg rounded-lg">
           <table className="min-w-full bg-white border border-gray-200 rounded-lg">
             <thead>
               <tr className="bg-gray-800 text-white text-left">
-                <th className="border px-6 py-3">Name</th>
                 <th className="border px-6 py-3">Email</th>
                 <th className="border px-6 py-3">Phone</th>
-                <th className="border px-6 py-3">People</th>
-                <th className="border px-6 py-3">Date</th>
-                <th className="border px-6 py-3">Time</th>
-                <th className="border px-6 py-3">Note</th>
-                <th className="border px-6 py-3">Gift Cards</th>
+                <th className="border px-6 py-3">Total Tickets</th>
+                <th className="border px-6 py-3">Total Amount</th>
+                <th className="border px-6 py-3">Ticket Holders</th>
+                <th className="border px-6 py-3">Payment Status</th>
+                <th className="border px-6 py-3">Booking Date</th>
               </tr>
             </thead>
             <tbody>
-              {filteredEvents.map((event, index) => (
-                <tr key={event._id} className={`border ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
-                  <td className="border px-6 py-3">{event.firstName} {event.lastName}</td>
-                  <td className="border px-6 py-3">{event.email}</td>
-                  <td className="border px-6 py-3">{event.phone}</td>
-                  <td className="border px-6 py-3">{event.people}</td>
-                  <td className="border px-6 py-3">{event.date}</td>
-                  <td className="border px-6 py-3">{event.time}</td>
-                  <td className="border px-6 py-3 cursor-pointer" onClick={() => toggleNote(event._id)}>
-          {expandedNotes[event._id] || event.note.length <= 20 
-            ? event.note 
-            : `${event.note.substring(0, 20)}...`}
-        </td>
-                  <td className="border px-6 py-3">$15 x {event.people} = ${15 * event.people}</td>
+              {filteredEvents.map((booking, index) => (
+                <tr key={booking._id} className={`border ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
+                  <td className="border px-6 py-3">{booking.email}</td>
+                  <td className="border px-6 py-3">{booking.phone}</td>
+                  <td className="border px-6 py-3">{booking.totalTickets}</td>
+                  <td className="border px-6 py-3">${booking.totalAmount} CAD</td>
+                  <td className="border px-6 py-3">
+                    <div className="max-w-xs">
+                      {booking.ticketHolders.map((holder, holderIndex) => (
+                        <div key={holderIndex} className="mb-2 p-2 bg-gray-100 rounded text-sm">
+                          <div><strong>{holder.firstName} {holder.lastName}</strong></div>
+                          <div>Ticket #{holder.ticketNumber}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </td>
+                  <td className="border px-6 py-3">
+                    <span className={`px-2 py-1 rounded text-xs ${
+                      booking.paymentStatus === 'completed' 
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-red-100 text-red-800'
+                    }`}>
+                      {booking.paymentStatus}
+                    </span>
+                  </td>
+                  <td className="border px-6 py-3">
+                    {moment(booking.createdAt).format('MMM DD, YYYY HH:mm')}
+                  </td>
                 </tr>
               ))}
             </tbody>

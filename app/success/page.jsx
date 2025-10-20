@@ -14,31 +14,25 @@ function SuccessComponent() {
       return;
     }
 
-    const firstName = searchParams.get("firstName");
-    const lastName = searchParams.get("lastName");
     const email = searchParams.get("email");
     const phone = searchParams.get("phone");
-    const people = searchParams.get("people");
-    const date = searchParams.get("date");
-    const time = searchParams.get("time");
-    const note = searchParams.get("note");
+    const tickets = searchParams.get("tickets");
+    const ticketHoldersParam = searchParams.get("ticketHolders");
 
     const sendRequest = async () => {
       try {
+        const ticketHolders = ticketHoldersParam ? JSON.parse(decodeURIComponent(ticketHoldersParam)) : [];
+        
         const response = await fetch("/api/new-event", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            firstName,
-            lastName,
             email,
             phone,
-            people,
-            date,
-            time,
-            note,
+            tickets: parseInt(tickets),
+            ticketHolders,
           }),
         });
 

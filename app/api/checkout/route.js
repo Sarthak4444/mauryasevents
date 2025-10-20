@@ -5,10 +5,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(req) {
   try {
-    const { firstName, lastName, email, phone, people, date, time, note } =
-      await req.json();
-
-    if (note === "") note = "None";
+    const { email, phone, tickets, ticketHolders } = await req.json();
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -17,25 +14,21 @@ export async function POST(req) {
           price_data: {
             currency: "cad",
             product_data: {
-              name: "Reservation Fee",
+              name: "Event Tickets",
             },
-            unit_amount: 1000,
+            unit_amount: 2500, // $25.00 CAD in cents
           },
-          quantity: people,
+          quantity: tickets,
         },
       ],
       mode: "payment",
       success_url: `${
         process.env.NEXT_PUBLIC_SITE_URL
-      }/success?firstName=${encodeURIComponent(
-        firstName
-      )}&lastName=${encodeURIComponent(lastName)}&email=${encodeURIComponent(
+      }/success?email=${encodeURIComponent(
         email
-      )}&phone=${encodeURIComponent(phone)}&people=${encodeURIComponent(
-        people
-      )}&date=${encodeURIComponent(date)}&time=${encodeURIComponent(
-        time
-      )}&note=${encodeURIComponent(note)}`,
+      )}&phone=${encodeURIComponent(phone)}&tickets=${encodeURIComponent(
+        tickets
+      )}&ticketHolders=${encodeURIComponent(JSON.stringify(ticketHolders))}`,
 
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cancel`,
       customer_email: email,

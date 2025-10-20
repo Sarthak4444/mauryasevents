@@ -2,27 +2,27 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Maurya's Events",
+  title: "Maurya's Events - Halloween",
   description:
-    "Welcome to Maurya's Events, explore our menu, reserve a table, and enjoy an unforgettable dining experience.",
+    "Welcome to Maurya's Events - Halloween, get your tickets now!",
   keywords:
-    "restaurant, dining, fine dining, family dining, tapas, cocktails, champagne, beer, beers, brewery, best cocktail bar, kamloops, mixology, best restaurant, Maurya's, food and drinks, table reservations",
+    "halloween, tickets, events, maurya's, restaurant, dining, fine dining, family dining, tapas, cocktails, champagne, beer, beers, brewery, best cocktail bar, kamloops, mixology, best restaurant, Maurya's, food and drinks, table reservations",
   openGraph: {
-    title: "Maurya's Events",
+    title: "Maurya's Events - Halloween",
     description:
-      "One dish. One drink. One unforgettable moment at a time.",
+      "Welcome to Maurya's Events - Halloween, get your tickets now!",
     url: "https://www.mauryasevents.com",
-    siteName: "Maurya's Events",
+    siteName: "Maurya's Events - Halloween",
     locale: "en_US",
     type: "website",
-    images: [
-      {
-        url: "https://mauryasevents.com/Item.png",
-        width: 800,
-        height: 600,
-        alt: "Maurya's Events",
-      },
-    ],  
+    // images: [
+    //   {
+    //     url: "https://mauryasevents.com/Item.png",
+    //     width: 800,
+    //     height: 600,
+    //     alt: "Maurya's Events - Halloween",
+    //   },
+    // ],  
   },
 };
 

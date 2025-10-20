@@ -1,8 +1,12 @@
 import mongoose from 'mongoose';
 
-const BookingSchema = new mongoose.Schema({
+const TicketHolderSchema = new mongoose.Schema({
   firstName: { type: String, required: true, trim: true },
   lastName: { type: String, required: true, trim: true },
+  ticketNumber: { type: String, required: true, unique: true },
+});
+
+const BookingSchema = new mongoose.Schema({
   email: { 
     type: String, 
     required: true, 
@@ -14,10 +18,10 @@ const BookingSchema = new mongoose.Schema({
     required: true, 
     trim: true, 
   },
-  people: { type: Number, required: true, min: 1 },
-  date: { type: String, required: true, trim: true },
-  time: { type: String, required: true, trim: true },
-  note: { type: String, trim: true },
+  ticketHolders: [TicketHolderSchema],
+  totalTickets: { type: Number, required: true },
+  totalAmount: { type: Number, required: true },
+  paymentStatus: { type: String, default: 'completed' },
 }, { timestamps: true });
 
 const Booking = mongoose.connection.models.Booking || mongoose.model('Booking', BookingSchema);
