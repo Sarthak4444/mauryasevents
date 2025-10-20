@@ -117,7 +117,7 @@ export default function Home() {
             </h1>
             <div className="mb-6">
               <p className="text-xl md:text-2xl font-semibold text-[#d88728] mb-2">
-                October 31st, 2024
+                October 31st, 2025
               </p>
               <p className="text-lg text-gray-600">
                 Join us for a spooktacular night of themed cocktails, music, and unforgettable vibes
