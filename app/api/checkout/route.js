@@ -14,9 +14,10 @@ export async function POST(req) {
           price_data: {
             currency: "cad",
             product_data: {
-              name: "Event Tickets",
+              name: "Halloween Party Tickets",
+              description: "Tickets for Halloween Night Party at Maurya's (includes 5% GST)",
             },
-            unit_amount: 2500, // $25.00 CAD in cents
+            unit_amount: 2625, // $26.25 CAD in cents ($25 + 5% GST)
           },
           quantity: tickets,
         },
@@ -29,7 +30,6 @@ export async function POST(req) {
       )}&phone=${encodeURIComponent(phone)}&tickets=${encodeURIComponent(
         tickets
       )}&ticketHolders=${encodeURIComponent(JSON.stringify(ticketHolders))}`,
-
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/cancel`,
       customer_email: email,
     });

@@ -1,5 +1,4 @@
 "use client";
-import { useRouter } from "next/navigation";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import React, { useState } from "react";
@@ -16,8 +15,6 @@ export default function Home() {
   const [ticketHolders, setTicketHolders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-      
-  const router = useRouter();
 
   const formatPhoneNumber = (value) => {
     let numbers = value.replace(/\D/g, "");
@@ -112,34 +109,38 @@ export default function Home() {
       <section className="max-w-[1300px] mx-auto md:px-20 px-6 pt-10 md:pt-16">
         <div className="bg-white border-2 border-[#d88728] rounded-lg p-6 md:p-10 shadow-lg">
           <div className="text-center">
-            <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-4">
-              Halloween Party at Maurya's
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-4">
+              Halloween Night Party
             </h1>
+            {/* <div className="flex justify-center my-4">
+              <img
+                src="/Halloween.png"
+                alt="Halloween Party Illustration"
+                className="w-full max-w-md rounded-lg shadow-xl"
+              />
+            </div> */}
             <div className="mb-6">
               <p className="text-xl md:text-2xl font-semibold text-[#d88728] mb-2">
-                October 31st, 2025
+                Oct 31st | 165 Victoria Street, Kamloops
               </p>
-              <p className="text-lg text-gray-600">
-                Join us for a spooktacular night of themed cocktails, music, and unforgettable vibes
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Join us for a night filled with fun, live music, costume contest, neon face painting, trivia & bingo, games & prizes, plus spooky food & drinks!
               </p>
             </div>
             <div className="flex flex-wrap justify-center items-center gap-4 mb-6">
-              <div className="bg-[#d88728] text-white px-6 py-3 rounded-lg font-semibold text-lg">
+              <a href="#booking-form" className="bg-[#d88728] text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-[#c07a24] transition-colors">
                 $25 CAD per ticket
-              </div>
-              <div className="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold text-lg border-2 border-gray-300">
-                Limited availability
+              </a>
+              <div className="bg-red-100 text-red-700 px-6 py-3 rounded-lg font-semibold text-lg border-2 border-red-400">
+                Limited Seating
               </div>
             </div>
-            <p className="text-gray-600 text-base">
-              Secure your spot today and celebrate Halloween at Maurya's Craft Bar & Kitchen
-            </p>
           </div>
         </div>
       </section>
 
       {/* Form */}
-      <section className="h-fit max-w-[1300px] mx-auto md:p-20 p-6 justify-center items-center mb-8">
+      <section id="booking-form" className="h-fit max-w-[1300px] mx-auto md:p-20 p-6 justify-center items-center mb-8">
         <form onSubmit={handleSubmit} className="mx-auto max-w-3xl">
           <div className="mb-10">
             <label className="block text-2xl font-bold">E-mail</label>

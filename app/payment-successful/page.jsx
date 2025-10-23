@@ -11,12 +11,11 @@ function Page() {
       <div className="flex flex-col items-center justify-center h-[70vh] bg-white text-black">
         <div className="bg-black p-6 shadow-lg text-center max-w-md m-5">
           <h1 className="text-3xl font-bold text-[#d88728]">
-            Payment Successful!
+            Successful!
           </h1>
           <p className="mt-4 text-gray-300">
-            Thank you for your payment. Your payment has been confirmed.
-            Please check your email for further details. We will look forward to
-            serving you soon. <br /> <br />
+            Happy Halloween! Please check your email for further details. See you at the venue 165 Victoria St!
+            <br /> <br />
             If you have any questions please feel free to contact us at{" "}
             <Link className="text-blue-500" href="tel:2503774969">
               250 377 4969
