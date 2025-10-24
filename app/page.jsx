@@ -105,24 +105,16 @@ export default function Home() {
   return (
     <div>
       <Header />
-      {/* Hero */}
-      <section className="max-w-[1300px] mx-auto md:px-20 px-6 pt-10 md:pt-16">
-        <div className="bg-white border-2 border-[#d88728] rounded-lg p-6 md:p-10 shadow-lg">
+      <section className="max-w-[1300px] mx-auto md:px-20 px-6 pt-4 md:pt-6">
           <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-4">
-              Halloween Night Party
-            </h1>
-            {/* <div className="flex justify-center my-4">
+            <div className="flex justify-center mb-8">
               <img
-                src="/Halloween.png"
+                src="/Halloween.jpg"
                 alt="Halloween Party Illustration"
                 className="w-full max-w-md rounded-lg shadow-xl"
               />
-            </div> */}
-            <div className="mb-6">
-              <p className="text-xl md:text-2xl font-semibold text-[#d88728] mb-2">
-                Oct 31st | 165 Victoria Street, Kamloops
-              </p>
+            </div>
+            <div className="mb-8">
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                 Join us for a night filled with fun, live music, costume contest, neon face painting, trivia & bingo, games & prizes, plus spooky food & drinks!
               </p>
@@ -136,7 +128,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-        </div>
       </section>
 
       {/* Form */}
