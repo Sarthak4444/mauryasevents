@@ -55,7 +55,7 @@ export async function POST(req) {
       }))
     );
 
-    const totalAmount = tickets * 26.25; // $26.25 per ticket (includes 5% GST)
+    const totalAmount = tickets * 47.25; // $47.25 per ticket (includes 5% GST)
 
     const newBooking = new Booking({
       email,

@@ -14,10 +14,10 @@ export async function POST(req) {
           price_data: {
             currency: "cad",
             product_data: {
-              name: "Halloween Party Tickets",
-              description: "Tickets for Halloween Night Party at Maurya's (includes 5% GST)",
+              name: "New Year Party Tickets",
+              description: "Tickets for New Year Night Party at Maurya's (includes 5% GST)",
             },
-            unit_amount: 2625, // $26.25 CAD in cents ($25 + 5% GST)
+            unit_amount: 4725, // $47.25 CAD in cents ($45 + 5% GST)
           },
           quantity: tickets,
         },

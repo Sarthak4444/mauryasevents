@@ -109,19 +109,19 @@ export default function Home() {
           <div className="text-center">
             <div className="flex justify-center mb-8">
               <img
-                src="/Halloween.jpg"
-                alt="Halloween Party Illustration"
+                src="/newyear.jpg"
+                alt="New Year Party Illustration"
                 className="w-full max-w-md rounded-lg shadow-xl"
               />
             </div>
             <div className="mb-8">
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                Join us for a night filled with fun, live music, costume contest, neon face painting, trivia & bingo, games & prizes, plus spooky food & drinks!
+              Join us for an unforgettable evening a night full of good food, drink, 2026 countdown, music, people, games and prizes! 🍾✨  <br /> <br />  Your ticket includes access to a special buffet, one complimentary drink (alcoholic or zero-proof), and full entry to a night of games, prizes, and dancing.
               </p>
             </div>
             <div className="flex flex-wrap justify-center items-center gap-4 mb-6">
               <a href="#booking-form" className="bg-[#d88728] text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-[#c07a24] transition-colors">
-                $25 CAD per ticket
+                $45 CAD per ticket
               </a>
               <div className="bg-red-100 text-red-700 px-6 py-3 rounded-lg font-semibold text-lg border-2 border-red-400">
                 Limited Seating

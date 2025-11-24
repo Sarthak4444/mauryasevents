@@ -14,7 +14,7 @@ function Page() {
             Successful!
           </h1>
           <p className="mt-4 text-gray-300">
-            Happy Halloween! Please check your email for further details. See you at the venue 165 Victoria St!
+            Please check your email for further details. See you at the venue 165 Victoria St!
             <br /> <br />
             If you have any questions please feel free to contact us at{" "}
             <Link className="text-blue-500" href="tel:2503774969">
