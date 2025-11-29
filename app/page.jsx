@@ -104,7 +104,7 @@ export default function Home() {
 
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <section className="max-w-[1300px] mx-auto md:px-20 px-6 pt-4 md:pt-6">
           <div className="text-center">
             <div className="flex justify-center mb-8">
