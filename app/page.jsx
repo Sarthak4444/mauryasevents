@@ -129,8 +129,7 @@ export default function Home() {
             </div>
             <div className="mb-8">
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-             Surge Pricing in Action! <br> Every 25 tickets sold, the price climbs higher! Grab yours early to lock in the best deal:<br>Tickets 1–25: $45<br>Tickets 26–50: $50<br>
-Tickets 51+: $55<br>Don’t wait—beat the surge and secure your spot before the price jumps! 
+             Surge Pricing in Action! <br /> Every 25 tickets sold, the price climbs higher! Grab yours early to lock in the best deal:<br />Tickets 1–25: $45<br />Tickets 26–50: $50<br />Tickets 51+: $55<br />Don’t wait—beat the surge and secure your spot before the price jumps! 
               </p>
             </div>
           </div>
