@@ -12,8 +12,15 @@ function GiftCardContent() {
   const [activeTab, setActiveTab] = useState("buy"); // buy or check
   const [buyerName, setBuyerName] = useState("");
   const [buyerEmail, setBuyerEmail] = useState("");
-  const [isGift, setIsGift] = useState(false);
-  const [cards, setCards] = useState([{ recipientName: "", recipientEmail: "", amount: "", personalMessage: "" }]);
+  const [buyerEmailConfirm, setBuyerEmailConfirm] = useState("");
+  const [cards, setCards] = useState([{ 
+    isForSelf: true, 
+    recipientName: "", 
+    recipientEmail: "", 
+    recipientEmailConfirm: "",
+    amount: "", 
+    personalMessage: "" 
+  }]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showSummary, setShowSummary] = useState(false);
@@ -31,9 +38,22 @@ function GiftCardContent() {
     }
   }, [searchParams]);
 
+  // Prevent paste on email confirmation fields
+  const handlePaste = (e) => {
+    e.preventDefault();
+    return false;
+  };
+
   const addCard = () => {
     if (cards.length < 50) {
-      setCards([...cards, { recipientName: "", recipientEmail: "", amount: "", personalMessage: "" }]);
+      setCards([...cards, { 
+        isForSelf: true, 
+        recipientName: "", 
+        recipientEmail: "", 
+        recipientEmailConfirm: "",
+        amount: "", 
+        personalMessage: "" 
+      }]);
     }
   };
 
@@ -47,6 +67,13 @@ function GiftCardContent() {
   const updateCard = (index, field, value) => {
     const newCards = [...cards];
     newCards[index][field] = value;
+    // Reset recipient fields when switching to "For Myself"
+    if (field === "isForSelf" && value === true) {
+      newCards[index].recipientName = "";
+      newCards[index].recipientEmail = "";
+      newCards[index].recipientEmailConfirm = "";
+      newCards[index].personalMessage = "";
+    }
     setCards(newCards);
   };
 
@@ -68,17 +95,25 @@ function GiftCardContent() {
   };
 
   const validateCards = () => {
+    // Validate buyer email confirmation
+    if (buyerEmail !== buyerEmailConfirm) {
+      return "Your email addresses do not match. Please check and try again.";
+    }
+    
     for (let i = 0; i < cards.length; i++) {
       const card = cards[i];
       if (!card.amount || parseFloat(card.amount) < 10 || parseFloat(card.amount) > 500) {
         return `Card ${i + 1}: Amount must be between $10 and $500`;
       }
-      if (isGift) {
+      if (!card.isForSelf) {
         if (!card.recipientName.trim()) {
           return `Card ${i + 1}: Recipient name is required`;
         }
         if (!card.recipientEmail.trim() || !card.recipientEmail.includes("@")) {
           return `Card ${i + 1}: Valid recipient email is required`;
+        }
+        if (card.recipientEmail !== card.recipientEmailConfirm) {
+          return `Card ${i + 1}: Recipient email addresses do not match`;
         }
       }
     }
@@ -95,16 +130,6 @@ function GiftCardContent() {
       return;
     }
     
-    // Fill in recipient info for self-purchase
-    if (!isGift) {
-      const updatedCards = cards.map(card => ({
-        ...card,
-        recipientName: buyerName,
-        recipientEmail: buyerEmail
-      }));
-      setCards(updatedCards);
-    }
-    
     setShowSummary(true);
   };
 
@@ -117,11 +142,15 @@ function GiftCardContent() {
       
       // Prepare cards with proper recipient info
       const finalCards = cards.map(card => ({
-        ...card,
-        recipientName: isGift ? card.recipientName : buyerName,
-        recipientEmail: isGift ? card.recipientEmail : buyerEmail,
-        amount: parseFloat(card.amount)
+        recipientName: card.isForSelf ? buyerName : card.recipientName,
+        recipientEmail: card.isForSelf ? buyerEmail : card.recipientEmail,
+        amount: parseFloat(card.amount),
+        personalMessage: card.personalMessage || "",
+        isForSelf: card.isForSelf
       }));
+
+      // Check if any card is a gift
+      const hasGiftCards = cards.some(card => !card.isForSelf);
 
       const response = await fetch("/api/giftcard/checkout", {
         method: "POST",
@@ -130,7 +159,7 @@ function GiftCardContent() {
           buyerName,
           buyerEmail,
           cards: finalCards,
-          isGift
+          isGift: hasGiftCards
         }),
       });
 
@@ -234,9 +263,9 @@ function GiftCardContent() {
                   <div className="flex items-center gap-4">
                     <div className="text-3xl">🎁</div>
                     <div>
-                      <h3 className="font-bold text-lg">Bonus Card Offer!</h3>
+                      <h3 className="font-bold text-lg">Bonus Card Offer! <span className="text-sm opacity-90"> Maximum bonus $20</span></h3>
                       <p className="text-sm opacity-90">
-                        Buy $50+ and get a <strong>$10 Bonus Card</strong> • Buy $100+ and get a <strong>$20 Bonus Card</strong>
+                        Buy $50 and get a <strong>$10 Bonus Card</strong> <br /> Buy $100 and get a <strong>$20 Bonus Card</strong> 
                       </p>
                     </div>
                   </div>
@@ -247,7 +276,7 @@ function GiftCardContent() {
                   <div className="mb-8">
                     <h2 className="text-2xl font-bold mb-4 text-gray-800">Your Information</h2>
                     <div className="grid md:grid-cols-2 gap-4">
-                      <div>
+                      <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-gray-700 mb-1">Your Name *</label>
                         <input
                           type="text"
@@ -269,37 +298,28 @@ function GiftCardContent() {
                           required
                         />
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Gift Toggle */}
-                  <div className="mb-8">
-                    <h2 className="text-2xl font-bold mb-4 text-gray-800">Who is this for?</h2>
-                    <div className="flex gap-4">
-                      <button
-                        type="button"
-                        onClick={() => setIsGift(false)}
-                        className={`flex-1 p-4 rounded-xl border-2 transition-all ${
-                          !isGift
-                            ? "border-[#d88728] bg-[#fef9f3] text-[#d88728]"
-                            : "border-gray-200 hover:border-gray-300"
-                        }`}
-                      >
-                        <i className="fas fa-user text-2xl mb-2"></i>
-                        <p className="font-semibold">For Myself</p>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setIsGift(true)}
-                        className={`flex-1 p-4 rounded-xl border-2 transition-all ${
-                          isGift
-                            ? "border-[#d88728] bg-[#fef9f3] text-[#d88728]"
-                            : "border-gray-200 hover:border-gray-300"
-                        }`}
-                      >
-                        <i className="fas fa-gift text-2xl mb-2"></i>
-                        <p className="font-semibold">As a Gift</p>
-                      </button>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Your Email *</label>
+                        <input
+                          type="email"
+                          value={buyerEmailConfirm}
+                          onChange={(e) => setBuyerEmailConfirm(e.target.value)}
+                          onPaste={handlePaste}
+                          className={`w-full border-2 rounded-lg p-3 focus:outline-none transition-colors ${
+                            buyerEmailConfirm && buyerEmail !== buyerEmailConfirm 
+                              ? "border-red-400 focus:border-red-500" 
+                              : "border-gray-200 focus:border-[#d88728]"
+                          }`}
+                          placeholder="Re-enter your email"
+                          required
+                        />
+                        {buyerEmailConfirm && buyerEmail !== buyerEmailConfirm && (
+                          <p className="text-red-500 text-sm mt-1">
+                            <i className="fas fa-exclamation-circle mr-1"></i>
+                            Emails do not match
+                          </p>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -338,6 +358,39 @@ function GiftCardContent() {
                               <i className="fas fa-trash mr-1"></i> Remove
                             </button>
                           )}
+                        </div>
+
+                        {/* Per-card recipient toggle */}
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            This card is for:
+                          </label>
+                          <div className="flex gap-3">
+                            <button
+                              type="button"
+                              onClick={() => updateCard(index, "isForSelf", true)}
+                              className={`flex-1 py-3 px-4 rounded-lg border-2 font-medium transition-all flex items-center justify-center gap-2 ${
+                                card.isForSelf
+                                  ? "border-[#d88728] bg-[#d88728] text-white"
+                                  : "border-gray-200 hover:border-[#d88728] text-gray-700"
+                              }`}
+                            >
+                              <i className="fas fa-user"></i>
+                              Myself
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => updateCard(index, "isForSelf", false)}
+                              className={`flex-1 py-3 px-4 rounded-lg border-2 font-medium transition-all flex items-center justify-center gap-2 ${
+                                !card.isForSelf
+                                  ? "border-[#d88728] bg-[#d88728] text-white"
+                                  : "border-gray-200 hover:border-[#d88728] text-gray-700"
+                              }`}
+                            >
+                              <i className="fas fa-gift"></i>
+                              A Friend
+                            </button>
+                          </div>
                         </div>
 
                         {/* Amount Selection */}
@@ -382,47 +435,77 @@ function GiftCardContent() {
                           )}
                         </div>
 
-                        {/* Recipient Info (only for gifts) */}
-                        {isGift && (
-                          <div className="grid md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Recipient Name *
-                              </label>
-                              <input
-                                type="text"
-                                value={card.recipientName}
-                                onChange={(e) => updateCard(index, "recipientName", e.target.value)}
-                                className="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:border-[#d88728]"
-                                placeholder="Friend's name"
-                                required={isGift}
-                              />
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Recipient Email *
-                              </label>
-                              <input
-                                type="email"
-                                value={card.recipientEmail}
-                                onChange={(e) => updateCard(index, "recipientEmail", e.target.value)}
-                                className="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:border-[#d88728]"
-                                placeholder="friend@example.com"
-                                required={isGift}
-                              />
-                            </div>
-                            <div className="md:col-span-2">
-                              <label className="block text-sm font-medium text-gray-700 mb-1">
-                                Personal Message (Optional)
-                              </label>
-                              <textarea
-                                value={card.personalMessage}
-                                onChange={(e) => updateCard(index, "personalMessage", e.target.value)}
-                                className="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:border-[#d88728]"
-                                placeholder="Happy Birthday! Enjoy your meal..."
-                                rows={2}
-                                maxLength={500}
-                              />
+                        {/* Recipient Info (only when card is for a friend) */}
+                        {!card.isForSelf && (
+                          <div className="border-t border-gray-200 pt-4 mt-4">
+                            <p className="text-sm text-[#d88728] mb-3">
+                              <i className="fas fa-info-circle mr-1"></i>
+                              This card will be emailed to your friend
+                            </p>
+                            <div className="grid md:grid-cols-2 gap-4 mb-4">
+                              <div className="md:col-span-2">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                  Recipient Name *
+                                </label>
+                                <input
+                                  type="text"
+                                  value={card.recipientName}
+                                  onChange={(e) => updateCard(index, "recipientName", e.target.value)}
+                                  className="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:border-[#d88728]"
+                                  placeholder="Friend's name"
+                                  required={!card.isForSelf}
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                  Recipient Email *
+                                </label>
+                                <input
+                                  type="email"
+                                  value={card.recipientEmail}
+                                  onChange={(e) => updateCard(index, "recipientEmail", e.target.value)}
+                                  className="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:border-[#d88728]"
+                                  placeholder="friend@example.com"
+                                  required={!card.isForSelf}
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                  Confirm Recipient Email *
+                                </label>
+                                <input
+                                  type="email"
+                                  value={card.recipientEmailConfirm}
+                                  onChange={(e) => updateCard(index, "recipientEmailConfirm", e.target.value)}
+                                  onPaste={handlePaste}
+                                  className={`w-full border-2 rounded-lg p-3 focus:outline-none transition-colors ${
+                                    card.recipientEmailConfirm && card.recipientEmail !== card.recipientEmailConfirm 
+                                      ? "border-red-400 focus:border-red-500" 
+                                      : "border-gray-200 focus:border-[#d88728]"
+                                  }`}
+                                  placeholder="Re-enter friend's email"
+                                  required={!card.isForSelf}
+                                />
+                                {card.recipientEmailConfirm && card.recipientEmail !== card.recipientEmailConfirm && (
+                                  <p className="text-red-500 text-sm mt-1">
+                                    <i className="fas fa-exclamation-circle mr-1"></i>
+                                    Emails do not match
+                                  </p>
+                                )}
+                              </div>
+                              <div className="md:col-span-2">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                  Personal Message (Optional)
+                                </label>
+                                <textarea
+                                  value={card.personalMessage}
+                                  onChange={(e) => updateCard(index, "personalMessage", e.target.value)}
+                                  className="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:border-[#d88728]"
+                                  placeholder="Happy Holidays! Enjoy your meal..."
+                                  rows={2}
+                                  maxLength={500}
+                                />
+                              </div>
                             </div>
                           </div>
                         )}
@@ -496,10 +579,12 @@ function GiftCardContent() {
                       </div>
                       <div className="mt-2 p-3 bg-gray-50 rounded-lg">
                         <p className="text-sm">
-                          <strong>For:</strong> {isGift ? card.recipientName : buyerName}
+                          <strong>For:</strong> {card.isForSelf ? buyerName : card.recipientName}
+                          {card.isForSelf && <span className="ml-2 text-xs bg-gray-200 px-2 py-1 rounded">(You)</span>}
+                          {!card.isForSelf && <span className="ml-2 text-xs bg-[#d88728] text-white px-2 py-1 rounded">Gift</span>}
                         </p>
                         <p className="text-sm">
-                          <strong>Email:</strong> {isGift ? card.recipientEmail : buyerEmail}
+                          <strong>Email:</strong> {card.isForSelf ? buyerEmail : card.recipientEmail}
                         </p>
                         {card.personalMessage && (
                           <p className="text-sm text-gray-600 mt-1 italic">
@@ -543,7 +628,9 @@ function GiftCardContent() {
                   <div className="space-y-2 mb-4">
                     {cards.map((card, index) => (
                       <div key={index} className="flex justify-between text-sm">
-                        <span>Gift Card #{index + 1} for {isGift ? card.recipientName : "yourself"}</span>
+                        <span>
+                          Gift Card #{index + 1} for {card.isForSelf ? "yourself" : card.recipientName}
+                        </span>
                         <span>${parseFloat(card.amount).toFixed(2)}</span>
                       </div>
                     ))}
@@ -569,8 +656,8 @@ function GiftCardContent() {
                 <div className="bg-blue-50 text-blue-700 p-4 rounded-lg mb-6">
                   <p className="text-sm">
                     <i className="fas fa-info-circle mr-2"></i>
-                    {isGift
-                      ? "Gift cards will be emailed to the recipients. You'll also receive a confirmation email."
+                    {cards.some(c => !c.isForSelf)
+                      ? "Gift cards will be emailed to the recipients. You'll also receive a confirmation email with all card details."
                       : "Gift cards will be emailed to you after payment."}
                   </p>
                 </div>
@@ -745,4 +832,3 @@ export default function GiftCardPage() {
     </Suspense>
   );
 }
-

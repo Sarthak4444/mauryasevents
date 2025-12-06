@@ -67,11 +67,28 @@ const generateCardHTML = (card, isBonus = false) => {
 
 // Send email to buyer
 const sendBuyerEmail = async (transporter, orderData, allCards) => {
-  const giftCards = allCards.filter(c => !c.isBonus);
+  const purchasedCards = allCards.filter(c => !c.isBonus);
   const bonusCards = allCards.filter(c => c.isBonus);
   
-  const giftCardsHTML = giftCards.map(card => generateCardHTML(card, false)).join('');
+  // Separate cards for self vs gifts
+  const selfCards = purchasedCards.filter(c => c.ownerEmail === orderData.buyerEmail);
+  const giftedCards = purchasedCards.filter(c => c.ownerEmail !== orderData.buyerEmail);
+  
+  const selfCardsHTML = selfCards.map(card => generateCardHTML(card, false)).join('');
   const bonusCardsHTML = bonusCards.map(card => generateCardHTML(card, true)).join('');
+  
+  // Generate summary for gifted cards
+  const giftedSummaryHTML = giftedCards.length > 0 ? `
+    <div style="background: #e8f5e9; padding: 15px; border-radius: 10px; margin: 15px 0;">
+      <p style="margin: 0 0 10px 0; color: #2e7d32;"><strong>✉️ Gifts Sent!</strong></p>
+      ${giftedCards.map(card => `
+        <p style="margin: 5px 0; font-size: 14px; color: #333;">
+          • <strong>$${card.originalAmount}</strong> card sent to <strong>${card.ownerName}</strong> (${card.ownerEmail})
+        </p>
+      `).join('')}
+      <p style="margin: 10px 0 0 0; font-size: 12px; color: #666;">Recipients will receive an email with their card details.</p>
+    </div>
+  ` : '';
   
   const mailOptions = {
     from: process.env.GMAIL_USER,
@@ -86,25 +103,22 @@ const sendBuyerEmail = async (transporter, orderData, allCards) => {
         
         <p style="font-size: 18px;">Dear <strong>${orderData.buyerName}</strong>,</p>
         
-        <p>Thank you for purchasing Maurya's Gift Card${giftCards.length > 1 ? 's' : ''}! ${orderData.isGift ? 'Your gift has been sent to the recipient.' : 'Your card details are below.'}</p>
+        <p>Thank you for purchasing Maurya's Gift Card${purchasedCards.length > 1 ? 's' : ''}!</p>
         
         <div style="background: #f9f9f9; padding: 20px; border-radius: 10px; margin: 20px 0;">
           <h3 style="color: #d88728; margin-top: 0;">Order Summary</h3>
           <p><strong>Order ID:</strong> ${orderData.orderId}</p>
-          <p><strong>Total Cards:</strong> ${giftCards.length}</p>
+          <p><strong>Total Cards:</strong> ${purchasedCards.length}</p>
           <p><strong>Total Amount Paid:</strong> $${orderData.totalAmount.toFixed(2)} CAD</p>
           ${bonusCards.length > 0 ? `<p style="color: #d88728;"><strong>🎉 Bonus Cards Earned:</strong> ${bonusCards.length} (Worth $${bonusCards.reduce((sum, c) => sum + c.originalAmount, 0)} CAD)</p>` : ''}
         </div>
         
-        ${!orderData.isGift ? `
+        ${selfCards.length > 0 ? `
           <h3 style="color: #d88728;">Your Gift Cards</h3>
-          ${giftCardsHTML}
-        ` : `
-          <p style="background: #e8f5e9; padding: 15px; border-radius: 5px; color: #2e7d32;">
-            <strong>✉️ Gift Sent!</strong><br>
-            Your gift card${giftCards.length > 1 ? 's have' : ' has'} been sent to the recipient(s). They will receive an email with their card details.
-          </p>
-        `}
+          ${selfCardsHTML}
+        ` : ''}
+        
+        ${giftedSummaryHTML}
         
         ${bonusCards.length > 0 ? `
           <h3 style="color: #d88728;">🎁 Your Bonus Cards</h3>
