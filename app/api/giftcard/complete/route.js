@@ -130,10 +130,10 @@ const sendBuyerEmail = async (transporter, orderData, allCards) => {
           <h4 style="margin-top: 0; color: #d88728;">How to Redeem</h4>
           <ol style="margin: 0; padding-left: 20px;">
             <li>Visit Maurya's Craft Bar & Kitchen</li>
-            <li>Present the card code when paying</li>
-            <li>The amount will be deducted from your bill</li>
+            <li>Present the card code and email when paying</li>
+            <li>The amount will be deducted from your gift card when the bill is applied</li>
           </ol>
-          <p style="margin-bottom: 0; font-size: 12px; color: #666;">Cards can be used for multiple visits until the balance is exhausted.</p>
+          <p style="margin-bottom: 0; font-size: 12px; color: #666;">Cards can be used for multiple visits until the balance is zero.</p>
         </div>
         
         <div style="border-top: 2px solid #d88728; padding-top: 15px; margin-top: 30px;">

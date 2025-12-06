@@ -38,8 +38,8 @@ function GiftCardContent() {
     }
   }, [searchParams]);
 
-  // Prevent paste on email confirmation fields
-  const handlePaste = (e) => {
+  // Prevent paste and drop on email confirmation fields
+  const preventCopyPaste = (e) => {
     e.preventDefault();
     return false;
   };
@@ -265,7 +265,7 @@ function GiftCardContent() {
                     <div>
                       <h3 className="font-bold text-lg">Bonus Card Offer! <span className="text-sm opacity-90"> Maximum bonus $20</span></h3>
                       <p className="text-sm opacity-90">
-                        Buy $50 and get a <strong>$10 Bonus Card</strong> <br /> Buy $100 and get a <strong>$20 Bonus Card</strong> 
+                      • Buy $50 and get a <strong>$10 Bonus Card</strong> <br /> • Buy $100 and get a <strong>$20 Bonus Card</strong> 
                       </p>
                     </div>
                   </div>
@@ -304,7 +304,10 @@ function GiftCardContent() {
                           type="email"
                           value={buyerEmailConfirm}
                           onChange={(e) => setBuyerEmailConfirm(e.target.value)}
-                          onPaste={handlePaste}
+                          onPaste={preventCopyPaste}
+                          onDrop={preventCopyPaste}
+                          onCopy={preventCopyPaste}
+                          autoComplete="off"
                           className={`w-full border-2 rounded-lg p-3 focus:outline-none transition-colors ${
                             buyerEmailConfirm && buyerEmail !== buyerEmailConfirm 
                               ? "border-red-400 focus:border-red-500" 
@@ -477,7 +480,10 @@ function GiftCardContent() {
                                   type="email"
                                   value={card.recipientEmailConfirm}
                                   onChange={(e) => updateCard(index, "recipientEmailConfirm", e.target.value)}
-                                  onPaste={handlePaste}
+                                  onPaste={preventCopyPaste}
+                                  onDrop={preventCopyPaste}
+                                  onCopy={preventCopyPaste}
+                                  autoComplete="off"
                                   className={`w-full border-2 rounded-lg p-3 focus:outline-none transition-colors ${
                                     card.recipientEmailConfirm && card.recipientEmail !== card.recipientEmailConfirm 
                                       ? "border-red-400 focus:border-red-500" 
