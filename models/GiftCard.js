@@ -116,10 +116,9 @@ const GiftCardSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-// Index for faster queries
+// Index for faster queries (code index already created by unique: true)
 GiftCardSchema.index({ ownerEmail: 1 });
 GiftCardSchema.index({ buyerEmail: 1 });
-GiftCardSchema.index({ code: 1 });
 GiftCardSchema.index({ orderId: 1 });
 
 const GiftCard = mongoose.connection.models.GiftCard || mongoose.model('GiftCard', GiftCardSchema);
