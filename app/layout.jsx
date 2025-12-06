@@ -2,17 +2,17 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Maurya's Events - New Year",
+  title: "Maurya's Events",
   description:
-    "Welcome to Maurya's Events - New Year, get your tickets now!",
+    "Welcome to Maurya's Events, get your tickets now!",
   keywords:
     "new year, tickets, events, maurya's, restaurant, dining, fine dining, family dining, tapas, cocktails, champagne, beer, beers, brewery, best cocktail bar, kamloops, mixology, best restaurant, Maurya's, food and drinks, table reservations",
   openGraph: {
-    title: "Maurya's Events - New Year",
+    title: "Maurya's Events",
     description:
-      "Welcome to Maurya's Events - New Year, get your tickets now!",
+      "Welcome to Maurya's Events, get your tickets now!",
     url: "https://www.mauryasevents.com",
-    siteName: "Maurya's Events - New Year",
+    siteName: "Maurya's Events",
     locale: "en_US",
     type: "website",
     // images: [
