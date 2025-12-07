@@ -519,6 +519,13 @@ function GiftCardContent() {
                     ))}
                   </div>
 
+                  <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-900 p-4 rounded-lg mb-6 flex items-start">
+                    <i className="fas fa-info-circle mr-3 mt-1 text-yellow-600"></i>
+                    <div>
+                      <span className="font-bold uppercase">Important:</span> Gift cards are <span className="font-bold">only applicable for Dine-In and Takeout</span> orders.
+                    </div>
+                  </div>
+
                   {/* Order Summary Preview */}
                   <div className="bg-[#1a1a1a] text-white rounded-xl p-6 mb-6">
                     <h3 className="text-lg font-bold mb-3">Order Preview</h3>

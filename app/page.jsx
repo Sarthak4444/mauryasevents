@@ -128,7 +128,7 @@ export default function Home() {
               </div>
             </div>
             <div className="mb-8">
-              <div className="text-left max-w-3xl mx-auto">
+              <div className="text-center max-w-3xl mx-auto">
                 <p className="text-lg text-gray-600">
                   <span className="text-2xl font-semibold text-black block">Surge Pricing in Action!</span>
                   Every 25 tickets sold, the price climbs higher! Grab yours early to lock in the best deal:
