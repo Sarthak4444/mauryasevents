@@ -104,12 +104,12 @@ export default function Home() {
 
   return (
     <div>
-      {/* <Header /> */}
+      <Header />
       <section className="max-w-[1300px] mx-auto md:px-20 px-6 pt-4 md:pt-6">
           <div className="text-center">
             <div className="flex justify-center mb-8">
               <img
-                src="/newyear.jpg"
+                src="/PosterNewYear.jpg"
                 alt="New Year Party Illustration"
                 className="w-full max-w-md rounded-lg shadow-xl"
               />
@@ -134,7 +134,7 @@ export default function Home() {
                   Every 25 tickets sold, the price climbs higher! Grab yours early to lock in the best deal:
                   <br />
                   <br />
-                  Tickets 1–25: $45
+                  Tickets 1–25: $45 (ALMOST SOLD OUT!)
                   <br />
                   Tickets 26–50: $50
                   <br />

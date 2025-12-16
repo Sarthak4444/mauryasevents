@@ -11,12 +11,11 @@ function Header() {
       <div className="w-full flex justify-start items-center h-5 mb-5 bg-black py-10 px-10">
         <div className="text-sm my-4 text-black">000000</div> 
            <Link href="/">
-             <img
+             <Image
         src={Logo}
         width={150}
         height={100}
         alt="Logo"
-        style={{ opacity: 0 }}
       />
           </Link>
         </div>
