@@ -117,7 +117,7 @@ export default function Home() {
           </div>
           <div className="mb-8">
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Join us for an unforgettable evening a night full of good food, drink, 2026 countdown, music, people, games and prizes! 🍾✨  <br /> <br /><b> Your ticket includes access to a special buffet and one complimentary drink (alcoholic or zero-proof)</b>
+              Join us for an unforgettable evening a night full of good food, drink, 2026 countdown, music, people, games and prizes! 🍾✨  <br /> <br /><b> Your ticket includes access to a special buffet and one complimentary drink (alcoholic select beer/shot or zero-proof)</b>
             </p>
           </div>
           <div className="flex flex-wrap justify-center items-center gap-4 mb-6">
