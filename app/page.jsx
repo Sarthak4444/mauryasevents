@@ -15,6 +15,7 @@ export default function Home() {
   const [ticketHolders, setTicketHolders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showTerms, setShowTerms] = useState(false);
 
   const formatPhoneNumber = (value) => {
     let numbers = value.replace(/\D/g, "");
@@ -46,7 +47,7 @@ export default function Home() {
   const handleTicketChange = (e) => {
     const numTickets = parseInt(e.target.value);
     setTickets(numTickets);
-    
+
     // Initialize ticket holders array
     const holders = [];
     for (let i = 0; i < numTickets; i++) {
@@ -67,7 +68,7 @@ export default function Home() {
     setError("");
 
     // Validate that all ticket holders have names
-    const allNamesFilled = ticketHolders.every(holder => 
+    const allNamesFilled = ticketHolders.every(holder =>
       holder.firstName.trim() && holder.lastName.trim()
     );
 
@@ -106,46 +107,46 @@ export default function Home() {
     <div>
       <Header />
       <section className="max-w-[1300px] mx-auto md:px-20 px-6 pt-4 md:pt-6">
-          <div className="text-center">
-            <div className="flex justify-center mb-8">
-              <img
-                src="/PosterNewYear.jpg"
-                alt="New Year Party Illustration"
-                className="w-full max-w-md rounded-lg shadow-xl"
-              />
-            </div>
-            <div className="mb-8">
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <div className="text-center">
+          <div className="flex justify-center mb-8">
+            <img
+              src="/PosterNewYear.jpg"
+              alt="New Year Party Illustration"
+              className="w-full max-w-md rounded-lg shadow-xl"
+            />
+          </div>
+          <div className="mb-8">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Join us for an unforgettable evening a night full of good food, drink, 2026 countdown, music, people, games and prizes! 🍾✨  <br /> <br /><b> Your ticket includes access to a special buffet and one complimentary drink (alcoholic or zero-proof)</b>
-              </p>
-            </div>
-            <div className="flex flex-wrap justify-center items-center gap-4 mb-6">
-              <a href="#booking-form" className="bg-[#d88728] text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-[#c07a24] transition-colors">
-                $45 CAD per ticket
-              </a>
-              <div className="bg-red-100 text-red-700 px-6 py-3 rounded-lg font-semibold text-lg border-2 border-red-400">
-                Limited Seating
-              </div>
-            </div>
-            <div className="mb-8">
-              <div className="text-center max-w-3xl mx-auto">
-                <p className="text-lg text-gray-600">
-                  <span className="text-2xl font-semibold text-black block">Surge Pricing in Action!</span>
-                  Every 25 tickets sold, the price climbs higher! Grab yours early to lock in the best deal:
-                  <br />
-                  <br />
-                  Tickets 1–25: $45 (ALMOST SOLD OUT!)
-                  <br />
-                  Tickets 26–50: $50
-                  <br />
-                  Tickets 51+: $55
-                  <br />
-                  <br />
-                  Don’t wait—beat the surge and secure your spot before the price jumps!
-                </p>
-              </div>
+            </p>
+          </div>
+          <div className="flex flex-wrap justify-center items-center gap-4 mb-6">
+            <a href="#booking-form" className="bg-[#d88728] text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-[#c07a24] transition-colors">
+              $45 CAD per ticket
+            </a>
+            <div className="bg-red-100 text-red-700 px-6 py-3 rounded-lg font-semibold text-lg border-2 border-red-400">
+              Limited Seating
             </div>
           </div>
+          <div className="mb-8">
+            <div className="text-center max-w-3xl mx-auto">
+              <p className="text-lg text-gray-600">
+                <span className="text-2xl font-semibold text-black block">Surge Pricing in Action!</span>
+                Every 25 tickets sold, the price climbs higher! Grab yours early to lock in the best deal:
+                <br />
+                <br />
+                Tickets 1–25: $45 (ALMOST SOLD OUT!)
+                <br />
+                Tickets 26–50: $50
+                <br />
+                Tickets 51+: $55
+                <br />
+                <br />
+                Don’t wait—beat the surge and secure your spot before the price jumps!
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Form */}
@@ -229,14 +230,43 @@ export default function Home() {
               </div>
             </div>
           )}
+          <div className="flex items-start mb-4">
+            <input
+              type="checkbox"
+              defaultChecked={true}
+              id="consent_terms"
+              className="h-6 w-6 mt-1"
+              required
+            />
+            <div className="ml-4 text-lg max-w-full">
+              <label htmlFor="consent_terms" className="font-semibold block mb-2 cursor-pointer">
+                Terms & Conditions – New Year’s Party
+              </label>
+              <div className={"text-sm text-gray-700 transition-all relative " + (showTerms ? "" : "max-h-10 overflow-hidden") }>
+                <p><strong>1. Admission Includes</strong><br/>Entry to the event, dinner buffet, and <strong>one complimentary select beer, shot (1oz) or select non-alcoholic drink</strong> per guest. The complimentary drink must be claimed at the bar and is non-transferable.</p>
+                <p className="mt-2"><strong>2. No Refund Policy</strong><br/>All ticket sales are <strong>final</strong>. <strong>No refunds or exchanges</strong> will be provided for any reason, including no-shows, late arrival, or removal from the event.</p>
+                <p className="mt-2"><strong>3. Right to Refuse Service &amp; Removal</strong><br/>Management reserves the <strong>right to refuse service or remove any individual</strong> from the premises due to inappropriate behavior, intoxication, misconduct, or failure to comply with staff instructions. <strong>No refund will be issued</strong> if a guest is removed.</p>
+                <p className="mt-2"><strong>4. Alcohol Responsibility</strong><br/>The complimentary drink is limited to <strong>one select beer, shot or select non-alcoholic drink</strong> only. Any additional alcohol purchases are subject to venue rules and responsible service laws.</p>
+                <p className="mt-2"><strong>5. Event Changes</strong><br/>The organizer reserves the right to make changes to the event program, menu, or schedule without prior notice.</p>
+                <p className="mt-2">By purchasing a ticket or attending the event, guests agree to abide by these terms and conditions.</p>
+                {!showTerms && (
+                  <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+                )}
+              </div>
+              <button type="button" onClick={() => setShowTerms(s => !s)} className="text-[#d88728] text-sm font-semibold mt-2">
+                {showTerms ? 'Show less' : 'Read more'}
+              </button>
+            </div>
+          </div>
           <div className="flex items-center mb-10">
             <input
               type="checkbox"
-              id="consent"
-              className="h-10 w-10 -mt-20"
+              defaultChecked={true}
+              id="consent_marketing"
+              className="h-6 w-6 -mt-20"
               required
             />
-            <label htmlFor="consent" className="ml-4 text-lg">
+            <label htmlFor="consent_marketing" className="ml-4 text-lg">
               I consent to receive communications from Maurya’s via email, text
               message, and/or other electronic means, including social media,
               regarding new menu items, special offers, and other relevant
