@@ -117,8 +117,30 @@ export default function Home() {
           </div>
           <div className="mb-8">
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Join us for an unforgettable evening a night full of good food, drink, 2026 countdown, music, people, games and prizes! 🍾✨  <br /> <br /><b> Your ticket includes access to a special buffet and one complimentary drink (alcoholic select beer/shot or zero-proof)</b>
+              Join us for an unforgettable evening a night full of good food, drink, 2026 countdown, music, people, games and prizes! 🍾✨
             </p>
+
+            <div className="mt-6 text-center">
+              <h2 className="text-2xl font-bold tracking-wide">HERE'S WHAT'S INCLUDED</h2>
+              <p className="text-sm font-semibold mt-1">TICKET INCLUDES 1 FREE DRINK + BUFFET</p>
+
+              <div className="mt-6 max-w-md mx-auto text-center text-base">
+                <div className="mb-4">
+                  <h3 className="font-bold">Appetizers</h3>
+                  <p>Chilly Chicken<br />Honey Garlic Potato Fries<br />Crispy Corn Kebabs<br />Peanut Masala</p>
+                </div>
+
+                <div className="mb-4">
+                  <h3 className="font-bold">Mains</h3>
+                  <p>Dal Makhani<br />Paneer Lababdar Korma<br />Kadahi Chicken<br />Naan &amp; Basmati Rice</p>
+                </div>
+
+                <div>
+                  <h3 className="font-bold">Dessert &amp; Drinks</h3>
+                  <p>Gulab Jamun<br />Complementary Drink<br />(alcohol or non-alcohol)</p>
+                </div>
+              </div>
+            </div>
           </div>
           <div className="flex flex-wrap justify-center items-center gap-4 mb-6">
             <a href="#booking-form" className="bg-[#d88728] text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-[#c07a24] transition-colors">
