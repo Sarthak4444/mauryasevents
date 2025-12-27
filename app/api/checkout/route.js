@@ -7,21 +7,59 @@ export async function POST(req) {
   try {
     const { email, phone, tickets, ticketHolders } = await req.json();
 
+    const ticketCounts = ticketHolders.reduce((acc, holder) => {
+      const type = holder.ticketType || 'general';
+      acc[type] = (acc[type] || 0) + 1;
+      return acc;
+    }, {});
+
+    const line_items = [];
+
+    if (ticketCounts.general) {
+      line_items.push({
+        price_data: {
+          currency: "cad",
+          product_data: {
+            name: "General Admission",
+            description: "General Admission Ticket (includes 5% GST)",
+          },
+          unit_amount: 4725, // $45 + 5% GST
+        },
+        quantity: ticketCounts.general,
+      });
+    }
+
+    if (ticketCounts.student) {
+      line_items.push({
+        price_data: {
+          currency: "cad",
+          product_data: {
+            name: "Student Admission",
+            description: "Student Admission Ticket (includes 5% GST). Must present valid Student ID.",
+          },
+          unit_amount: 3675, // $35 + 5% GST
+        },
+        quantity: ticketCounts.student,
+      });
+    }
+
+    if (ticketCounts.kids) {
+      line_items.push({
+        price_data: {
+          currency: "cad",
+          product_data: {
+            name: "Kids Admission",
+            description: "Kids Admission Ticket (includes 5% GST)",
+          },
+          unit_amount: 2625, // $25 + 5% GST
+        },
+        quantity: ticketCounts.kids,
+      });
+    }
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      line_items: [
-        {
-          price_data: {
-            currency: "cad",
-            product_data: {
-              name: "New Year Party Tickets",
-              description: "Tickets for New Year Night Party at Maurya's (includes 5% GST)",
-            },
-            unit_amount: 4725, // $47.25 CAD in cents ($45 + 5% GST)
-          },
-          quantity: tickets,
-        },
-      ],
+      line_items: line_items,
       mode: "payment",
       success_url: `${
         process.env.NEXT_PUBLIC_SITE_URL

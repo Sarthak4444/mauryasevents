@@ -79,6 +79,7 @@ export default function EventsPage() {
                       {booking.ticketHolders.map((holder, holderIndex) => (
                         <div key={holderIndex} className="mb-2 p-2 bg-gray-100 rounded text-sm">
                           <div><strong>{holder.firstName} {holder.lastName}</strong></div>
+                          <div className="text-gray-600">Type: {holder.ticketType ? holder.ticketType.charAt(0).toUpperCase() + holder.ticketType.slice(1) : 'General'}</div>
                           <div>Ticket #{holder.ticketNumber}</div>
                         </div>
                       ))}

@@ -55,7 +55,11 @@ export async function POST(req) {
       }))
     );
 
-    const totalAmount = tickets * 47.25; // $47.25 per ticket (includes 5% GST)
+    const totalAmount = ticketHoldersWithNumbers.reduce((sum, holder) => {
+      if (holder.ticketType === 'student') return sum + 36.75;
+      if (holder.ticketType === 'kids') return sum + 26.25;
+      return sum + 47.25; // general
+    }, 0);
 
     const newBooking = new Booking({
       email,
@@ -80,6 +84,7 @@ export async function POST(req) {
       <div style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; background-color: #f9f9f9;">
         <h4 style="color: #d32f2f; margin: 0 0 10px 0;">Ticket #${index + 1}</h4>
         <p style="margin: 5px 0;"><strong>Name:</strong> ${holder.firstName} ${holder.lastName}</p>
+        <p style="margin: 5px 0;"><strong>Ticket Type:</strong> ${holder.ticketType ? holder.ticketType.charAt(0).toUpperCase() + holder.ticketType.slice(1) : 'General'}</p>
         <p style="margin: 5px 0;"><strong>Ticket Number:</strong> ${holder.ticketNumber}</p>
       </div>
     `).join('');

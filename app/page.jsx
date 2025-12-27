@@ -115,7 +115,7 @@ export default function Home() {
               className="w-full max-w-md rounded-lg shadow-xl"
             />
           </div>
-          <div className="mb-8">
+          <div>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Join us for an unforgettable evening a night full of good food, drink, 2026 countdown, music, people, games and prizes! 🍾✨
             </p>
@@ -124,7 +124,7 @@ export default function Home() {
               <h2 className="text-2xl font-bold tracking-wide">HERE'S WHAT'S INCLUDED</h2>
               <p className="text-sm font-semibold mt-1">TICKET INCLUDES 1 FREE DRINK + BUFFET</p>
 
-              <div className="mt-6 max-w-md mx-auto text-center text-base">
+              <div className="mt-6 max-w-4xl mx-auto text-center text-base">
                 <div className="mb-4">
                   <h3 className="font-bold">Appetizers</h3>
                   <p>Chilly Chicken<br />Honey Garlic Potato Fries<br />Crispy Corn Kebabs<br />Peanut Masala</p>
@@ -135,37 +135,37 @@ export default function Home() {
                   <p>Dal Makhani<br />Paneer Lababdar Korma<br />Kadahi Chicken<br />Naan &amp; Basmati Rice</p>
                 </div>
 
-                <div>
+                <div className="mb-4">
                   <h3 className="font-bold">Dessert &amp; Drinks</h3>
-                  <p>Gulab Jamun<br />Complementary Drink<br />(alcohol or non-alcohol)</p>
+                  <p>Gulab Jamun</p>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+                  <div className="border-2 border-[#d88728] p-6 rounded-lg">
+                    <h3 className="font-bold text-lg mb-2">General Admission</h3>
+                    <p className="mb-4">TICKET INCLUDES 1 FREE DRINK + BUFFET + EVENT ACCESS (Trivia, DJ & Dance)</p>
+                    <a href="#booking-form" className="bg-[#d88728] text-white px-6 py-2 rounded-lg font-semibold inline-block hover:bg-[#c07a24] transition-colors">
+                      $45 CAD per ticket
+                    </a>
+                  </div>
+
+                  <div className="border-2 border-[#d88728] p-6 rounded-lg">
+                    <h3 className="font-bold text-lg mb-2">Student Admission</h3>
+                    <p className="mb-4">TICKET INCLUDES BUFFET + EVENT ACCESS (Trivia, DJ & Dance)</p>
+                    <a href="#booking-form" className="bg-[#d88728] text-white px-6 py-2 rounded-lg font-semibold inline-block hover:bg-[#c07a24] transition-colors">
+                      $35 CAD per ticket
+                    </a>
+                  </div>
+
+                  <div className="border-2 border-[#d88728] p-6 rounded-lg">
+                    <h3 className="font-bold text-lg mb-2">Kids Admission</h3>
+                    <p className="mb-4">TICKET INCLUDES BUFFET + EVENT ACCESS (Trivia, DJ & Dance)</p>
+                    <a href="#booking-form" className="bg-[#d88728] text-white px-6 py-2 rounded-lg font-semibold inline-block hover:bg-[#c07a24] transition-colors">
+                      $25 CAD per ticket
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="flex flex-wrap justify-center items-center gap-4 mb-6">
-            <a href="#booking-form" className="bg-[#d88728] text-white px-6 py-3 rounded-lg font-semibold text-lg hover:bg-[#c07a24] transition-colors">
-              $45 CAD per ticket
-            </a>
-            <div className="bg-red-100 text-red-700 px-6 py-3 rounded-lg font-semibold text-lg border-2 border-red-400">
-              Limited Seating
-            </div>
-          </div>
-          <div className="mb-8">
-            <div className="text-center max-w-3xl mx-auto">
-              <p className="text-lg text-gray-600">
-                <span className="text-2xl font-semibold text-black block">Surge Pricing in Action!</span>
-                Every 25 tickets sold, the price climbs higher! Grab yours early to lock in the best deal:
-                <br />
-                <br />
-                Tickets 1–25: $45 (ALMOST SOLD OUT!)
-                <br />
-                Tickets 26–50: $50
-                <br />
-                Tickets 51+: $55
-                <br />
-                <br />
-                Don’t wait—beat the surge and secure your spot before the price jumps!
-              </p>
             </div>
           </div>
         </div>
@@ -223,7 +223,19 @@ export default function Home() {
                 {ticketHolders.map((holder, index) => (
                   <div key={index} className="border-2 border-[#d88728] p-4 rounded">
                     <h3 className="text-lg font-semibold mb-3">Ticket #{index + 1}</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">Ticket Type</label>
+                        <select
+                          className="w-full border border-gray-300 p-2 focus:outline-none focus:border-[#d88728]"
+                          value={holder.ticketType}
+                          onChange={(e) => handleTicketHolderChange(index, 'ticketType', e.target.value)}
+                        >
+                          <option value="general">General ($45)</option>
+                          <option value="student">Student ($35)</option>
+                          <option value="kids">Kids ($25)</option>
+                        </select>
+                      </div>
                       <div>
                         <label className="block text-sm font-medium mb-1">First Name</label>
                         <input
@@ -252,6 +264,21 @@ export default function Home() {
               </div>
             </div>
           )}
+
+          {ticketHolders.some(h => h.ticketType === 'student') && (
+
+            <div className="flex items-center mb-4">
+              <input
+                type="checkbox"
+                id="student_id_check"
+                className="h-3 w-3"
+                required
+              />
+              <label htmlFor="student_id_check" className="ml-4 text-lg">
+                I understand that I need to carry a valid student ID and photo ID for entry.
+              </label>
+            </div>
+          )}
           <div className="flex items-start mb-4">
             <input
               type="checkbox"
@@ -264,12 +291,12 @@ export default function Home() {
               <label htmlFor="consent_terms" className="font-semibold block mb-2 cursor-pointer">
                 Terms & Conditions – New Year’s Party
               </label>
-              <div className={"text-sm text-gray-700 transition-all relative " + (showTerms ? "" : "max-h-10 overflow-hidden") }>
-                <p><strong>1. Admission Includes</strong><br/>Entry to the event, dinner buffet, and <strong>one complimentary select beer, shot (1oz) or select non-alcoholic drink</strong> per guest. The complimentary drink must be claimed at the bar and is non-transferable.</p>
-                <p className="mt-2"><strong>2. No Refund Policy</strong><br/>All ticket sales are <strong>final</strong>. <strong>No refunds or exchanges</strong> will be provided for any reason, including no-shows, late arrival, or removal from the event.</p>
-                <p className="mt-2"><strong>3. Right to Refuse Service &amp; Removal</strong><br/>Management reserves the <strong>right to refuse service or remove any individual</strong> from the premises due to inappropriate behavior, intoxication, misconduct, or failure to comply with staff instructions. <strong>No refund will be issued</strong> if a guest is removed.</p>
-                <p className="mt-2"><strong>4. Alcohol Responsibility</strong><br/>The complimentary drink is limited to <strong>one select beer, shot or select non-alcoholic drink</strong> only. Any additional alcohol purchases are subject to venue rules and responsible service laws.</p>
-                <p className="mt-2"><strong>5. Event Changes</strong><br/>The organizer reserves the right to make changes to the event program, menu, or schedule without prior notice.</p>
+              <div className={"text-sm text-gray-700 transition-all relative " + (showTerms ? "" : "max-h-10 overflow-hidden")}>
+                <p><strong>1. Admission Includes</strong><br />Entry to the event, dinner buffet, and <strong>one complimentary select beer, shot (1oz) or select non-alcoholic drink</strong> per guest. The complimentary drink must be claimed at the bar and is non-transferable.</p>
+                <p className="mt-2"><strong>2. No Refund Policy</strong><br />All ticket sales are <strong>final</strong>. <strong>No refunds or exchanges</strong> will be provided for any reason, including no-shows, late arrival, or removal from the event.</p>
+                <p className="mt-2"><strong>3. Right to Refuse Service &amp; Removal</strong><br />Management reserves the <strong>right to refuse service or remove any individual</strong> from the premises due to inappropriate behavior, intoxication, misconduct, or failure to comply with staff instructions. <strong>No refund will be issued</strong> if a guest is removed.</p>
+                <p className="mt-2"><strong>4. Alcohol Responsibility</strong><br />The complimentary drink is limited to <strong>one select beer, shot or select non-alcoholic drink</strong> only. Any additional alcohol purchases are subject to venue rules and responsible service laws.</p>
+                <p className="mt-2"><strong>5. Event Changes</strong><br />The organizer reserves the right to make changes to the event program, menu, or schedule without prior notice.</p>
                 <p className="mt-2">By purchasing a ticket or attending the event, guests agree to abide by these terms and conditions.</p>
                 {!showTerms && (
                   <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white to-transparent pointer-events-none" />

@@ -3,6 +3,12 @@ import mongoose from 'mongoose';
 const TicketHolderSchema = new mongoose.Schema({
   firstName: { type: String, required: true, trim: true },
   lastName: { type: String, required: true, trim: true },
+  ticketType: { 
+    type: String, 
+    required: true, 
+    enum: ['general', 'student', 'kids'],
+    default: 'general'
+  },
   ticketNumber: { type: String, required: true, unique: true },
 });
 
