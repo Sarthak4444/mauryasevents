@@ -159,7 +159,7 @@ export default function Home() {
 
                   <div className="border-2 border-[#d88728] p-6 rounded-lg">
                     <h3 className="font-bold text-lg mb-2">Kids Admission</h3>
-                    <p className="mb-4">TICKET INCLUDES BUFFET + EVENT ACCESS (Trivia, DJ & Dance)</p>
+                    <p className="mb-4">TICKET INCLUDES BUFFET + EVENT ACCESS (Trivia, DJ & Dance)(8-12 years)</p>
                     <a href="#booking-form" className="bg-[#d88728] text-white px-6 py-2 rounded-lg font-semibold inline-block hover:bg-[#c07a24] transition-colors">
                       $25 CAD per ticket
                     </a>
