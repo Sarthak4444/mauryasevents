@@ -122,8 +122,6 @@ export default function Home() {
 
             <div className="mt-6 text-center">
               <h2 className="text-2xl font-bold tracking-wide">HERE'S WHAT'S INCLUDED</h2>
-              <p className="text-sm font-semibold mt-1">TICKET INCLUDES 1 FREE DRINK + BUFFET</p>
-
               <div className="mt-6 max-w-4xl mx-auto text-center text-base">
                 <div className="mb-4">
                   <h3 className="font-bold">Appetizers</h3>
