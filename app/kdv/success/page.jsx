@@ -50,12 +50,9 @@ function KDVSuccessComponent() {
   }, [searchParams, router]);
 
   return (
-    <div className="h-screen w-screen flex justify-center items-center bg-gradient-to-b from-purple-950 via-black to-black">
+    <div className="h-screen w-screen flex justify-center items-center bg-black">
       {loading && (
-        <div className="flex flex-col items-center">
-          <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-white mt-4 text-lg">Processing your booking...</p>
-        </div>
+        <div className="w-16 h-16 border-4 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
       )}
     </div>
   );
@@ -63,9 +60,8 @@ function KDVSuccessComponent() {
 
 export default function KDVSuccess() {
   return (
-    <Suspense fallback={<div className="h-screen w-screen flex justify-center items-center bg-gradient-to-b from-purple-950 via-black to-black"><p className="text-white">Loading...</p></div>}>
+    <Suspense fallback={<div className="h-screen w-screen flex justify-center items-center bg-black">Loading...</div>}>
       <KDVSuccessComponent />
     </Suspense>
   );
 }
-

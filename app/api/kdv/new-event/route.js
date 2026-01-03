@@ -78,8 +78,8 @@ export async function POST(req) {
 
     // Create ticket details HTML
     const ticketDetailsHTML = ticketHoldersWithNumbers.map((holder, index) => `
-      <div style="border: 1px solid #9333ea; padding: 15px; margin: 10px 0; border-radius: 10px; background: linear-gradient(135deg, #f5f3ff 0%, #fdf2f8 100%);">
-        <h4 style="color: #7c3aed; margin: 0 0 10px 0;">🎫 Ticket #${index + 1}</h4>
+      <div style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; background-color: #f9f9f9;">
+        <h4 style="color: #d32f2f; margin: 0 0 10px 0;">Ticket #${index + 1}</h4>
         <p style="margin: 5px 0;"><strong>Name:</strong> ${holder.firstName} ${holder.lastName}</p>
         <p style="margin: 5px 0;"><strong>Ticket Number:</strong> ${holder.ticketNumber}</p>
       </div>
@@ -89,58 +89,51 @@ export async function POST(req) {
     const mailOptions = {
       from: process.env.GMAIL_USER,
       to: email,
-      subject: "🎉 Ticket Confirmation - Kamloops Dance Vibes",
+      subject: "Payment Confirmation - Kamloops Dance Vibes Tickets",
       html: `
-       <div style="font-family: 'Segoe UI', Arial, sans-serif; color: #333; padding: 20px; max-width: 600px; line-height: 1.8; background: linear-gradient(135deg, #1e1b4b 0%, #0f0f0f 100%); border-radius: 15px;">
-  <div style="background: white; border-radius: 10px; padding: 30px;">
-    <div style="text-align: center; margin-bottom: 20px;">
-      <h1 style="color: #7c3aed; margin: 0;">🎶 Kamloops Dance Vibes</h1>
-      <p style="color: #ec4899; font-size: 18px; margin: 5px 0;">Get ready to dance!</p>
-    </div>
-    
-    <p style="font-size: 18px; margin-bottom: 20px;">Dear <strong>${ticketHoldersWithNumbers[0].firstName}</strong>,</p>
-    
-    <p>
-      Your payment has been confirmed! We can't wait to see you on the dance floor! 💃🕺
+       <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; max-width: 600px; line-height: 1.8;">
+  <p style="font-size: 18px; margin-bottom: 20px;">Dear <strong>${ticketHoldersWithNumbers[0].firstName}</strong>,</p>
+  
+  <p>
+    Your payment has been confirmed! We look forward to seeing you at Kamloops Dance Vibes!
+  </p>
+  
+  <h3 style="color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 5px; display: inline-block; margin-bottom: 30px;">
+    Booking Details
+  </h3>
+
+  <p style="margin-bottom: 20px;">
+    <strong>&nbsp; &bull; Email:</strong> ${email} <br />
+    <strong>&nbsp; &bull; Phone:</strong> ${phone} <br />
+    <strong>&nbsp; &bull; Total Tickets:</strong> ${tickets} <br />
+    <strong>&nbsp; &bull; Total Amount:</strong> $${totalAmount.toFixed(2)} CAD <br />
+  </p>
+
+  <h3 style="color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 5px; display: inline-block; margin-bottom: 20px;">
+    Ticket Information
+  </h3>
+
+  ${ticketDetailsHTML}
+
+  <p style="margin-bottom: 20px;">
+    Please bring a valid ID and this confirmation email to the event. Each ticket holder must be present.
+  </p>
+
+  <p style="margin-bottom: 20px;">
+    Thank you for choosing us! If you have any questions or need assistance, feel free to reach out.
+  </p>
+
+  <p style="margin-bottom: 30px;">Best Regards,<br /><br />Maurya's Craft Bar & Kitchen</p>
+
+  <div style="border-top: 2px solid #d32f2f; padding-top: 15px; margin-top: 30px; line-height: 1;">
+    <p><strong>Maurya's Craft Bar & Kitchen</strong></p>
+    <p>📍 165 Victoria St, Kamloops, BC, Canada. V2C 1Z4</p>
+    <p>📞 +1 250 377 4969</p>
+    <p>📧 comments@mauryascuisine.com</p>
+    <p style="margin: 15px 0;">
+      <a href="https://www.mauryascuisine.com" style="color: #d32f2f; text-decoration: none;">Visit our website</a> | 
+      <a href="https://instagram.com/mauryas.rest.bar.banquet" style="color: #d32f2f; text-decoration: none;">Instagram</a>
     </p>
-    
-    <h3 style="color: #7c3aed; border-bottom: 2px solid #ec4899; padding-bottom: 5px; display: inline-block; margin-bottom: 30px;">
-      📋 Booking Details
-    </h3>
-
-    <p style="margin-bottom: 20px; background: #f5f3ff; padding: 15px; border-radius: 10px;">
-      <strong>&nbsp; &bull; Email:</strong> ${email} <br />
-      <strong>&nbsp; &bull; Phone:</strong> ${phone} <br />
-      <strong>&nbsp; &bull; Total Tickets:</strong> ${tickets} <br />
-      <strong>&nbsp; &bull; Total Amount:</strong> $${totalAmount.toFixed(2)} CAD <br />
-    </p>
-
-    <h3 style="color: #7c3aed; border-bottom: 2px solid #ec4899; padding-bottom: 5px; display: inline-block; margin-bottom: 20px;">
-      🎫 Your Tickets
-    </h3>
-
-    ${ticketDetailsHTML}
-
-    <p style="margin: 20px 0; padding: 15px; background: #fdf2f8; border-radius: 10px; border-left: 4px solid #ec4899;">
-      <strong>📌 Important:</strong> Please bring a valid ID and this confirmation email to the event. Each ticket holder must be present.
-    </p>
-
-    <p style="margin-bottom: 20px;">
-      Thank you for booking with us! Get ready for an amazing night of music and dance! 🎉
-    </p>
-
-    <p style="margin-bottom: 30px;">See you there!<br /><br /><strong>The KDV Team</strong></p>
-
-    <div style="border-top: 2px solid #7c3aed; padding-top: 15px; margin-top: 30px; line-height: 1.6;">
-      <p><strong>Maurya's Craft Bar & Kitchen</strong></p>
-      <p>📍 165 Victoria St, Kamloops, BC, Canada. V2C 1Z4</p>
-      <p>📞 +1 250 377 4969</p>
-      <p>📧 comments@mauryascuisine.com</p>
-      <p style="margin: 15px 0;">
-        <a href="https://www.mauryascuisine.com" style="color: #7c3aed; text-decoration: none;">Visit our website</a> | 
-        <a href="https://instagram.com/mauryas.rest.bar.banquet" style="color: #7c3aed; text-decoration: none;">Instagram</a>
-      </p>
-    </div>
   </div>
 </div>
 
@@ -191,4 +184,3 @@ export async function GET(req) {
     );
   }
 }
-
