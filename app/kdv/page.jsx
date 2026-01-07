@@ -110,7 +110,7 @@ export default function KDVPage() {
         <div className="text-center">
           <div className="flex justify-center mb-8">
             <img
-              src="/kdv.jpeg"
+              src="/kdvposter.jpeg"
               alt="Kamloops Dance Vibes"
               className="w-full max-w-md rounded-lg shadow-xl"
             />
