@@ -78,6 +78,7 @@ export default function Home() {
   const [error, setError] = useState("");
   const [availability, setAvailability] = useState({});
   const [loadingAvailability, setLoadingAvailability] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
 
   // Fetch availability when date changes
   useEffect(() => {
@@ -192,7 +193,7 @@ export default function Home() {
             Valentine's Day at Maurya's
           </h1>
           <p className="text-xl md:text-2xl mb-4 text-red-100">
-            February 13th, 14th & 15th, 2025
+            February 13th, 14th & 15th, 2026
           </p>
           <p className="text-lg text-red-200 max-w-2xl mx-auto mb-8">
             Celebrate love with an unforgettable dining experience. Reserve your table now for a romantic evening filled with exquisite cuisine and enchanting ambiance.
@@ -387,6 +388,51 @@ export default function Home() {
               </div>
             )}
 
+            <div className="flex items-start mb-4">
+              <input
+                type="checkbox"
+                defaultChecked={true}
+                id="consent_terms"
+                className="h-6 w-6 mt-1"
+                required
+              />
+              <div className="ml-4 text-lg max-w-full">
+                <label htmlFor="consent_terms" className="font-semibold block mb-2 cursor-pointer">
+                  Terms & Conditions – Valentine's Day Reservation
+                </label>
+                <div className={"text-sm text-gray-700 transition-all relative " + (showTerms ? "" : "max-h-10 overflow-hidden")}>
+                  <p><strong>1. Reservation Fee</strong><br />The <strong>$10 per person reservation fee</strong> is a deposit to secure your table. When you arrive at the restaurant, this fee will be returned to you in the form of a <strong>$15 gift card</strong> that can be used towards your meal or future visits!</p>
+                  <p className="mt-2"><strong>2. Arrival Time</strong><br />Please arrive within <strong>15 minutes</strong> of your reserved time slot. Late arrivals may result in forfeiture of your reservation.</p>
+                  <p className="mt-2"><strong>3. Cancellation Policy</strong><br />Cancellations must be made at least <strong>24 hours in advance</strong> for a full refund. No-shows will not be refunded.</p>
+                  <p className="mt-2"><strong>4. Gift Card Terms</strong><br />The $15 gift card will be provided upon arrival and check-in at the restaurant. Gift cards are valid for 1 year from the date of issue.</p>
+                  <p className="mt-2"><strong>5. Right to Refuse Service</strong><br />Management reserves the right to refuse service or modify reservations due to unforeseen circumstances.</p>
+                  <p className="mt-2">By completing this reservation, you agree to abide by these terms and conditions.</p>
+                  {!showTerms && (
+                    <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white to-transparent pointer-events-none" />
+                  )}
+                </div>
+                <button type="button" onClick={() => setShowTerms(s => !s)} className="text-[#d88728] text-sm font-semibold mt-2">
+                  {showTerms ? 'Show less' : 'Read more'}
+                </button>
+              </div>
+            </div>
+            <div className="flex items-center mb-10">
+              <input
+                type="checkbox"
+                defaultChecked={true}
+                id="consent_marketing"
+                className="h-6 w-6 -mt-20"
+                required
+              />
+              <label htmlFor="consent_marketing" className="ml-4 text-lg">
+                I consent to receive communications from Maurya's via email, text
+                message, and/or other electronic means, including social media,
+                regarding new events, special offers, and other relevant
+                information. I have read the Terms & Conditions and Privacy Policy
+                and I am ready to comply with it.
+              </label>
+            </div>
+
             <div className="w-full flex justify-center items-center mb-5">
               {error && <p className="text-red-500">{error}</p>}
             </div>
@@ -401,52 +447,6 @@ export default function Home() {
               </button>
             </div>
           </form>
-        </div>
-      </section>
-
-      {/* Terms & Information Section */}
-      <section className="max-w-4xl mx-auto py-16 px-6">
-        <h2 className="text-2xl font-bold text-center mb-8">Important Information</h2>
-        
-        <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6 mb-8">
-          <h3 className="font-bold text-lg text-green-800 mb-3">💝 About the Reservation Fee</h3>
-          <p className="text-green-700">
-            The <strong>$10 per person reservation fee</strong> is a deposit to secure your table. 
-            When you arrive at the restaurant, this fee will be returned to you in the form of a 
-            <strong> $15 gift card</strong> that can be used towards your meal or future visits!
-          </p>
-        </div>
-
-        <div className="space-y-6 text-gray-700">
-          <div>
-            <h3 className="font-bold text-lg mb-2">Terms & Conditions</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              <li>Reservations are confirmed upon successful payment of the reservation fee.</li>
-              <li>Please arrive within 15 minutes of your reserved time slot. Late arrivals may result in forfeiture of your reservation.</li>
-              <li>Cancellations must be made at least 24 hours in advance for a full refund.</li>
-              <li>The $15 gift card will be provided upon arrival and check-in at the restaurant.</li>
-              <li>Gift cards are valid for 1 year from the date of issue.</li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-bold text-lg mb-2">Privacy Policy</h3>
-            <p>
-              Your personal information is collected solely for the purpose of managing your reservation. 
-              We will use your email and phone number to send confirmation and reminder messages. 
-              Your information will not be shared with third parties except as necessary to process your payment.
-            </p>
-          </div>
-
-          <div>
-            <h3 className="font-bold text-lg mb-2">Contact Us</h3>
-            <p>
-              For any questions or special requests, please contact us at:<br />
-              📞 +1 250 377 4969<br />
-              📧 comments@mauryascuisine.com<br />
-              📍 165 Victoria St, Kamloops, BC, Canada. V2C 1Z4
-            </p>
-          </div>
         </div>
       </section>
 
