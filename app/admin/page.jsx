@@ -11,7 +11,7 @@ export default function ValentinesAdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [dateFilter, setDateFilter] = useState("all");
-  const correctPasscode = "val2025";
+  const correctPasscode = "val2026";
 
   const fetchBookings = async () => {
     try {
