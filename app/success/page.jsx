@@ -14,25 +14,35 @@ function SuccessComponent() {
       return;
     }
 
+    const name = searchParams.get("name");
     const email = searchParams.get("email");
     const phone = searchParams.get("phone");
-    const tickets = searchParams.get("tickets");
-    const ticketHoldersParam = searchParams.get("ticketHolders");
+    const numberOfGuests = searchParams.get("numberOfGuests");
+    const date = searchParams.get("date");
+    const timeSlot = searchParams.get("timeSlot");
+    const dietaryRestrictionsParam = searchParams.get("dietaryRestrictions");
+    const notesAndAllergies = searchParams.get("notesAndAllergies");
 
     const sendRequest = async () => {
       try {
-        const ticketHolders = ticketHoldersParam ? JSON.parse(decodeURIComponent(ticketHoldersParam)) : [];
+        const dietaryRestrictions = dietaryRestrictionsParam 
+          ? JSON.parse(decodeURIComponent(dietaryRestrictionsParam)) 
+          : [];
         
-        const response = await fetch("/api/new-event", {
+        const response = await fetch("/api/valentines/new-booking", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            name,
             email,
             phone,
-            tickets: parseInt(tickets),
-            ticketHolders,
+            numberOfGuests: parseInt(numberOfGuests),
+            date,
+            timeSlot,
+            dietaryRestrictions,
+            notesAndAllergies: notesAndAllergies || '',
           }),
         });
 
@@ -42,7 +52,7 @@ function SuccessComponent() {
         router.push("/payment-successful");
       } catch (error) {
         console.error(error);
-        router.push("/payment-failed");
+        router.push("/?error=booking-failed");
       }
     };
 
@@ -52,7 +62,10 @@ function SuccessComponent() {
   return (
     <div className="h-screen w-screen flex justify-center items-center bg-black">
       {loading && (
-        <div className="w-16 h-16 border-4 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
+        <div className="flex flex-col items-center">
+          <div className="w-16 h-16 border-4 border-gray-300 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-white mt-4">Confirming your reservation...</p>
+        </div>
       )}
     </div>
   );
