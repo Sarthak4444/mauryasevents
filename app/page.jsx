@@ -16,8 +16,6 @@ const testimonials = [
     rating: 5,
     year: "2024",
     message: "Absolutely magical Valentine's dinner! The ambiance was perfect and the food was exceptional. Can't wait to come back!",
-    link: "https://g.co/kgs/example1",
-    platform: "Google"
   },
   {
     id: 2,
@@ -25,8 +23,6 @@ const testimonials = [
     rating: 5,
     year: "2024",
     message: "Best Valentine's experience we've ever had. The staff made us feel so special. Highly recommend!",
-    link: "https://facebook.com/example2",
-    platform: "Facebook"
   },
   {
     id: 3,
@@ -34,8 +30,6 @@ const testimonials = [
     rating: 5,
     year: "2023",
     message: "The food was incredible and the service was top-notch. Perfect spot for a romantic evening.",
-    link: "https://g.co/kgs/example3",
-    platform: "Google"
   },
   {
     id: 4,
@@ -43,8 +37,6 @@ const testimonials = [
     rating: 5,
     year: "2023",
     message: "We've been coming here for 3 years now for Valentine's. It never disappoints! The attention to detail is amazing.",
-    link: "https://g.co/kgs/example4",
-    platform: "Google"
   },
 ];
 
@@ -79,6 +71,15 @@ export default function Home() {
   const [availability, setAvailability] = useState({});
   const [loadingAvailability, setLoadingAvailability] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
+  // Auto-scroll testimonials every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Fetch availability when date changes
   useEffect(() => {
@@ -209,31 +210,69 @@ export default function Home() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="max-w-6xl mx-auto py-16 px-6">
+      <section className="max-w-4xl mx-auto py-16 px-6">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">What Our Guests Say</h2>
         <p className="text-gray-600 text-center mb-12">Real reviews from our Valentine's Day celebrations</p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {testimonials.map((testimonial) => (
-            <div key={testimonial.id} className="border-2 border-red-100 rounded-lg p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-              <div className="flex justify-between items-start mb-3">
-                <div>
-                  <h3 className="font-bold text-lg">{testimonial.name}</h3>
-                  <p className="text-sm text-gray-500">{testimonial.year}</p>
+        <div className="relative">
+          {/* Carousel Container */}
+          <div className="overflow-hidden">
+            <div 
+              className="flex transition-transform duration-500 ease-in-out"
+              style={{ transform: `translateX(-${currentTestimonial * 100}%)` }}
+            >
+              {testimonials.map((testimonial) => (
+                <div key={testimonial.id} className="w-full flex-shrink-0 px-4">
+                  <div className="border-2 border-red-100 rounded-lg p-8 bg-white shadow-lg max-w-2xl mx-auto">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h3 className="font-bold text-xl">{testimonial.name}</h3>
+                        <p className="text-sm text-gray-500">{testimonial.year}</p>
+                      </div>
+                      <div className="text-xl">{renderStars(testimonial.rating)}</div>
+                    </div>
+                    <p className="text-gray-700 text-lg italic">"{testimonial.message}"</p>
+                  </div>
                 </div>
-                <div className="text-lg">{renderStars(testimonial.rating)}</div>
-              </div>
-              <p className="text-gray-700 mb-4 italic">"{testimonial.message}"</p>
-              <a 
-                href={testimonial.link} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-red-600 hover:text-red-800 font-medium text-sm inline-flex items-center"
-              >
-                View on {testimonial.platform} →
-              </a>
+              ))}
             </div>
-          ))}
+          </div>
+
+          {/* Navigation Buttons */}
+          <button
+            onClick={() => setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length)}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-2 md:-translate-x-4 bg-white border-2 border-red-200 hover:border-red-400 rounded-full p-3 shadow-lg transition-all hover:scale-110"
+            aria-label="Previous testimonial"
+          >
+            <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            onClick={() => setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-2 md:translate-x-4 bg-white border-2 border-red-200 hover:border-red-400 rounded-full p-3 shadow-lg transition-all hover:scale-110"
+            aria-label="Next testimonial"
+          >
+            <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+
+          {/* Dots Indicator */}
+          <div className="flex justify-center mt-6 gap-2">
+            {testimonials.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentTestimonial(index)}
+                className={`w-3 h-3 rounded-full transition-all ${
+                  index === currentTestimonial 
+                    ? "bg-red-500 w-6" 
+                    : "bg-red-200 hover:bg-red-300"
+                }`}
+                aria-label={`Go to testimonial ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
@@ -402,8 +441,8 @@ export default function Home() {
                 </label>
                 <div className={"text-sm text-gray-700 transition-all relative " + (showTerms ? "" : "max-h-10 overflow-hidden")}>
                   <p><strong>1. Reservation Fee</strong><br />The <strong>$10 per person reservation fee</strong> is a deposit to secure your table. When you arrive at the restaurant, this fee will be returned to you in the form of a <strong>$15 gift card</strong> that can be used towards your meal or future visits!</p>
-                  <p className="mt-2"><strong>2. Arrival Time</strong><br />Please arrive within <strong>15 minutes</strong> of your reserved time slot. Late arrivals may result in forfeiture of your reservation.</p>
-                  <p className="mt-2"><strong>3. Cancellation Policy</strong><br />Cancellations must be made at least <strong>24 hours in advance</strong> for a full refund. No-shows will not be refunded.</p>
+                  <p className="mt-2"><strong>2. Table Time Limit</strong><br />To ensure all guests have a wonderful experience, table reservations are limited to a <strong>maximum of 2 hours</strong>. Please plan your dining experience accordingly.</p>
+                  <p className="mt-2"><strong>3. No Refund Policy</strong><br />All ticket sales are final. No refunds or exchanges will be provided for any reason, including no-shows, late arrival, or removal from the event.</p>
                   <p className="mt-2"><strong>4. Gift Card Terms</strong><br />The $15 gift card will be provided upon arrival and check-in at the restaurant. Gift cards are valid for 1 year from the date of issue.</p>
                   <p className="mt-2"><strong>5. Right to Refuse Service</strong><br />Management reserves the right to refuse service or modify reservations due to unforeseen circumstances.</p>
                   <p className="mt-2">By completing this reservation, you agree to abide by these terms and conditions.</p>
