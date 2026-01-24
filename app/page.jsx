@@ -12,31 +12,52 @@ const stripePromise = loadStripe(
 const testimonials = [
   {
     id: 1,
-    name: "Sarah M.",
+    name: "John",
     rating: 5,
-    year: "2024",
-    message: "Absolutely magical Valentine's dinner! The ambiance was perfect and the food was exceptional. Can't wait to come back!",
+    year: "Google 2024",
+    message: "Just had the Valentines Day set menu. One of he most unique and amazing dining experiences I have ever had. So much thought and creativity. Incredible flavors! Will be looking forward to trying this dine in experience more often. We were pretty regular takeaway customers already. If you are gluten intolerant this is one of the best places you can go as the options are so varied. You feel like part of the experience rather than an afterthought. Congratulations to all staff you run a tight ship!",
   },
   {
     id: 2,
-    name: "Michael & Jennifer",
+    name: "Joseph Doyle ",
     rating: 5,
-    year: "2024",
-    message: "Best Valentine's experience we've ever had. The staff made us feel so special. Highly recommend!",
+    year: "Google 2024",
+    message: "Amazing experience Hands down great food and the hosts were incredible.",
   },
   {
     id: 3,
-    name: "David R.",
+    name: "L weaver",
     rating: 5,
-    year: "2023",
-    message: "The food was incredible and the service was top-notch. Perfect spot for a romantic evening.",
+    year: "Google 2023",
+    message: "Tonight though, we did the Valentine's dinner and it was incredible... amazing food and drinks all presented personally with a lovely story accompanying each dish coming from/inspired by the chef's hometown. Definitely Indian food from a region that I had never tried. Such amazing tastes presented in a lovely way. The staff also made the night so special with their very attentive service. We will definitely reserve a table at the next set dinner! Thank you!",
   },
   {
     id: 4,
-    name: "Emily & Chris",
+    name: "Michelle Graf",
     rating: 5,
-    year: "2023",
-    message: "We've been coming here for 3 years now for Valentine's. It never disappoints! The attention to detail is amazing.",
+    year: "Google 2023",
+    message: "We went for the Valentine's special. This may have been one of the best meals I've ever eaten. It was an explosion of amazing flavors. A carnival for the taste buds.",
+  },
+  {
+    id: 5,
+    name: "Mr White",
+    rating: 5,
+    year: "Google 2023",
+    message: "We had the off-menu experience for Valentines Day....Easily one of our best culinary experiences. Chef Dilip deftly wove traditional flavours and dishes into elevated cuisine with some western familiarity. Truly taste of India. Well balanced dishes that played on multiple senses. We had dinner there the week prior and it was just as delicious.",
+  },
+  {
+    id: 6,
+    name: "Brianne & Calli",
+    rating: 5,
+    year: "Google 2024",
+    message: "We went and experienced the off menu Valentines dinner this year and were absolutely blown away. The combination of the storytelling, the impeccable service and the almost too good for Kamloops food was perfection. Each course was a surprise, and paired with a fresh, new-to-us cocktail. It's an investment, but we would absolutely do it again.",
+  },
+  {
+    id: 7,
+    name: "John Weaver",
+    rating: 5,
+    year: "Google 2024",
+    message: "“Just had the Valentines Day set menu. One of the most unique and amazing dining experiences I have ever had. So much thought and creativity. Incredible flavors! Will be looking forward to trying this dine in experience more often. We were pretty regular takeaway customers already... this is one of the best places you can go as the options are so varied. You feel like part of the experience rather than an afterthought. Congratulations to all staff you run a tight ship!",
   },
 ];
 
@@ -281,7 +302,7 @@ export default function Home() {
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Reserve Your Table</h2>
           <p className="text-gray-600 text-center mb-8">
-            Secure your spot for Valentine's with a $10/person reservation fee
+            Secure your spot for Valentine's with a $10/person deposit
           </p>
 
           <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-8">
