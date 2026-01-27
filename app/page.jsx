@@ -86,6 +86,7 @@ export default function Home() {
   const [loadingAvailability, setLoadingAvailability] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [showMenuModal, setShowMenuModal] = useState(false);
 
   // Auto-scroll testimonials every 5 seconds
   useEffect(() => {
@@ -199,29 +200,59 @@ export default function Home() {
 
   return (
     <div>
-      <Header />
-      
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-b from-red-900 to-red-950 text-white py-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Valentine's Day at Maurya's
-          </h1>
-          <p className="text-xl md:text-2xl mb-4 text-red-100">
-            February 13th, 14th & 15th, 2026
-          </p>
-          <p className="text-lg text-red-200 max-w-2xl mx-auto mb-8">
-            Celebrate love with an unforgettable dining experience. Reserve your table now for a romantic evening filled with exquisite cuisine and enchanting ambiance.
-          </p>
-          <a 
-            href="#booking-form" 
-            className="inline-block bg-white text-red-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-red-100 transition-colors"
-          >
-            Reserve Your Table
-          </a>
+      <Header />      
+      {/* Hero Section with Responsive Images */}
+      <section className="relative w-full flex justify-center">
+        {/* Mobile Image */}
+        <img 
+          src="/val_banner.jpeg" 
+          alt="Valentine's Day at Maurya's" 
+          className="w-full h-auto block md:hidden"
+        />
+        {/* Desktop Image */}
+        <img 
+          src="/val_banner_16x9.jpg" 
+          alt="Valentine's Day at Maurya's" 
+          className="w-full h-auto hidden md:block max-w-7xl"
+        />
+        
+        {/* Overlay Buttons */}
+        <div className="absolute inset-0 flex items-center justify-center mt-20">
+          <div className="flex flex-row gap-3 md:gap-4">
+            <a 
+              href="#booking-form" 
+              className="bg-[#d88728] text-white px-4 py-2 md:px-8 md:py-4 font-bold text-sm md:text-lg hover:bg-[#c07a24] transition-colors shadow-lg"
+            >
+              Reserve Table
+            </a>
+            <button 
+              onClick={() => setShowMenuModal(true)}
+              className="bg-transparent text-white px-4 py-2 md:px-8 md:py-4 font-bold text-sm md:text-lg hover:bg-[#d88728] hover:text-white transition-colors border-2 border-[#d88728]"
+            >
+              View Menu
+            </button>
+          </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent"></div>
       </section>
+
+      {/* Menu Modal */}
+      {showMenuModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-2xl max-w-md w-full p-8 relative">
+            <button 
+              onClick={() => setShowMenuModal(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold"
+            >
+              ×
+            </button>
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-red-900 mb-4">Valentine's Menu</h2>
+              <p className="text-gray-600 text-lg">Coming Soon</p>
+              <p className="text-gray-500 mt-4 text-sm">Our special Valentine's menu is being crafted with love. Check back soon!</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Testimonials Section */}
       <section className="max-w-4xl mx-auto py-16 px-6">
