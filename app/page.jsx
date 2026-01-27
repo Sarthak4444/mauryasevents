@@ -202,26 +202,26 @@ export default function Home() {
     <div>
       <Header />      
       {/* Hero Section */}
-      <section className="relative w-full">
+      <section className="relative w-full min-h-[400px] sm:min-h-0">
         {/* Background Image - Responsive for both mobile and desktop */}
         <img 
           src="/val_banner_16x9.jpg" 
           alt="Valentine's Day at Maurya's" 
-          className="w-full h-auto object-cover"
+          className="w-full h-full object-cover absolute inset-0 sm:relative sm:h-auto"
         />
         
         {/* Dark Overlay for better text readability */}
         <div className="absolute inset-0 bg-black bg-opacity-40"></div>
         
         {/* Content Overlay */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4 md:px-6">
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-white mb-3 md:mb-6 drop-shadow-lg">
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 py-8 sm:px-8 md:px-6">
+          <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold text-white mb-3 md:mb-6 drop-shadow-lg">
             Valentine's Day at Maurya's
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl mb-2 md:mb-4 text-red-100 drop-shadow">
+          <p className="text-base sm:text-xl md:text-2xl mb-2 md:mb-4 text-red-100 drop-shadow">
             February 13th, 14th & 15th, 2025
           </p>
-          <p className="text-sm sm:text-base md:text-lg text-white max-w-2xl mx-auto mb-4 md:mb-8 drop-shadow px-2">
+          <p className="text-xs sm:text-base md:text-lg text-white max-w-2xl mx-auto mb-4 md:mb-8 drop-shadow px-4 sm:px-2">
             Celebrate love with an unforgettable dining experience. Reserve your table now for a romantic evening filled with exquisite cuisine and enchanting ambiance.
           </p>
           
