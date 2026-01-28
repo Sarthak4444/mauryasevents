@@ -496,7 +496,7 @@ export default function Home() {
             <div className="mb-8">
               <label className="block text-lg font-bold mb-2">Notes & Allergies</label>
               <textarea
-                className="w-full border-2 border-[#d88728] p-3 rounded focus:outline-none focus:border-red-500 min-h-[100px]"
+                className="w-full border-2 border-[#d88728] p-3 rounded focus:outline-none focus:border-red-500 min-h-[125px]"
                 placeholder={"Any special requests, allergies, or notes for the kitchen...\nQuestions about the menu? Call 250-377-4969"}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
