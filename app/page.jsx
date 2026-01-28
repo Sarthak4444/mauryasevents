@@ -211,21 +211,21 @@ export default function Home() {
         />
         
         {/* Dark Overlay for better text readability */}
-        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div className="absolute inset-0 bg-black bg-opacity-30"></div>
         
-        {/* Content Overlay */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 py-8 sm:px-8 md:px-6">
-          <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold text-white mb-3 md:mb-6 drop-shadow-lg">
+        {/* Text Content - Centered */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 sm:px-8 md:px-6">
+          <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold text-white mb-2 md:mb-4 drop-shadow-lg">
             Valentine's Day at Maurya's
           </h1>
-          <p className="text-base sm:text-xl md:text-2xl mb-2 md:mb-4 text-red-100 drop-shadow">
-            February 13th, 14th & 15th, 2025
-          </p>
-          <p className="text-xs sm:text-base md:text-lg text-white max-w-2xl mx-auto mb-4 md:mb-8 drop-shadow px-4 sm:px-2">
-            Celebrate love with an unforgettable dining experience. Reserve your table now for a romantic evening filled with exquisite cuisine and enchanting ambiance.
-          </p>
           
-          {/* Buttons */}
+          <p className="text-xs sm:text-base md:text-lg italic max-w-2xl mx-auto drop-shadow px-4 sm:px-2" style={{ color: '#d4a574' }}>
+            "Great love stories start with six courses and strawberry-oat Champagne"
+          </p>
+        </div>
+        
+        {/* Buttons - Positioned at bottom */}
+        <div className="absolute bottom-8 sm:bottom-12 md:bottom-20 left-0 right-0 flex justify-center">
           <div className="flex flex-row gap-3 md:gap-4">
             <a 
               href="#booking-form" 
@@ -333,8 +333,11 @@ export default function Home() {
       <section id="booking-form" className="bg-gray-50 py-16 px-6">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Reserve Your Table</h2>
-          <p className="text-gray-600 text-center mb-8">
-            Secure your spot for Valentine's with a $10/person deposit
+          <p className="text-gray-600 text-center mb-2">
+            Secure your spot for Valentine's $79 per person <br /> Number of Guests * ($10 per person deposit)
+          </p>
+          <p className="text-[#d88728] font-semibold text-center mb-8">
+            February 13th, 14th & 15th, 2026
           </p>
 
           <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-8">
@@ -376,7 +379,7 @@ export default function Home() {
             </div>
 
             <div className="mb-6">
-              <label className="block text-lg font-bold mb-2">Number of Guests * <span className="text-sm font-normal text-gray-600">($10 per person)</span></label>
+              <label className="block text-lg font-bold mb-2">Number of Guests * <span className="text-sm font-normal text-gray-600">($10 per person deposit)</span></label>
               <select
                 required
                 className="w-full border-2 border-[#d88728] p-3 rounded focus:outline-none focus:border-red-500"

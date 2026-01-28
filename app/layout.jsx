@@ -2,27 +2,33 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "Maurya's Events",
+  title: "Valentine's Day at Maurya's | $79 Six-Course Dining Experience",
   description:
-    "Welcome to Maurya's Events, get your tickets now!",
+    "Celebrate Valentine's Day at Maurya's with a romantic six-course dining experience. February 13th, 14th & 15th, 2025. $79 per person. Reserve your table now!",
   keywords:
-    "new year, tickets, events, maurya's, restaurant, dining, fine dining, family dining, tapas, cocktails, champagne, beer, beers, brewery, best cocktail bar, kamloops, mixology, best restaurant, Maurya's, food and drinks, table reservations",
+    "valentines day, romantic dinner, six course meal, maurya's, restaurant, fine dining, kamloops, valentine's dinner, couples dinner, romantic restaurant, special occasion dining",
   openGraph: {
-    title: "Maurya's Events",
+    title: "Valentine's Day at Maurya's | $79 Six-Course Dining Experience",
     description:
-      "Welcome to Maurya's Events, get your tickets now!",
+      "Celebrate Valentine's Day at Maurya's with a romantic six-course dining experience. February 13th, 14th & 15th, 2025. $79 per person. Reserve your table now!",
     url: "https://www.mauryasevents.com",
     siteName: "Maurya's Events",
     locale: "en_US",
     type: "website",
-    // images: [
-    //   {
-    //     url: "https://mauryasevents.com/Item.png",
-    //     width: 800,
-    //     height: 600,
-    //     alt: "Maurya's Events - Halloween",
-    //   },
-    // ],  
+    images: [
+      {
+        url: "https://www.mauryasevents.com/val_16x9.webp",
+        width: 1920,
+        height: 1080,
+        alt: "Valentine's Day at Maurya's - Romantic Six-Course Dining Experience",
+      },
+    ],  
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Valentine's Day at Maurya's | $79 Six-Course Dining Experience",
+    description: "Celebrate Valentine's Day with a romantic six-course dining experience. February 13th, 14th & 15th, 2025.",
+    images: ["https://www.mauryasevents.com/val_16x9.webp"],
   },
 };
 
