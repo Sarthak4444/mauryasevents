@@ -56,7 +56,7 @@ const testimonials = [
 
 // Time slots from 4pm to 11pm in 30-minute intervals
 const allTimeSlots = [
-  "4:00 PM", "4:30 PM", "5:00 PM", "5:30 PM", 
+  "4:00 PM", "4:30 PM", "5:00 PM", "5:30 PM",
   "6:00 PM", "6:30 PM", "7:00 PM", "7:30 PM",
   "8:00 PM", "8:30 PM", "9:00 PM", "9:30 PM",
   "10:00 PM", "10:30 PM", "11:00 PM"
@@ -137,8 +137,8 @@ export default function Home() {
   };
 
   const handleDietaryChange = (option) => {
-    setDietaryRestrictions(prev => 
-      prev.includes(option) 
+    setDietaryRestrictions(prev =>
+      prev.includes(option)
         ? prev.filter(item => item !== option)
         : [...prev, option]
     );
@@ -200,42 +200,43 @@ export default function Home() {
 
   return (
     <div>
-      <Header />      
+      <Header />
       {/* Hero Section */}
       <section className="relative w-full min-h-[400px] sm:min-h-0">
         {/* Background Image - Responsive for both mobile and desktop */}
-        <img 
-          src="/val_banner_16x9.jpg" 
-          alt="Valentine's Day at Maurya's" 
+        <img
+          src="/val_banner_16x9.jpg"
+          alt="Valentine's Day at Maurya's"
           className="w-full h-full object-cover absolute inset-0 sm:relative sm:h-auto"
         />
-        
+
         {/* Dark Overlay for better text readability */}
         <div className="absolute inset-0 bg-black bg-opacity-30"></div>
-        
+
         {/* Text Content - Centered */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 sm:px-8 md:px-6">
           <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold text-white mb-2 md:mb-4 drop-shadow-lg">
             Valentine's Day at Maurya's
           </h1>
-          
+
           <p className="text-xs sm:text-base md:text-lg italic max-w-2xl mx-auto drop-shadow px-4 sm:px-2" style={{ color: '#d4a574' }}>
             "Great love stories start with six courses and strawberry-oat Champagne"
           </p>
         </div>
-        
+
         {/* Buttons - Positioned at bottom */}
-        <div className="absolute bottom-8 sm:bottom-12 md:bottom-20 left-0 right-0 flex justify-center">
-          <div className="flex flex-row gap-3 md:gap-4">
-            <a 
-              href="#booking-form" 
-              className="bg-[#d88728] text-white px-4 py-2 md:px-8 md:py-4 font-bold text-sm md:text-lg hover:bg-[#c07a24] transition-colors shadow-lg"
+        <div className="absolute bottom-8 sm:bottom-12 md:bottom-20 left-0 right-0 flex justify-center px-4">
+          <div className="flex flex-row gap-4 md:gap-6">
+            <a
+              href="#booking-form"
+              className="bg-[#d88728] text-white px-6 py-3 sm:px-8 sm:py-4 md:px-12 md:py-5 font-bold text-base sm:text-lg md:text-xl hover:bg-[#c07a24] transition-colors shadow-xl"
             >
               Reserve Table
             </a>
-            <button 
+            <button
               onClick={() => setShowMenuModal(true)}
-              className="bg-transparent text-white px-4 py-2 md:px-8 md:py-4 font-bold text-sm md:text-lg hover:bg-white hover:text-[#d88728] transition-colors border-2 border-white"
+              className="bg-transparent text-white px-6 py-3 sm:px-8 sm:py-4 md:px-12 md:py-5 font-bold text-base sm:text-lg md:text-xl hover:bg-white hover:text-[#d88728] transition-colors border-3 border-white shadow-xl"
+              style={{ borderWidth: '3px' }}
             >
               View Menu
             </button>
@@ -247,7 +248,7 @@ export default function Home() {
       {showMenuModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg shadow-2xl max-w-md w-full p-8 relative">
-            <button 
+            <button
               onClick={() => setShowMenuModal(false)}
               className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold"
             >
@@ -266,11 +267,11 @@ export default function Home() {
       <section className="max-w-4xl mx-auto py-16 px-6">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">What Our Guests Say</h2>
         <p className="text-gray-600 text-center mb-12">Real reviews from our Valentine's Day celebrations</p>
-        
+
         <div className="relative">
           {/* Carousel Container */}
           <div className="overflow-hidden">
-            <div 
+            <div
               className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${currentTestimonial * 100}%)` }}
             >
@@ -317,11 +318,10 @@ export default function Home() {
               <button
                 key={index}
                 onClick={() => setCurrentTestimonial(index)}
-                className={`w-3 h-3 rounded-full transition-all ${
-                  index === currentTestimonial 
-                    ? "bg-red-500 w-6" 
+                className={`w-3 h-3 rounded-full transition-all ${index === currentTestimonial
+                    ? "bg-red-500 w-6"
                     : "bg-red-200 hover:bg-red-300"
-                }`}
+                  }`}
                 aria-label={`Go to testimonial ${index + 1}`}
               />
             ))}
@@ -334,7 +334,7 @@ export default function Home() {
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Reserve Your Table</h2>
           <p className="text-gray-600 text-center mb-2">
-            Secure your spot for Valentine's $79 per person <br /> Number of Guests * ($10 per person deposit)
+            Secure your table for Valentine's $79 per person
           </p>
           <p className="text-[#d88728] font-semibold text-center mb-8">
             February 13th, 14th & 15th, 2026
@@ -379,7 +379,7 @@ export default function Home() {
             </div>
 
             <div className="mb-6">
-              <label className="block text-lg font-bold mb-2">Number of Guests * <span className="text-sm font-normal text-gray-600">($10 per person deposit)</span></label>
+              <label className="block text-lg font-bold mb-2">Number of Guests * <span className="text-sm font-normal text-gray-600">($10 per person deposit to secure your table)</span></label>
               <select
                 required
                 className="w-full border-2 border-[#d88728] p-3 rounded focus:outline-none focus:border-red-500"
@@ -403,11 +403,10 @@ export default function Home() {
                     key={d}
                     type="button"
                     onClick={() => { setDate(d); setTimeSlot(""); }}
-                    className={`p-4 rounded-lg border-2 font-medium transition-all ${
-                      date === d 
-                        ? "border-red-500 bg-red-50 text-red-700" 
+                    className={`p-4 rounded-lg border-2 font-medium transition-all ${date === d
+                        ? "border-red-500 bg-red-50 text-red-700"
                         : "border-gray-200 hover:border-[#d88728]"
-                    }`}
+                      }`}
                   >
                     Feb {d}
                   </button>
@@ -430,13 +429,12 @@ export default function Home() {
                           type="button"
                           disabled={!available}
                           onClick={() => setTimeSlot(slot)}
-                          className={`p-3 rounded border-2 text-sm font-medium transition-all ${
-                            !available 
-                              ? "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed" 
-                              : timeSlot === slot 
-                                ? "border-red-500 bg-red-50 text-red-700" 
+                          className={`p-3 rounded border-2 text-sm font-medium transition-all ${!available
+                              ? "border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed"
+                              : timeSlot === slot
+                                ? "border-red-500 bg-red-50 text-red-700"
                                 : "border-gray-200 hover:border-[#d88728]"
-                          }`}
+                            }`}
                         >
                           {slot}
                           {!available && <span className="block text-xs">Full</span>}
@@ -496,7 +494,7 @@ export default function Home() {
                   Terms & Conditions – Valentine's Day Reservation
                 </label>
                 <div className={"text-sm text-gray-700 transition-all relative " + (showTerms ? "" : "max-h-10 overflow-hidden")}>
-                  <p><strong>1. Reservation Fee</strong><br />The <strong>$10 per person reservation fee</strong> is a deposit to secure your table. When you arrive at the restaurant, this fee will be returned to you in the form of a <strong>$15 gift card</strong> that can be used towards your meal or future visits!</p>
+                  <p><strong>1. Reservation Fee</strong><br />The <strong>$10 per person reservation fee</strong> is a deposit to secure your table. When you arrive at the restaurant, this fee will be returned to you in the form of a <strong>$15 gift card</strong> that can be used towards your future visits!</p>
                   <p className="mt-2"><strong>2. Table Time Limit</strong><br />To ensure all guests have a wonderful experience, table reservations are limited to a <strong>maximum of 2 hours</strong>. Please plan your dining experience accordingly.</p>
                   <p className="mt-2"><strong>3. No Refund Policy</strong><br />All ticket sales are final. No refunds or exchanges will be provided for any reason, including no-shows, late arrival, or removal from the event.</p>
                   <p className="mt-2"><strong>4. Gift Card Terms</strong><br />The $15 gift card will be provided upon arrival and check-in at the restaurant. Gift cards are valid for 1 year from the date of issue.</p>
