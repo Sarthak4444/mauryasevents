@@ -364,7 +364,7 @@ export default function Home() {
         <div className="max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Reserve Your Table</h2>
           <p className="text-gray-600 text-center mb-2">
-            Secure your table for Valentine's $79 per person
+          Join this culinary experience — $79 per person
           </p>
           <p className="text-[#d88728] font-semibold text-center mb-8">
             February 13th, 14th & 15th, 2026
@@ -497,7 +497,7 @@ export default function Home() {
               <label className="block text-lg font-bold mb-2">Notes & Allergies</label>
               <textarea
                 className="w-full border-2 border-[#d88728] p-3 rounded focus:outline-none focus:border-red-500 min-h-[100px]"
-                placeholder="Any special requests, allergies, or notes for the kitchen..."
+                placeholder={"Any special requests, allergies, or notes for the kitchen...\nQuestions about the menu? Call 250-377-4969"}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
               />
