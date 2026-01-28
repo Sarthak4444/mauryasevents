@@ -564,7 +564,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-[#d88728] hover:scale-105 transition-all duration-500 text-white px-14 text-lg md:text-xl font-bold tracking-wider py-4 rounded-lg"
+                className="bg-[#d88728] hover:scale-105 transition-all duration-500 text-white px-6 sm:px-10 md:px-14 text-lg md:text-xl font-bold tracking-wider py-4 rounded-lg"
               >
                 {loading ? "Processing..." : "Complete Reservation"}
               </button>
