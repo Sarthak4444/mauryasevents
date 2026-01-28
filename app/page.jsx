@@ -244,13 +244,13 @@ export default function Home() {
           <div className="flex flex-row gap-4 md:gap-6">
             <a
               href="#booking-form"
-              className="bg-[#d88728] text-white px-6 py-3 sm:px-8 sm:py-4 md:px-12 md:py-5 font-bold text-base sm:text-lg md:text-xl hover:bg-[#c07a24] transition-colors shadow-xl"
+              className="bg-[#d88728] text-white py-3 sm:py-4 md:py-5 font-bold text-base sm:text-lg md:text-xl hover:bg-[#c07a24] transition-colors shadow-xl text-center w-40 sm:w-48 md:w-56"
             >
               Reserve Table
             </a>
             <button
               onClick={() => setShowMenuModal(true)}
-              className="bg-transparent text-white px-6 py-3 sm:px-8 sm:py-4 md:px-12 md:py-5 font-bold text-base sm:text-lg md:text-xl hover:bg-white hover:text-[#d88728] transition-colors border-3 border-white shadow-xl"
+              className="bg-transparent text-white py-3 sm:py-4 md:py-5 font-bold text-base sm:text-lg md:text-xl hover:bg-white hover:text-[#d88728] transition-colors border-white shadow-xl text-center w-40 sm:w-48 md:w-56"
               style={{ borderWidth: '3px' }}
             >
               View Menu
