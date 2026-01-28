@@ -87,6 +87,21 @@ export default function Home() {
   const [showTerms, setShowTerms] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [showMenuModal, setShowMenuModal] = useState(false);
+  const [expandedTestimonials, setExpandedTestimonials] = useState({});
+
+  const MAX_CHARS = 200; // Character limit for testimonials
+
+  const toggleTestimonialExpand = (id) => {
+    setExpandedTestimonials(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
+  const truncateText = (text, maxLength) => {
+    if (text.length <= maxLength) return { text, isTruncated: false };
+    return { text: text.substring(0, maxLength).trim() + '...', isTruncated: true };
+  };
 
   // Auto-scroll testimonials every 5 seconds
   useEffect(() => {
@@ -275,20 +290,35 @@ export default function Home() {
               className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${currentTestimonial * 100}%)` }}
             >
-              {testimonials.map((testimonial) => (
-                <div key={testimonial.id} className="w-full flex-shrink-0 px-4">
-                  <div className="border-2 border-red-100 rounded-lg p-8 bg-white shadow-lg max-w-2xl mx-auto">
-                    <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h3 className="font-bold text-xl">{testimonial.name}</h3>
-                        <p className="text-sm text-gray-500">{testimonial.year}</p>
+              {testimonials.map((testimonial) => {
+                const isExpanded = expandedTestimonials[testimonial.id];
+                const { text: displayText, isTruncated } = truncateText(testimonial.message, MAX_CHARS);
+                
+                return (
+                  <div key={testimonial.id} className="w-full flex-shrink-0 px-4">
+                    <div className="border-2 border-red-100 rounded-lg p-8 bg-white shadow-lg max-w-2xl mx-auto">
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h3 className="font-bold text-xl">{testimonial.name}</h3>
+                          <p className="text-sm text-gray-500">{testimonial.year}</p>
+                        </div>
+                        <div className="text-xl">{renderStars(testimonial.rating)}</div>
                       </div>
-                      <div className="text-xl">{renderStars(testimonial.rating)}</div>
+                      <p className="text-gray-700 text-lg italic">
+                        "{isExpanded ? testimonial.message : displayText}"
+                      </p>
+                      {isTruncated && (
+                        <button
+                          onClick={() => toggleTestimonialExpand(testimonial.id)}
+                          className="text-[#d88728] font-semibold text-sm mt-3 hover:text-[#c07a24] transition-colors"
+                        >
+                          {isExpanded ? 'Read less' : 'Read more'}
+                        </button>
+                      )}
                     </div>
-                    <p className="text-gray-700 text-lg italic">"{testimonial.message}"</p>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
