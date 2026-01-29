@@ -81,18 +81,20 @@ function GiftCardContent() {
     return cards.reduce((sum, card) => sum + (parseFloat(card.amount) || 0), 0);
   };
 
-  const calculateBonus = () => {
-    let bonus = 0;
-    cards.forEach(card => {
-      const amount = parseFloat(card.amount) || 0;
-      if (amount >= 100) {
-        bonus += 20;
-      } else if (amount >= 50) {
-        bonus += 10;
-      }
-    });
-    return bonus;
-  };
+  // BONUS FEATURE DISABLED - Uncomment to re-enable
+  // const calculateBonus = () => {
+  //   let bonus = 0;
+  //   cards.forEach(card => {
+  //     const amount = parseFloat(card.amount) || 0;
+  //     if (amount >= 100) {
+  //       bonus += 20;
+  //     } else if (amount >= 50) {
+  //       bonus += 10;
+  //     }
+  //   });
+  //   return bonus;
+  // };
+  const calculateBonus = () => 0; // Bonus feature disabled
 
   const validateCards = () => {
     // Validate buyer email confirmation
@@ -258,7 +260,7 @@ function GiftCardContent() {
           <div className="p-6 md:p-10">
             {activeTab === "buy" && !showSummary && (
               <div>
-                {/* Bonus Info Banner */}
+                {/* BONUS FEATURE DISABLED - Uncomment to re-enable
                 <div className="bg-gradient-to-r from-[#d88728] to-[#f5a623] text-white p-5 rounded-xl mb-8">
                   <div className="flex items-center gap-4">
                     <div className="text-3xl">🎁</div>
@@ -270,6 +272,7 @@ function GiftCardContent() {
                     </div>
                   </div>
                 </div>
+                */}
 
                 <form onSubmit={handleReviewOrder}>
                   {/* Buyer Information */}
@@ -430,12 +433,14 @@ function GiftCardContent() {
                               required
                             />
                           </div>
+                          {/* BONUS FEATURE DISABLED - Uncomment to re-enable
                           {parseFloat(card.amount) >= 50 && (
                             <p className="text-green-600 text-sm mt-2">
                               <i className="fas fa-check-circle mr-1"></i>
                               You'll get a ${parseFloat(card.amount) >= 100 ? "20" : "10"} Bonus Card!
                             </p>
                           )}
+                          */}
                         </div>
 
                         {/* Recipient Info (only when card is for a friend) */}
@@ -533,12 +538,14 @@ function GiftCardContent() {
                       <span>Gift Cards ({cards.length})</span>
                       <span>${calculateTotal().toFixed(2)}</span>
                     </div>
+                    {/* BONUS FEATURE DISABLED - Uncomment to re-enable
                     {calculateBonus() > 0 && (
                       <div className="flex justify-between text-[#d88728] mb-2">
                         <span>🎁 Bonus Cards</span>
                         <span>+${calculateBonus().toFixed(2)} FREE</span>
                       </div>
                     )}
+                    */}
                     <div className="border-t border-gray-700 pt-3 mt-3 flex justify-between text-xl font-bold">
                       <span>Total to Pay</span>
                       <span>${calculateTotal().toFixed(2)} CAD</span>
@@ -606,7 +613,7 @@ function GiftCardContent() {
                         )}
                       </div>
                       
-                      {/* Bonus Card Preview */}
+                      {/* BONUS FEATURE DISABLED - Uncomment to re-enable
                       {parseFloat(card.amount) >= 50 && (
                         <div className="mt-3 relative">
                           <div className="bg-white rounded-xl overflow-hidden shadow-lg border border-[#d88728]">
@@ -630,6 +637,7 @@ function GiftCardContent() {
                           </div>
                         </div>
                       )}
+                      */}
                     </div>
                   ))}
                 </div>
@@ -649,6 +657,7 @@ function GiftCardContent() {
                     ))}
                   </div>
                   
+                  {/* BONUS FEATURE DISABLED - Uncomment to re-enable
                   {calculateBonus() > 0 && (
                     <div className="border-t border-gray-700 pt-3 mb-3">
                       <div className="text-[#d88728]">
@@ -659,6 +668,7 @@ function GiftCardContent() {
                       </div>
                     </div>
                   )}
+                  */}
                   
                   <div className="border-t border-gray-700 pt-3 flex justify-between text-xl font-bold">
                     <span>Total</span>

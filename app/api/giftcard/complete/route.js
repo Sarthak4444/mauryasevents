@@ -255,35 +255,35 @@ export async function POST(req) {
       await newCard.save();
       allCreatedCards.push(newCard);
       
-      // Create bonus card if applicable
-      let bonusCardAmount = 0;
-      if (amount >= 100) {
-        bonusCardAmount = 20;
-      } else if (amount >= 50) {
-        bonusCardAmount = 10;
-      }
-      
-      if (bonusCardAmount > 0) {
-        const bonusCode = await generateUniqueCode();
-        const bonusCard = new GiftCard({
-          code: bonusCode,
-          originalAmount: bonusCardAmount,
-          remainingAmount: bonusCardAmount,
-          ownerEmail: buyerEmail, // Bonus always goes to buyer
-          ownerName: buyerName,
-          buyerEmail,
-          buyerName,
-          isBonus: true,
-          parentCardCode: code,
-          isGift: false,
-          status: 'active',
-          orderId,
-          personalMessage: ''
-        });
-        
-        await bonusCard.save();
-        allCreatedCards.push(bonusCard);
-      }
+      // BONUS FEATURE DISABLED - Uncomment to re-enable
+      // let bonusCardAmount = 0;
+      // if (amount >= 100) {
+      //   bonusCardAmount = 20;
+      // } else if (amount >= 50) {
+      //   bonusCardAmount = 10;
+      // }
+      // 
+      // if (bonusCardAmount > 0) {
+      //   const bonusCode = await generateUniqueCode();
+      //   const bonusCard = new GiftCard({
+      //     code: bonusCode,
+      //     originalAmount: bonusCardAmount,
+      //     remainingAmount: bonusCardAmount,
+      //     ownerEmail: buyerEmail, // Bonus always goes to buyer
+      //     ownerName: buyerName,
+      //     buyerEmail,
+      //     buyerName,
+      //     isBonus: true,
+      //     parentCardCode: code,
+      //     isGift: false,
+      //     status: 'active',
+      //     orderId,
+      //     personalMessage: ''
+      //   });
+      //   
+      //   await bonusCard.save();
+      //   allCreatedCards.push(bonusCard);
+      // }
       
       // Send email to recipient if it's a gift
       if (isGiftCard && cardData.recipientEmail !== buyerEmail) {

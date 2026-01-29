@@ -49,16 +49,17 @@ export async function POST(req) {
       );
     }
 
-    // Calculate bonus cards
-    let bonusAmount = 0;
-    for (const card of cards) {
-      const amount = parseFloat(card.amount);
-      if (amount >= 100) {
-        bonusAmount += 20;
-      } else if (amount >= 50) {
-        bonusAmount += 10;
-      }
-    }
+    // BONUS FEATURE DISABLED - Uncomment to re-enable
+    // let bonusAmount = 0;
+    // for (const card of cards) {
+    //   const amount = parseFloat(card.amount);
+    //   if (amount >= 100) {
+    //     bonusAmount += 20;
+    //   } else if (amount >= 50) {
+    //     bonusAmount += 10;
+    //   }
+    // }
+    let bonusAmount = 0; // Bonus feature disabled
 
     // Generate a unique order ID
     const orderId = `GC-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
