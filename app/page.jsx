@@ -237,22 +237,8 @@ export default function Home() {
           className="w-full h-full object-cover absolute inset-0 sm:relative sm:h-auto"
         />
 
-        {/* Dark Overlay for better text readability */}
-        <div className="absolute inset-0 bg-black bg-opacity-30"></div>
-
-        {/* Text Content - Centered */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 sm:px-8 md:px-6">
-          <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold text-white mb-2 md:mb-4 drop-shadow-lg">
-            Valentine's Day at Maurya's
-          </h1>
-
-          <p className="text-xs sm:text-base md:text-lg italic max-w-2xl mx-auto drop-shadow px-4 sm:px-2" style={{ color: '#d4a574' }}>
-            "Great love stories start with six courses and strawberry-oat Champagne"
-          </p>
-        </div>
-
         {/* Buttons - Positioned at bottom */}
-        <div className="absolute bottom-8 sm:bottom-12 md:bottom-20 left-0 right-0 flex justify-center px-4">
+        <div className="absolute bottom-10 sm:bottom-28 md:bottom-48 left-0 right-0 flex justify-center px-4">
           <div className="flex flex-row gap-4 md:gap-6">
             <a
               href="#booking-form"
