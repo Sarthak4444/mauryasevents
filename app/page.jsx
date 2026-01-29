@@ -277,7 +277,7 @@ export default function Home() {
           {/* Close Button - Fixed position */}
           <button
             onClick={() => setShowMenuModal(false)}
-            className="fixed top-6 right-10 z-50 bg-white text-gray-700 pb-1.5 hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center text-2xl font-bold shadow-lg"
+            className="fixed top-6 right-10 z-50 bg-white text-gray-700 hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center text-2xl font-bold shadow-lg"
           >
             ×
           </button>
