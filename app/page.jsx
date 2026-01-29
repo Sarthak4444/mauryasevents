@@ -279,7 +279,7 @@ export default function Home() {
             onClick={() => setShowMenuModal(false)}
             className="fixed top-6 right-10 z-50 bg-white text-gray-700 hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center text-2xl font-bold shadow-lg"
           >
-            <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"></svg>
+            <i className="fa-solid fa-xmark"></i>
           </button>
           
           <div className="w-full max-w-3xl mx-auto p-4">
