@@ -111,6 +111,18 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  // Prevent body scroll when menu modal is open
+  useEffect(() => {
+    if (showMenuModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showMenuModal]);
+
   // Fetch availability when date changes
   useEffect(() => {
     if (date) {
@@ -261,18 +273,40 @@ export default function Home() {
 
       {/* Menu Modal */}
       {showMenuModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-2xl max-w-md w-full p-8 relative">
-            <button
-              onClick={() => setShowMenuModal(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold"
-            >
-              ×
-            </button>
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-red-900 mb-4">Valentine's Menu</h2>
-              <p className="text-gray-600 text-lg">Coming Soon</p>
-              <p className="text-gray-500 mt-4 text-sm">Our special Valentine's menu is being crafted with love. Check back soon!</p>
+        <div className="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-start justify-center overflow-y-auto">
+          {/* Close Button - Fixed position */}
+          <button
+            onClick={() => setShowMenuModal(false)}
+            className="fixed top-4 right-8 z-50 bg-white text-gray-700 pb-1.5 hover:bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center text-2xl font-bold shadow-lg"
+          >
+            ×
+          </button>
+          
+          <div className="w-full max-w-3xl mx-auto py-8 px-4 my-10">
+            
+            {/* Menu Images */}
+            <div className="flex flex-col gap-4">
+              <img 
+                src="/Menu_p1.jpeg" 
+                alt="Valentine's Menu Page 1" 
+                className="w-full h-auto rounded-lg shadow-xl"
+              />
+              <img 
+                src="/Menu_p2.jpeg" 
+                alt="Valentine's Menu Page 2" 
+                className="w-full h-auto rounded-lg shadow-xl"
+              />
+            </div>
+            
+            {/* Reserve Table Button */}
+            <div className="flex justify-center mt-8 mb-4">
+              <a
+                href="#booking-form"
+                onClick={() => setShowMenuModal(false)}
+                className="bg-[#d88728] text-white py-3 sm:py-4 md:py-5 font-bold text-base sm:text-lg md:text-xl hover:bg-[#c07a24] transition-colors shadow-xl text-center w-48 sm:w-56 md:w-64"
+              >
+                Reserve Table
+              </a>
             </div>
           </div>
         </div>
