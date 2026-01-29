@@ -256,13 +256,13 @@ export default function Home() {
           <div className="flex flex-row gap-4 md:gap-6">
             <a
               href="#booking-form"
-              className="bg-[#d88728] text-white py-3 sm:py-4 md:py-5 font-bold text-base sm:text-lg md:text-xl hover:bg-[#c07a24] transition-colors shadow-xl text-center w-40 sm:w-48 md:w-56"
+              className="bg-[#d88728] text-white py-3 rounded-lg sm:py-4 md:py-5 font-bold text-base sm:text-lg md:text-xl hover:bg-[#c07a24] transition-colors shadow-xl text-center w-40 sm:w-48 md:w-56"
             >
               Reserve Table
             </a>
             <button
               onClick={() => setShowMenuModal(true)}
-              className="bg-transparent text-white py-3 sm:py-4 md:py-5 font-bold text-base sm:text-lg md:text-xl hover:bg-white hover:text-[#d88728] transition-colors border-white shadow-xl text-center w-40 sm:w-48 md:w-56"
+              className="bg-transparent text-white py-3 rounded-lg sm:py-4 md:py-5 font-bold text-base sm:text-lg md:text-xl hover:bg-white hover:text-[#d88728] transition-colors border-white shadow-xl text-center w-40 sm:w-48 md:w-56"
               style={{ borderWidth: '3px' }}
             >
               View Menu
@@ -303,7 +303,7 @@ export default function Home() {
               <a
                 href="#booking-form"
                 onClick={() => setShowMenuModal(false)}
-                className="bg-[#d88728] text-white py-3 sm:py-4 md:py-5 font-bold text-base sm:text-lg md:text-xl hover:bg-[#c07a24] transition-colors shadow-xl text-center w-48 sm:w-56 md:w-64"
+                className="bg-[#d88728] text-white py-3 sm:py-4 md:py-5 font-bold text-base sm:text-lg rounded-lg md:text-xl hover:bg-[#c07a24] transition-colors shadow-xl text-center w-48 sm:w-56 md:w-64"
               >
                 Reserve Table
               </a>
@@ -598,7 +598,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-[#d88728] hover:scale-105 transition-all duration-500 text-white px-6 sm:px-10 md:px-14 text-lg md:text-xl font-bold tracking-wider py-4"
+                className="bg-[#d88728] hover:scale-105 transition-all duration-500 text-white px-6 sm:px-10 md:px-14 text-lg md:text-xl font-bold tracking-wider py-4 rounded-lg"
               >
                 {loading ? "Processing..." : "Complete Reservation"}
               </button>
