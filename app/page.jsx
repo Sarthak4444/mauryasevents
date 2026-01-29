@@ -277,12 +277,12 @@ export default function Home() {
           {/* Close Button - Fixed position */}
           <button
             onClick={() => setShowMenuModal(false)}
-            className="fixed top-4 right-8 z-50 bg-white text-gray-700 pb-1.5 hover:bg-gray-100 rounded-full w-10 h-10 flex items-center justify-center text-2xl font-bold shadow-lg"
+            className="fixed top-6 right-10 z-50 bg-white text-gray-700 pb-1.5 hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center text-2xl font-bold shadow-lg"
           >
             ×
           </button>
           
-          <div className="w-full max-w-3xl mx-auto py-8 px-4 my-10">
+          <div className="w-full max-w-3xl mx-auto p-4">
             
             {/* Menu Images */}
             <div className="flex flex-col gap-4">
