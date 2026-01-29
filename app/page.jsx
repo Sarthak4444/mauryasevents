@@ -232,7 +232,7 @@ export default function Home() {
       <section className="relative w-full min-h-[400px] sm:min-h-0">
         {/* Background Image - Responsive for both mobile and desktop */}
         <img
-          src="/val_banner_16x9.jpg"
+          src="/valentine's weekend.webp"
           alt="Valentine's Day at Maurya's"
           className="w-full h-full object-cover absolute inset-0 sm:relative sm:h-auto"
         />
@@ -598,7 +598,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-[#d88728] hover:scale-105 transition-all duration-500 text-white px-6 sm:px-10 md:px-14 text-lg md:text-xl font-bold tracking-wider py-4 rounded-lg"
+                className="bg-[#d88728] hover:scale-105 transition-all duration-500 text-white px-6 sm:px-10 md:px-14 text-lg md:text-xl font-bold tracking-wider py-4"
               >
                 {loading ? "Processing..." : "Complete Reservation"}
               </button>
