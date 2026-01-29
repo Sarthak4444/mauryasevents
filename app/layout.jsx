@@ -17,7 +17,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "https://www.mauryasevents.com/val_banner_16x9.jpg",
+        url: "https://www.mauryasevents.com/valentine's weekend.webp",
         width: 1920,
         height: 1080,
         alt: "Valentine's Day at Maurya's - Romantic Six-Course Dining Experience",
@@ -28,7 +28,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Valentine's Day at Maurya's",
     description: "Celebrate Valentine's Day with a romantic six-course dining experience. February 13th, 14th & 15th, 2026.",
-    images: ["https://www.mauryasevents.com/val_banner_16x9.jpg"],
+    images: ["https://www.mauryasevents.com/valentine's weekend.webp"],
   },
 };
 
