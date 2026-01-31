@@ -98,32 +98,6 @@ export default function ValentinesAdminPage() {
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold mb-2 text-center">💝 Valentine's Day Reservations</h1>
         <h2 className="text-gray-600 mb-8 text-center">Admin Dashboard</h2>
-        
-        {/* Overall Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white border-2 border-red-200 rounded-lg p-6">
-            <h3 className="text-gray-600 text-sm font-medium">Total Reservations</h3>
-            <p className="text-3xl font-bold text-red-600">{totalBookings}</p>
-          </div>
-          <div className="bg-white border-2 border-red-200 rounded-lg p-6">
-            <h3 className="text-gray-600 text-sm font-medium">Total Guests</h3>
-            <p className="text-3xl font-bold text-red-600">{totalGuests}</p>
-          </div>
-          <div className="bg-white border-2 border-red-200 rounded-lg p-6">
-            <h3 className="text-gray-600 text-sm font-medium">Total Revenue</h3>
-            <p className="text-3xl font-bold text-red-600">${totalRevenue} CAD</p>
-          </div>
-        </div>
-
-        {/* Stats by Date */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          {Object.entries(statsByDate).map(([date, stats]) => (
-            <div key={date} className="bg-white border rounded-lg p-4">
-              <h3 className="font-bold text-lg mb-2">February {date}</h3>
-              <p className="text-sm text-gray-600">{stats.bookings} reservations • {stats.guests} guests</p>
-            </div>
-          ))}
-        </div>
 
         {/* Filters */}
         <div className="flex flex-col md:flex-row gap-4 mb-6">

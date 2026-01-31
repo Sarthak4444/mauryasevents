@@ -71,22 +71,6 @@ export default function KDVAdminPage() {
   return isAuthenticated ? (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6 text-center">Kamloops Dance Vibes - Ticket Bookings</h1>
-      
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white border-2 border-[#d88728] rounded-lg p-6">
-          <h3 className="text-gray-600 text-sm font-medium">Total Bookings</h3>
-          <p className="text-3xl font-bold text-[#d88728]">{bookings.length}</p>
-        </div>
-        <div className="bg-white border-2 border-[#d88728] rounded-lg p-6">
-          <h3 className="text-gray-600 text-sm font-medium">Total Tickets Sold</h3>
-          <p className="text-3xl font-bold text-[#d88728]">{totalTickets}</p>
-        </div>
-        <div className="bg-white border-2 border-[#d88728] rounded-lg p-6">
-          <h3 className="text-gray-600 text-sm font-medium">Total Revenue</h3>
-          <p className="text-3xl font-bold text-[#d88728]">${totalRevenue.toFixed(2)} CAD</p>
-        </div>
-      </div>
 
       {/* Search */}
       <div className="mb-6">

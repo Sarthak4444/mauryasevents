@@ -120,7 +120,7 @@ export async function POST(req) {
         📋 Reservation Details
       </h3>
       <p style="margin: 8px 0;"><strong>Booking Number:</strong> ${bookingNumber}</p>
-      <p style="margin: 8px 0;"><strong>Date:</strong> February ${date}, 2025</p>
+      <p style="margin: 8px 0;"><strong>Date:</strong> February ${date}, 2026</p>
       <p style="margin: 8px 0;"><strong>Time:</strong> ${timeSlot}</p>
       <p style="margin: 8px 0;"><strong>Number of Guests:</strong> ${numberOfGuests}</p>
       <p style="margin: 8px 0;"><strong>Reservation Fee Paid:</strong> $${totalAmount} CAD</p>
