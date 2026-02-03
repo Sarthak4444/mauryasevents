@@ -12,7 +12,7 @@ const stripePromise = loadStripe(
 const testimonials = [
   {
     id: 1,
-    name: "John",
+    name: "John Weaver",
     rating: 5,
     year: "Google 2024",
     message: "Just had the Valentines Day set menu. One of he most unique and amazing dining experiences I have ever had. So much thought and creativity. Incredible flavors! Will be looking forward to trying this dine in experience more often. We were pretty regular takeaway customers already. If you are gluten intolerant this is one of the best places you can go as the options are so varied. You feel like part of the experience rather than an afterthought. Congratulations to all staff you run a tight ship!",
@@ -44,14 +44,7 @@ const testimonials = [
     rating: 5,
     year: "Google 2024",
     message: "We went and experienced the off menu Valentines dinner this year and were absolutely blown away. The combination of the storytelling, the impeccable service and the almost too good for Kamloops food was perfection. Each course was a surprise, and paired with a fresh, new-to-us cocktail. It's an investment, but we would absolutely do it again.",
-  },
-  {
-    id: 6,
-    name: "John Weaver",
-    rating: 5,
-    year: "Google 2024",
-    message: "“Just had the Valentines Day set menu. One of the most unique and amazing dining experiences I have ever had. So much thought and creativity. Incredible flavors! Will be looking forward to trying this dine in experience more often. We were pretty regular takeaway customers already... this is one of the best places you can go as the options are so varied. You feel like part of the experience rather than an afterthought. Congratulations to all staff you run a tight ship!",
-  },
+  }
 ];
 
 // Time slots from 4pm to 11pm in 30-minute intervals
