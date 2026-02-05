@@ -1,4 +1,4 @@
-
+import Script from "next/script";
 import "./globals.css";
 
 export const metadata = {
@@ -22,19 +22,20 @@ export const metadata = {
         height: 1080,
         alt: "Valentine's Day at Maurya's - Romantic Six-Course Dining Experience",
       },
-    ],  
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Valentine's Day at Maurya's",
-    description: "Celebrate Valentine's Day with a romantic six-course dining experience. February 13th, 14th & 15th, 2026.",
-    images: ["https://www.mauryasevents.com/valentine's weekend.webp"],
+    description:
+      "Celebrate Valentine's Day with a romantic six-course dining experience. February 13th, 14th & 15th, 2026.",
+    images: [
+      "https://www.mauryasevents.com/valentine's weekend.webp",
+    ],
   },
 };
 
-
 export default function RootLayout({ children }) {
-
   return (
     <html lang="en">
       <head>
@@ -45,9 +46,39 @@ export default function RootLayout({ children }) {
           crossOrigin="anonymous"
           referrerPolicy="no-referrer"
         />
+
+        {/* Meta Pixel */}
+        <Script
+          id="meta-pixel"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function(f,b,e,v,n,t,s)
+              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+              n.queue=[];t=b.createElement(e);t.async=!0;
+              t.src=v;s=b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t,s)}(window, document,'script',
+              'https://connect.facebook.net/en_US/fbevents.js');
+              fbq('init', '204595835739270');
+              fbq('track', 'PageView');
+            `,
+          }}
+        />
       </head>
 
       <body>
+        <noscript>
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            src="https://www.facebook.com/tr?id=204595835739270&ev=PageView&noscript=1"
+            alt=""
+          />
+        </noscript>
+
         {children}
       </body>
     </html>
