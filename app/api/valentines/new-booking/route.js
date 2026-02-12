@@ -39,7 +39,7 @@ export async function POST(req) {
       paymentStatus: 'completed'
     });
 
-    if (existingBookings >= 5) {
+    if (existingBookings >= 4) {
       return NextResponse.json(
         { error: "This time slot is no longer available." },
         { status: 400 }

@@ -44,7 +44,7 @@ export async function GET(req) {
     // Apply manually disabled slots (set to 5 which is max capacity)
     if (manuallyDisabledSlots[date]) {
       manuallyDisabledSlots[date].forEach((slot) => {
-        slots[slot] = 4; // 5 = fully booked
+        slots[slot] = 4; // 4 = fully booked (max 4 per slot)
       });
     }
 

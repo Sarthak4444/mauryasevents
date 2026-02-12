@@ -21,14 +21,14 @@ export async function POST(req) {
     // Connect to database to check availability
     await mongoose.connect(process.env.MONGODB_URI);
 
-    // Check if the slot is still available (max 5 bookings per slot)
+    // Check if the slot is still available (max 4 bookings per slot)
     const existingBookings = await ValentinesBooking.countDocuments({
       date: date,
       timeSlot: timeSlot,
       paymentStatus: 'completed'
     });
 
-    if (existingBookings >= 5) {
+    if (existingBookings >= 4) {
       return NextResponse.json(
         { error: "Sorry, this time slot is no longer available. Please select another time." },
         { status: 400 }
