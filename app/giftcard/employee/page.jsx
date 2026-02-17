@@ -4,6 +4,11 @@ import { useEffect, useState, useRef } from "react";
 export default function EmployeePanelPage() {
   const [passcode, setPasscode] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(false);
+  const [authError, setAuthError] = useState("");
+  
+  // Employee info
+  const [employee, setEmployee] = useState(null);
   
   // Scanner state
   const [scannerActive, setScannerActive] = useState(false);
@@ -28,8 +33,6 @@ export default function EmployeePanelPage() {
   
   // Transaction history for current session
   const [transactions, setTransactions] = useState([]);
-
-  const correctPasscode = "1234"; // Simple employee passcode
 
   // Initialize and cleanup QR scanner
   useEffect(() => {
@@ -93,12 +96,25 @@ export default function EmployeePanelPage() {
     lookupCard(code.toUpperCase().trim());
   };
 
-  const handlePasscodeSubmit = (e) => {
+  const handlePasscodeSubmit = async (e) => {
     e.preventDefault();
-    if (passcode === correctPasscode) {
+    setAuthLoading(true);
+    setAuthError("");
+    
+    try {
+      const response = await fetch(`/api/giftcard/employee?auth=${passcode}`);
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || "Invalid passcode");
+      }
+      
+      setEmployee(data.employee);
       setIsAuthenticated(true);
-    } else {
-      alert("Incorrect passcode. Please try again.");
+    } catch (err) {
+      setAuthError(err.message);
+    } finally {
+      setAuthLoading(false);
     }
   };
 
@@ -140,7 +156,7 @@ export default function EmployeePanelPage() {
   const handleDeduct = async (e) => {
     e.preventDefault();
     
-    if (!foundCard || !deductAmount) return;
+    if (!foundCard || !deductAmount || !employee) return;
     
     const amount = parseFloat(deductAmount);
     if (amount <= 0) {
@@ -163,7 +179,8 @@ export default function EmployeePanelPage() {
         body: JSON.stringify({
           code: foundCard.code,
           deductAmount: amount,
-          note: deductNote
+          note: deductNote,
+          employeeId: employee._id
         }),
       });
       
@@ -213,20 +230,38 @@ export default function EmployeePanelPage() {
             <i className="fas fa-user-tie text-3xl text-white"></i>
           </div>
           <h2 className="text-2xl font-bold mb-2">Employee Panel</h2>
-          <p className="text-gray-500 mb-6">Enter employee passcode</p>
+          <p className="text-gray-500 mb-6">Enter your 4-digit passcode</p>
           <input
             type="password"
             maxLength={4}
             value={passcode}
-            onChange={(e) => setPasscode(e.target.value)}
+            onChange={(e) => {
+              setPasscode(e.target.value.replace(/\D/g, ''));
+              setAuthError("");
+            }}
             className="border-2 border-gray-200 px-4 py-3 rounded-lg w-full text-center text-2xl tracking-widest mb-4 focus:outline-none focus:border-green-600"
             placeholder="••••"
+            disabled={authLoading}
           />
+          {authError && (
+            <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">
+              <i className="fas fa-exclamation-circle mr-2"></i>
+              {authError}
+            </div>
+          )}
           <button
             type="submit"
-            className="bg-green-600 hover:bg-green-700 text-white w-full py-3 rounded-lg font-semibold text-lg transition-all"
+            disabled={authLoading || passcode.length !== 4}
+            className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white w-full py-3 rounded-lg font-semibold text-lg transition-all"
           >
-            Access Panel
+            {authLoading ? (
+              <span>
+                <i className="fas fa-spinner fa-spin mr-2"></i>
+                Authenticating...
+              </span>
+            ) : (
+              "Access Panel"
+            )}
           </button>
         </form>
       </div>
@@ -240,12 +275,17 @@ export default function EmployeePanelPage() {
         <div className="max-w-2xl mx-auto flex justify-between items-center">
           <div>
             <h1 className="text-xl font-bold">Employee Panel</h1>
-            <p className="text-green-100 text-sm">Gift Card Redemption</p>
+            <p className="text-green-100 text-sm">
+              Logged in as: <span className="font-semibold text-white">{employee?.name}</span>
+            </p>
           </div>
           <button
             onClick={() => {
               stopScanner();
               setIsAuthenticated(false);
+              setEmployee(null);
+              setPasscode("");
+              setTransactions([]);
             }}
             className="text-green-100 hover:text-white transition-colors"
           >

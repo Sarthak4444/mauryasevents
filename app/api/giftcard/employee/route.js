@@ -1,22 +1,48 @@
 import mongoose from "mongoose";
 import GiftCard from "../../../../models/GiftCard";
+import Employee from "../../../../models/Employee";
+import GiftCardTransaction from "../../../../models/GiftCardTransaction";
 import { NextResponse } from "next/server";
 
-// Check gift card balance by code only (for employee use)
+// GET: Check gift card balance OR authenticate employee
 export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);
     const code = searchParams.get("code");
+    const authPasscode = searchParams.get("auth");
     
+    await mongoose.connect(process.env.MONGODB_URI);
+    
+    // If auth parameter is provided, authenticate employee
+    if (authPasscode) {
+      const employee = await Employee.findOne({ 
+        passcode: authPasscode,
+        status: 'active'
+      });
+      
+      if (!employee) {
+        return NextResponse.json(
+          { error: "Invalid passcode or employee is not active" },
+          { status: 401 }
+        );
+      }
+      
+      return NextResponse.json({
+        success: true,
+        employee: {
+          _id: employee._id,
+          name: employee.name
+        }
+      }, { status: 200 });
+    }
+    
+    // Otherwise, look up gift card
     if (!code) {
       return NextResponse.json(
         { error: "Card code is required" },
         { status: 400 }
       );
     }
-    
-    // Connect to database
-    await mongoose.connect(process.env.MONGODB_URI);
     
     // Find the card by code only
     const card = await GiftCard.findOne({ 
@@ -55,12 +81,12 @@ export async function GET(req) {
 // Deduct amount from gift card (for employee use)
 export async function POST(req) {
   try {
-    const { code, deductAmount, note } = await req.json();
+    const { code, deductAmount, note, employeeId } = await req.json();
     
     // Validate required fields
-    if (!code || deductAmount === undefined) {
+    if (!code || deductAmount === undefined || !employeeId) {
       return NextResponse.json(
-        { error: "Card code and deduct amount are required" },
+        { error: "Card code, deduct amount, and employee ID are required" },
         { status: 400 }
       );
     }
@@ -76,6 +102,15 @@ export async function POST(req) {
     
     // Connect to database
     await mongoose.connect(process.env.MONGODB_URI);
+    
+    // Verify employee exists and is active
+    const employee = await Employee.findById(employeeId);
+    if (!employee || employee.status !== 'active') {
+      return NextResponse.json(
+        { error: "Invalid or inactive employee" },
+        { status: 401 }
+      );
+    }
     
     // Find the card
     const card = await GiftCard.findOne({ 
@@ -118,17 +153,34 @@ export async function POST(req) {
     
     await card.save();
     
+    // Create transaction record
+    const transaction = new GiftCardTransaction({
+      cardCode: card.code,
+      cardOwnerName: card.ownerName,
+      type: 'deduction',
+      amount: parsedAmount,
+      previousBalance: previousBalance,
+      newBalance: card.remainingAmount,
+      employeeId: employee._id,
+      employeeName: employee.name,
+      note: note || ''
+    });
+    
+    await transaction.save();
+    
     return NextResponse.json({
       success: true,
       message: "Transaction completed successfully",
       transaction: {
+        _id: transaction._id,
         code: card.code,
         ownerName: card.ownerName,
         deductedAmount: parsedAmount,
         previousBalance: previousBalance,
         newBalance: card.remainingAmount,
         status: card.status,
-        note: note || ''
+        note: note || '',
+        employeeName: employee.name
       }
     }, { status: 200 });
     

@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 
 export default function GiftCardAdminPage() {
+  // Tab state
+  const [activeTab, setActiveTab] = useState("cards"); // cards, employees, transactions
+  
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,6 +48,26 @@ export default function GiftCardAdminPage() {
     totalRemaining: 0,
     totalRedeemed: 0
   });
+  
+  // Employee state
+  const [employees, setEmployees] = useState([]);
+  const [employeesLoading, setEmployeesLoading] = useState(false);
+  const [showArchivedEmployees, setShowArchivedEmployees] = useState(false);
+  
+  // Employee modal state
+  const [showEmployeeModal, setShowEmployeeModal] = useState(false);
+  const [editingEmployee, setEditingEmployee] = useState(null);
+  const [empName, setEmpName] = useState("");
+  const [empPasscode, setEmpPasscode] = useState("");
+  const [empNotes, setEmpNotes] = useState("");
+  const [empLoading, setEmpLoading] = useState(false);
+  const [empError, setEmpError] = useState("");
+  const [empSuccess, setEmpSuccess] = useState("");
+  
+  // Transactions state
+  const [transactions, setTransactions] = useState([]);
+  const [transactionsLoading, setTransactionsLoading] = useState(false);
+  const [transactionsTotals, setTransactionsTotals] = useState({ deducted: 0, refunded: 0 });
 
   const correctPasscode = "987654"; // Super Admin passcode
 
@@ -88,13 +111,54 @@ export default function GiftCardAdminPage() {
     }
   };
 
+  const fetchEmployees = async () => {
+    setEmployeesLoading(true);
+    try {
+      const response = await fetch(`/api/giftcard/employees?includeArchived=${showArchivedEmployees}`);
+      if (!response.ok) throw new Error("Failed to fetch employees");
+      const data = await response.json();
+      setEmployees(data.employees || []);
+    } catch (err) {
+      console.error("Fetch employees error:", err);
+    } finally {
+      setEmployeesLoading(false);
+    }
+  };
+
+  const fetchTransactions = async () => {
+    setTransactionsLoading(true);
+    try {
+      const response = await fetch("/api/giftcard/transactions?limit=100");
+      if (!response.ok) throw new Error("Failed to fetch transactions");
+      const data = await response.json();
+      setTransactions(data.transactions || []);
+      setTransactionsTotals(data.totals || { deducted: 0, refunded: 0 });
+    } catch (err) {
+      console.error("Fetch transactions error:", err);
+    } finally {
+      setTransactionsLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
       fetchOrders();
-      const interval = setInterval(fetchOrders, 60000);
+      fetchEmployees();
+      fetchTransactions();
+      const interval = setInterval(() => {
+        fetchOrders();
+        if (activeTab === 'employees') fetchEmployees();
+        if (activeTab === 'transactions') fetchTransactions();
+      }, 60000);
       return () => clearInterval(interval);
     }
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (isAuthenticated && activeTab === 'employees') {
+      fetchEmployees();
+    }
+  }, [showArchivedEmployees]);
 
   useEffect(() => {
     let filtered = [...orders];
@@ -299,6 +363,113 @@ export default function GiftCardAdminPage() {
     }
   };
 
+  // Employee handlers
+  const openEmployeeModal = (employee = null) => {
+    setEditingEmployee(employee);
+    setEmpName(employee?.name || "");
+    setEmpPasscode(employee?.passcode || "");
+    setEmpNotes(employee?.notes || "");
+    setEmpError("");
+    setEmpSuccess("");
+    setShowEmployeeModal(true);
+  };
+
+  const closeEmployeeModal = () => {
+    setShowEmployeeModal(false);
+    setEditingEmployee(null);
+    setEmpName("");
+    setEmpPasscode("");
+    setEmpNotes("");
+    setEmpError("");
+    setEmpSuccess("");
+  };
+
+  const handleEmployeeSubmit = async (e) => {
+    e.preventDefault();
+    setEmpLoading(true);
+    setEmpError("");
+    setEmpSuccess("");
+
+    try {
+      const url = "/api/giftcard/employees";
+      const method = editingEmployee ? "PUT" : "POST";
+      const body = editingEmployee 
+        ? { employeeId: editingEmployee._id, name: empName, passcode: empPasscode, notes: empNotes }
+        : { name: empName, passcode: empPasscode, notes: empNotes };
+
+      const response = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to save employee");
+      }
+
+      setEmpSuccess(editingEmployee ? "Employee updated!" : "Employee created!");
+      fetchEmployees();
+      
+      setTimeout(() => {
+        closeEmployeeModal();
+      }, 1500);
+    } catch (err) {
+      setEmpError(err.message);
+    } finally {
+      setEmpLoading(false);
+    }
+  };
+
+  const handleArchiveEmployee = async (employee) => {
+    if (!confirm(`Are you sure you want to ${employee.status === 'active' ? 'archive' : 'restore'} ${employee.name}?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/giftcard/employees", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          employeeId: employee._id,
+          status: employee.status === 'active' ? 'archived' : 'active'
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to update employee");
+      }
+
+      fetchEmployees();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleDeleteEmployee = async (employee) => {
+    if (!confirm(`Are you sure you want to delete ${employee.name}? This cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/giftcard/employees?employeeId=${employee._id}`, {
+        method: "DELETE"
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to delete employee");
+      }
+
+      fetchEmployees();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#fef9f3] to-white">
@@ -334,16 +505,27 @@ export default function GiftCardAdminPage() {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold">Gift Card Super Admin</h1>
-            <p className="text-gray-400 text-sm">Full access - Create, Edit, Delete gift cards</p>
+            <p className="text-gray-400 text-sm">Manage gift cards, employees, and transactions</p>
           </div>
           <div className="flex items-center gap-4">
-            <button
-              onClick={openCreateModal}
-              className="bg-[#d88728] hover:bg-[#c07a24] text-white px-4 py-2 rounded-lg font-medium transition-colors"
-            >
-              <i className="fas fa-plus mr-2"></i>
-              Create Card
-            </button>
+            {activeTab === 'cards' && (
+              <button
+                onClick={openCreateModal}
+                className="bg-[#d88728] hover:bg-[#c07a24] text-white px-4 py-2 rounded-lg font-medium transition-colors"
+              >
+                <i className="fas fa-plus mr-2"></i>
+                Create Card
+              </button>
+            )}
+            {activeTab === 'employees' && (
+              <button
+                onClick={() => openEmployeeModal()}
+                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+              >
+                <i className="fas fa-user-plus mr-2"></i>
+                Add Employee
+              </button>
+            )}
             <button
               onClick={() => setIsAuthenticated(false)}
               className="text-gray-400 hover:text-white transition-colors"
@@ -355,7 +537,51 @@ export default function GiftCardAdminPage() {
         </div>
       </div>
 
+      {/* Tabs */}
+      <div className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex gap-1">
+            <button
+              onClick={() => setActiveTab('cards')}
+              className={`px-6 py-4 font-medium transition-colors border-b-2 ${
+                activeTab === 'cards' 
+                  ? 'text-[#d88728] border-[#d88728]' 
+                  : 'text-gray-500 border-transparent hover:text-gray-700'
+              }`}
+            >
+              <i className="fas fa-credit-card mr-2"></i>
+              Gift Cards
+            </button>
+            <button
+              onClick={() => setActiveTab('employees')}
+              className={`px-6 py-4 font-medium transition-colors border-b-2 ${
+                activeTab === 'employees' 
+                  ? 'text-green-600 border-green-600' 
+                  : 'text-gray-500 border-transparent hover:text-gray-700'
+              }`}
+            >
+              <i className="fas fa-users mr-2"></i>
+              Employees
+            </button>
+            <button
+              onClick={() => { setActiveTab('transactions'); fetchTransactions(); }}
+              className={`px-6 py-4 font-medium transition-colors border-b-2 ${
+                activeTab === 'transactions' 
+                  ? 'text-blue-600 border-blue-600' 
+                  : 'text-gray-500 border-transparent hover:text-gray-700'
+              }`}
+            >
+              <i className="fas fa-history mr-2"></i>
+              Transactions
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto p-6">
+        {/* Gift Cards Tab */}
+        {activeTab === 'cards' && (
+          <>
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-white p-4 rounded-xl shadow-sm">
@@ -578,6 +804,191 @@ export default function GiftCardAdminPage() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+          </>
+        )}
+
+        {/* Employees Tab */}
+        {activeTab === 'employees' && (
+          <div>
+            {/* Employee Controls */}
+            <div className="bg-white p-4 rounded-xl shadow-sm mb-6">
+              <div className="flex items-center justify-between">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={showArchivedEmployees}
+                    onChange={(e) => setShowArchivedEmployees(e.target.checked)}
+                    className="w-4 h-4 accent-green-600"
+                  />
+                  <span className="text-sm text-gray-600">Show archived employees</span>
+                </label>
+                <button
+                  onClick={fetchEmployees}
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition-colors"
+                >
+                  <i className="fas fa-sync-alt mr-2"></i>
+                  Refresh
+                </button>
+              </div>
+            </div>
+
+            {/* Employee List */}
+            {employeesLoading ? (
+              <div className="text-center py-12">
+                <div className="w-12 h-12 border-4 border-green-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading employees...</p>
+              </div>
+            ) : employees.length === 0 ? (
+              <div className="text-center py-12 text-gray-500">
+                <i className="fas fa-users text-4xl mb-4"></i>
+                <p>No employees found</p>
+                <button
+                  onClick={() => openEmployeeModal()}
+                  className="mt-4 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+                >
+                  Add First Employee
+                </button>
+              </div>
+            ) : (
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {employees.map((emp) => (
+                  <div 
+                    key={emp._id} 
+                    className={`bg-white rounded-xl shadow-sm p-5 ${emp.status === 'archived' ? 'opacity-60' : ''}`}
+                  >
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <h3 className="font-bold text-lg">{emp.name}</h3>
+                        <p className="text-sm text-gray-500">
+                          Passcode: <span className="font-mono font-bold">{emp.passcode}</span>
+                        </p>
+                      </div>
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        emp.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+                      }`}>
+                        {emp.status}
+                      </span>
+                    </div>
+                    
+                    {emp.notes && (
+                      <p className="text-sm text-gray-600 mb-3">{emp.notes}</p>
+                    )}
+                    
+                    <div className="flex gap-4 text-sm text-gray-500 mb-4">
+                      <span><i className="fas fa-receipt mr-1"></i> {emp.transactionCount} transactions</span>
+                      <span><i className="fas fa-dollar-sign mr-1"></i> ${emp.totalDeducted.toFixed(2)} deducted</span>
+                    </div>
+                    
+                    <div className="flex gap-2 pt-3 border-t">
+                      <button
+                        onClick={() => openEmployeeModal(emp)}
+                        className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-lg text-sm transition-colors"
+                      >
+                        <i className="fas fa-edit mr-1"></i> Edit
+                      </button>
+                      <button
+                        onClick={() => handleArchiveEmployee(emp)}
+                        className={`flex-1 py-2 rounded-lg text-sm transition-colors ${
+                          emp.status === 'active' 
+                            ? 'bg-yellow-100 hover:bg-yellow-200 text-yellow-700' 
+                            : 'bg-green-100 hover:bg-green-200 text-green-700'
+                        }`}
+                      >
+                        <i className={`fas ${emp.status === 'active' ? 'fa-archive' : 'fa-undo'} mr-1`}></i>
+                        {emp.status === 'active' ? 'Archive' : 'Restore'}
+                      </button>
+                      {emp.transactionCount === 0 && (
+                        <button
+                          onClick={() => handleDeleteEmployee(emp)}
+                          className="bg-red-100 hover:bg-red-200 text-red-700 py-2 px-3 rounded-lg text-sm transition-colors"
+                        >
+                          <i className="fas fa-trash"></i>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Transactions Tab */}
+        {activeTab === 'transactions' && (
+          <div>
+            {/* Transaction Stats */}
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="bg-white p-4 rounded-xl shadow-sm">
+                <p className="text-gray-500 text-sm">Total Deducted</p>
+                <p className="text-2xl font-bold text-red-600">${transactionsTotals.deducted.toFixed(2)}</p>
+              </div>
+              <div className="bg-white p-4 rounded-xl shadow-sm">
+                <p className="text-gray-500 text-sm">Total Refunded</p>
+                <p className="text-2xl font-bold text-green-600">${transactionsTotals.refunded.toFixed(2)}</p>
+              </div>
+            </div>
+
+            {/* Transactions List */}
+            {transactionsLoading ? (
+              <div className="text-center py-12">
+                <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-gray-600">Loading transactions...</p>
+              </div>
+            ) : transactions.length === 0 ? (
+              <div className="text-center py-12 text-gray-500">
+                <i className="fas fa-history text-4xl mb-4"></i>
+                <p>No transactions found</p>
+              </div>
+            ) : (
+              <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date/Time</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Card</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Balance</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Employee</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Note</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {transactions.map((tx) => (
+                        <tr key={tx._id} className="hover:bg-gray-50">
+                          <td className="px-4 py-3 text-sm">
+                            {moment(tx.createdAt).format('MMM DD, YYYY h:mm A')}
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className="font-mono font-bold text-[#d88728]">{tx.cardCode}</span>
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-600">{tx.cardOwnerName}</td>
+                          <td className="px-4 py-3">
+                            <span className={`font-bold ${tx.type === 'deduction' ? 'text-red-600' : 'text-green-600'}`}>
+                              {tx.type === 'deduction' ? '-' : '+'}${tx.amount.toFixed(2)}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-sm">
+                            <span className="text-gray-400">${tx.previousBalance.toFixed(2)}</span>
+                            <i className="fas fa-arrow-right mx-2 text-gray-300"></i>
+                            <span className="font-medium">${tx.newBalance.toFixed(2)}</span>
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">
+                              {tx.employeeName}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-sm text-gray-500">{tx.note || '-'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -906,6 +1317,110 @@ export default function GiftCardAdminPage() {
                     </span>
                   ) : (
                     "Delete Card"
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Employee Modal */}
+      {showEmployeeModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xl font-bold">
+                  {editingEmployee ? 'Edit Employee' : 'Add New Employee'}
+                </h3>
+                <button
+                  onClick={closeEmployeeModal}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <i className="fas fa-times text-xl"></i>
+                </button>
+              </div>
+            </div>
+            
+            <form onSubmit={handleEmployeeSubmit} className="p-6">
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Employee Name *
+                </label>
+                <input
+                  type="text"
+                  value={empName}
+                  onChange={(e) => setEmpName(e.target.value)}
+                  className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-green-600"
+                  placeholder="e.g., John Smith"
+                  required
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  4-Digit Passcode *
+                </label>
+                <input
+                  type="text"
+                  value={empPasscode}
+                  onChange={(e) => setEmpPasscode(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                  className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-green-600 font-mono text-center text-2xl tracking-widest"
+                  placeholder="0000"
+                  maxLength={4}
+                  required
+                />
+                <p className="text-xs text-gray-500 mt-1">This passcode will be used to log into the employee panel</p>
+              </div>
+
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Notes (Optional)
+                </label>
+                <textarea
+                  value={empNotes}
+                  onChange={(e) => setEmpNotes(e.target.value)}
+                  className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:outline-none focus:border-green-600"
+                  rows="2"
+                  placeholder="e.g., Part-time server, works weekends"
+                />
+              </div>
+
+              {empError && (
+                <div className="mb-4 p-3 bg-red-50 text-red-600 rounded-lg text-sm">
+                  <i className="fas fa-exclamation-circle mr-2"></i>
+                  {empError}
+                </div>
+              )}
+
+              {empSuccess && (
+                <div className="mb-4 p-3 bg-green-50 text-green-600 rounded-lg text-sm">
+                  <i className="fas fa-check-circle mr-2"></i>
+                  {empSuccess}
+                </div>
+              )}
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={closeEmployeeModal}
+                  className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 rounded-lg font-semibold transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={empLoading || empPasscode.length !== 4}
+                  className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white py-3 rounded-lg font-semibold transition-colors"
+                >
+                  {empLoading ? (
+                    <span>
+                      <i className="fas fa-spinner fa-spin mr-2"></i>
+                      Saving...
+                    </span>
+                  ) : (
+                    editingEmployee ? "Save Changes" : "Create Employee"
                   )}
                 </button>
               </div>
