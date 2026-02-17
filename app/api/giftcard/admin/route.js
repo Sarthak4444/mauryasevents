@@ -23,11 +23,11 @@ const generateUniqueCode = async () => {
   return code;
 };
 
-// Generate QR code as base64 data URL
-const generateQRCode = async (code) => {
+// Generate QR code as buffer for email attachment
+const generateQRCodeBuffer = async (code) => {
   try {
-    return await QRCode.toDataURL(code, {
-      width: 120,
+    return await QRCode.toBuffer(code, {
+      width: 150,
       margin: 1,
       color: { dark: '#d88728', light: '#ffffff' }
     });
@@ -239,7 +239,8 @@ export async function POST(req) {
     // Send email if requested
     if (sendEmail) {
       try {
-        const qrCode = await generateQRCode(code);
+        const qrBuffer = await generateQRCodeBuffer(code);
+        const qrCid = `qr-${code}@mauryas`;
         const transporter = nodemailer.createTransport({
           service: "gmail",
           auth: {
@@ -247,6 +248,15 @@ export async function POST(req) {
             pass: process.env.GMAIL_APP_PASS,
           },
         });
+        
+        const attachments = [];
+        if (qrBuffer) {
+          attachments.push({
+            filename: `qr-${code}.png`,
+            content: qrBuffer,
+            cid: qrCid
+          });
+        }
         
         const mailOptions = {
           from: process.env.GMAIL_USER,
@@ -282,10 +292,10 @@ export async function POST(req) {
                         <p style="margin: 10px 0 5px 0; font-size: 14px;"><strong>For:</strong> ${ownerName}</p>
                         ${personalMessage ? `<p style="margin: 10px 0; font-style: italic; color: #666;">"${personalMessage}"</p>` : ''}
                       </td>
-                      ${qrCode ? `
-                      <td style="vertical-align: top; text-align: right; width: 130px;">
+                      ${qrBuffer ? `
+                      <td style="vertical-align: top; text-align: right; width: 160px;">
                         <div style="text-align: center;">
-                          <img src="${qrCode}" alt="QR Code" style="width: 120px; height: 120px; border: 2px solid #d88728; border-radius: 8px;" />
+                          <img src="cid:${qrCid}" alt="QR Code" style="width: 140px; height: 140px; border: 2px solid #d88728; border-radius: 8px;" />
                           <p style="margin: 5px 0 0 0; font-size: 10px; color: #888;">Scan to redeem</p>
                         </div>
                       </td>
@@ -317,6 +327,7 @@ export async function POST(req) {
               </div>
             </div>
           `,
+          attachments: attachments
         };
         
         await transporter.sendMail(mailOptions);

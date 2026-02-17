@@ -25,18 +25,18 @@ const generateUniqueCode = async () => {
   return code;
 };
 
-// Generate QR code as base64 data URL
-const generateQRCode = async (code) => {
+// Generate QR code as buffer for email attachment
+const generateQRCodeBuffer = async (code) => {
   try {
-    const qrDataUrl = await QRCode.toDataURL(code, {
-      width: 120,
+    const qrBuffer = await QRCode.toBuffer(code, {
+      width: 150,
       margin: 1,
       color: {
         dark: '#d88728',
         light: '#ffffff'
       }
     });
-    return qrDataUrl;
+    return qrBuffer;
   } catch (error) {
     console.error("QR code generation error:", error);
     return null;
@@ -54,8 +54,8 @@ const createTransporter = () => {
   });
 };
 
-// Generate gift card HTML for email
-const generateCardHTML = (card, qrCodeDataUrl, isBonus = false) => {
+// Generate gift card HTML for email (using CID for QR code)
+const generateCardHTML = (card, qrCid, isBonus = false) => {
   const cardType = isBonus ? 'BONUS' : 'GIFT';
   const cardTitle = isBonus ? 'BONUS FOR YOU!' : 'GIFT FOR YOU!';
   const cardColor = '#d88728';
@@ -80,10 +80,10 @@ const generateCardHTML = (card, qrCodeDataUrl, isBonus = false) => {
               <p style="margin: 10px 0 5px 0; font-size: 14px;"><strong>For:</strong> ${card.ownerName}</p>
               ${card.personalMessage ? `<p style="margin: 10px 0; font-style: italic; color: #666;">"${card.personalMessage}"</p>` : ''}
             </td>
-            ${qrCodeDataUrl ? `
-            <td style="vertical-align: top; text-align: right; width: 130px;">
+            ${qrCid ? `
+            <td style="vertical-align: top; text-align: right; width: 160px;">
               <div style="text-align: center;">
-                <img src="${qrCodeDataUrl}" alt="QR Code" style="width: 120px; height: 120px; border: 2px solid ${cardColor}; border-radius: 8px;" />
+                <img src="cid:${qrCid}" alt="QR Code" style="width: 140px; height: 140px; border: 2px solid ${cardColor}; border-radius: 8px;" />
                 <p style="margin: 5px 0 0 0; font-size: 10px; color: #888;">Scan to redeem</p>
               </div>
             </td>
@@ -100,7 +100,7 @@ const generateCardHTML = (card, qrCodeDataUrl, isBonus = false) => {
 };
 
 // Send email to buyer
-const sendBuyerEmail = async (transporter, orderData, allCards, qrCodes) => {
+const sendBuyerEmail = async (transporter, orderData, allCards, qrBuffers) => {
   const purchasedCards = allCards.filter(c => !c.isBonus);
   const bonusCards = allCards.filter(c => c.isBonus);
   
@@ -108,15 +108,34 @@ const sendBuyerEmail = async (transporter, orderData, allCards, qrCodes) => {
   const selfCards = purchasedCards.filter(c => c.ownerEmail === orderData.buyerEmail);
   const giftedCards = purchasedCards.filter(c => c.ownerEmail !== orderData.buyerEmail);
   
-  // Generate HTML with QR codes
-  const selfCardsHTML = await Promise.all(selfCards.map(async card => {
-    const qr = qrCodes[card.code];
-    return generateCardHTML(card, qr, false);
-  }));
-  const bonusCardsHTML = await Promise.all(bonusCards.map(async card => {
-    const qr = qrCodes[card.code];
-    return generateCardHTML(card, qr, true);
-  }));
+  // Build attachments array for QR codes
+  const attachments = [];
+  
+  // Generate HTML with QR code CIDs for self cards
+  const selfCardsHTML = selfCards.map(card => {
+    const cid = `qr-${card.code}@mauryas`;
+    if (qrBuffers[card.code]) {
+      attachments.push({
+        filename: `qr-${card.code}.png`,
+        content: qrBuffers[card.code],
+        cid: cid
+      });
+    }
+    return generateCardHTML(card, qrBuffers[card.code] ? cid : null, false);
+  });
+  
+  // Generate HTML with QR code CIDs for bonus cards
+  const bonusCardsHTML = bonusCards.map(card => {
+    const cid = `qr-${card.code}@mauryas`;
+    if (qrBuffers[card.code]) {
+      attachments.push({
+        filename: `qr-${card.code}.png`,
+        content: qrBuffers[card.code],
+        cid: cid
+      });
+    }
+    return generateCardHTML(card, qrBuffers[card.code] ? cid : null, true);
+  });
   
   // Generate summary for gifted cards
   const giftedSummaryHTML = giftedCards.length > 0 ? `
@@ -171,7 +190,7 @@ const sendBuyerEmail = async (transporter, orderData, allCards, qrCodes) => {
           <h4 style="margin-top: 0; color: #d88728;">How to Redeem</h4>
           <ol style="margin: 0; padding-left: 20px;">
             <li>Visit Maurya's Craft Bar & Kitchen</li>
-            <li>Present the card code and email when paying</li>
+            <li>Present the card code or scan QR code when paying</li>
             <li>The amount will be deducted from your gift card when the bill is applied</li>
           </ol>
           <p style="margin-bottom: 0; font-size: 12px; color: #666;">Cards can be used for multiple visits until the balance is zero.</p>
@@ -186,14 +205,25 @@ const sendBuyerEmail = async (transporter, orderData, allCards, qrCodes) => {
         </div>
       </div>
     `,
+    attachments: attachments
   };
   
   await transporter.sendMail(mailOptions);
 };
 
 // Send email to gift recipient
-const sendRecipientEmail = async (transporter, card, buyerName, qrCodeDataUrl) => {
-  const cardHTML = generateCardHTML(card, qrCodeDataUrl, false);
+const sendRecipientEmail = async (transporter, card, buyerName, qrBuffer) => {
+  const cid = `qr-${card.code}@mauryas`;
+  const cardHTML = generateCardHTML(card, qrBuffer ? cid : null, false);
+  
+  const attachments = [];
+  if (qrBuffer) {
+    attachments.push({
+      filename: `qr-${card.code}.png`,
+      content: qrBuffer,
+      cid: cid
+    });
+  }
   
   const mailOptions = {
     from: process.env.GMAIL_USER,
@@ -221,7 +251,7 @@ const sendRecipientEmail = async (transporter, card, buyerName, qrCodeDataUrl) =
           <h4 style="margin-top: 0; color: #d88728;">How to Redeem</h4>
           <ol style="margin: 0; padding-left: 20px;">
             <li>Visit Maurya's Craft Bar & Kitchen</li>
-            <li>Present the card code when paying</li>
+            <li>Present the card code or scan QR code when paying</li>
             <li>The amount will be deducted from your bill</li>
           </ol>
           <p style="margin-bottom: 0; font-size: 12px; color: #666;">Cards can be used for multiple visits until the balance is exhausted.</p>
@@ -236,6 +266,7 @@ const sendRecipientEmail = async (transporter, card, buyerName, qrCodeDataUrl) =
         </div>
       </div>
     `,
+    attachments: attachments
   };
   
   await transporter.sendMail(mailOptions);
@@ -267,7 +298,7 @@ export async function POST(req) {
     }
     
     const allCreatedCards = [];
-    const qrCodes = {}; // Store QR codes by card code
+    const qrBuffers = {}; // Store QR code buffers by card code
     const transporter = createTransporter();
     
     // Create gift cards
@@ -297,9 +328,9 @@ export async function POST(req) {
       await newCard.save();
       allCreatedCards.push(newCard);
       
-      // Generate QR code for this card
-      const qrCode = await generateQRCode(code);
-      qrCodes[code] = qrCode;
+      // Generate QR code buffer for this card (for email attachment)
+      const qrBuffer = await generateQRCodeBuffer(code);
+      qrBuffers[code] = qrBuffer;
       
       // BONUS FEATURE DISABLED - Uncomment to re-enable
       // let bonusCardAmount = 0;
@@ -330,15 +361,15 @@ export async function POST(req) {
       //   await bonusCard.save();
       //   allCreatedCards.push(bonusCard);
       //   
-      //   // Generate QR code for bonus card
-      //   const bonusQr = await generateQRCode(bonusCode);
-      //   qrCodes[bonusCode] = bonusQr;
+      //   // Generate QR code buffer for bonus card
+      //   const bonusQr = await generateQRCodeBuffer(bonusCode);
+      //   qrBuffers[bonusCode] = bonusQr;
       // }
       
       // Send email to recipient if it's a gift
       if (isGiftCard && cardData.recipientEmail !== buyerEmail) {
         try {
-          await sendRecipientEmail(transporter, newCard, buyerName, qrCodes[code]);
+          await sendRecipientEmail(transporter, newCard, buyerName, qrBuffers[code]);
         } catch (emailError) {
           console.error("Failed to send recipient email:", emailError);
         }
@@ -347,7 +378,7 @@ export async function POST(req) {
     
     // Send confirmation email to buyer
     try {
-      await sendBuyerEmail(transporter, orderData, allCreatedCards, qrCodes);
+      await sendBuyerEmail(transporter, orderData, allCreatedCards, qrBuffers);
     } catch (emailError) {
       console.error("Failed to send buyer email:", emailError);
     }
