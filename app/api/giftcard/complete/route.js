@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import mongoose from "mongoose";
+import QRCode from "qrcode";
 import GiftCard from "../../../../models/GiftCard";
 import { NextResponse } from "next/server";
 
@@ -24,6 +25,24 @@ const generateUniqueCode = async () => {
   return code;
 };
 
+// Generate QR code as base64 data URL
+const generateQRCode = async (code) => {
+  try {
+    const qrDataUrl = await QRCode.toDataURL(code, {
+      width: 120,
+      margin: 1,
+      color: {
+        dark: '#d88728',
+        light: '#ffffff'
+      }
+    });
+    return qrDataUrl;
+  } catch (error) {
+    console.error("QR code generation error:", error);
+    return null;
+  }
+};
+
 // Create email transporter
 const createTransporter = () => {
   return nodemailer.createTransport({
@@ -36,7 +55,7 @@ const createTransporter = () => {
 };
 
 // Generate gift card HTML for email
-const generateCardHTML = (card, isBonus = false) => {
+const generateCardHTML = (card, qrCodeDataUrl, isBonus = false) => {
   const cardType = isBonus ? 'BONUS' : 'GIFT';
   const cardTitle = isBonus ? 'BONUS FOR YOU!' : 'GIFT FOR YOU!';
   const cardColor = '#d88728';
@@ -52,10 +71,25 @@ const generateCardHTML = (card, isBonus = false) => {
           <div style="font-size: 12px; color: ${cardColor};">${cardType} CARD</div>
         </div>
       </div>
-      <div style="margin-top: 15px; padding: 10px; background: #f5f5f5; border-radius: 5px;">
-        <p style="margin: 5px 0; font-size: 14px;"><strong>Card Code:</strong> <span style="font-family: monospace; font-size: 18px; letter-spacing: 2px; color: ${cardColor};">${card.code}</span></p>
-        <p style="margin: 5px 0; font-size: 14px;"><strong>For:</strong> ${card.ownerName}</p>
-        ${card.personalMessage ? `<p style="margin: 10px 0; font-style: italic; color: #666;">"${card.personalMessage}"</p>` : ''}
+      <div style="margin-top: 15px; padding: 15px; background: #f5f5f5; border-radius: 5px;">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td style="vertical-align: top;">
+              <p style="margin: 5px 0; font-size: 14px;"><strong>Card Code:</strong></p>
+              <p style="margin: 5px 0; font-family: monospace; font-size: 22px; letter-spacing: 3px; color: ${cardColor}; font-weight: bold;">${card.code}</p>
+              <p style="margin: 10px 0 5px 0; font-size: 14px;"><strong>For:</strong> ${card.ownerName}</p>
+              ${card.personalMessage ? `<p style="margin: 10px 0; font-style: italic; color: #666;">"${card.personalMessage}"</p>` : ''}
+            </td>
+            ${qrCodeDataUrl ? `
+            <td style="vertical-align: top; text-align: right; width: 130px;">
+              <div style="text-align: center;">
+                <img src="${qrCodeDataUrl}" alt="QR Code" style="width: 120px; height: 120px; border: 2px solid ${cardColor}; border-radius: 8px;" />
+                <p style="margin: 5px 0 0 0; font-size: 10px; color: #888;">Scan to redeem</p>
+              </div>
+            </td>
+            ` : ''}
+          </tr>
+        </table>
       </div>
       <div style="margin-top: 15px; border-top: 1px solid #ddd; padding-top: 10px;">
         <p style="margin: 0; font-size: 12px; color: #666;">165 Victoria Street, Kamloops | 250-377-4969</p>
@@ -66,7 +100,7 @@ const generateCardHTML = (card, isBonus = false) => {
 };
 
 // Send email to buyer
-const sendBuyerEmail = async (transporter, orderData, allCards) => {
+const sendBuyerEmail = async (transporter, orderData, allCards, qrCodes) => {
   const purchasedCards = allCards.filter(c => !c.isBonus);
   const bonusCards = allCards.filter(c => c.isBonus);
   
@@ -74,8 +108,15 @@ const sendBuyerEmail = async (transporter, orderData, allCards) => {
   const selfCards = purchasedCards.filter(c => c.ownerEmail === orderData.buyerEmail);
   const giftedCards = purchasedCards.filter(c => c.ownerEmail !== orderData.buyerEmail);
   
-  const selfCardsHTML = selfCards.map(card => generateCardHTML(card, false)).join('');
-  const bonusCardsHTML = bonusCards.map(card => generateCardHTML(card, true)).join('');
+  // Generate HTML with QR codes
+  const selfCardsHTML = await Promise.all(selfCards.map(async card => {
+    const qr = qrCodes[card.code];
+    return generateCardHTML(card, qr, false);
+  }));
+  const bonusCardsHTML = await Promise.all(bonusCards.map(async card => {
+    const qr = qrCodes[card.code];
+    return generateCardHTML(card, qr, true);
+  }));
   
   // Generate summary for gifted cards
   const giftedSummaryHTML = giftedCards.length > 0 ? `
@@ -115,7 +156,7 @@ const sendBuyerEmail = async (transporter, orderData, allCards) => {
         
         ${selfCards.length > 0 ? `
           <h3 style="color: #d88728;">Your Gift Cards</h3>
-          ${selfCardsHTML}
+          ${selfCardsHTML.join('')}
         ` : ''}
         
         ${giftedSummaryHTML}
@@ -123,7 +164,7 @@ const sendBuyerEmail = async (transporter, orderData, allCards) => {
         ${bonusCards.length > 0 ? `
           <h3 style="color: #d88728;">🎁 Your Bonus Cards</h3>
           <p style="color: #666; font-size: 14px;">As a thank you for your purchase, here are your bonus cards!</p>
-          ${bonusCardsHTML}
+          ${bonusCardsHTML.join('')}
         ` : ''}
         
         <div style="margin-top: 30px; padding: 20px; background: #fff3e0; border-radius: 10px;">
@@ -151,8 +192,8 @@ const sendBuyerEmail = async (transporter, orderData, allCards) => {
 };
 
 // Send email to gift recipient
-const sendRecipientEmail = async (transporter, card, buyerName) => {
-  const cardHTML = generateCardHTML(card, false);
+const sendRecipientEmail = async (transporter, card, buyerName, qrCodeDataUrl) => {
+  const cardHTML = generateCardHTML(card, qrCodeDataUrl, false);
   
   const mailOptions = {
     from: process.env.GMAIL_USER,
@@ -226,6 +267,7 @@ export async function POST(req) {
     }
     
     const allCreatedCards = [];
+    const qrCodes = {}; // Store QR codes by card code
     const transporter = createTransporter();
     
     // Create gift cards
@@ -255,6 +297,10 @@ export async function POST(req) {
       await newCard.save();
       allCreatedCards.push(newCard);
       
+      // Generate QR code for this card
+      const qrCode = await generateQRCode(code);
+      qrCodes[code] = qrCode;
+      
       // BONUS FEATURE DISABLED - Uncomment to re-enable
       // let bonusCardAmount = 0;
       // if (amount >= 100) {
@@ -283,12 +329,16 @@ export async function POST(req) {
       //   
       //   await bonusCard.save();
       //   allCreatedCards.push(bonusCard);
+      //   
+      //   // Generate QR code for bonus card
+      //   const bonusQr = await generateQRCode(bonusCode);
+      //   qrCodes[bonusCode] = bonusQr;
       // }
       
       // Send email to recipient if it's a gift
       if (isGiftCard && cardData.recipientEmail !== buyerEmail) {
         try {
-          await sendRecipientEmail(transporter, newCard, buyerName);
+          await sendRecipientEmail(transporter, newCard, buyerName, qrCodes[code]);
         } catch (emailError) {
           console.error("Failed to send recipient email:", emailError);
         }
@@ -297,7 +347,7 @@ export async function POST(req) {
     
     // Send confirmation email to buyer
     try {
-      await sendBuyerEmail(transporter, orderData, allCreatedCards);
+      await sendBuyerEmail(transporter, orderData, allCreatedCards, qrCodes);
     } catch (emailError) {
       console.error("Failed to send buyer email:", emailError);
     }
