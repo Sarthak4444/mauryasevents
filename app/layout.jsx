@@ -2,15 +2,15 @@ import Script from "next/script";
 import "./globals.css";
 
 export const metadata = {
-  title: "Valentine's Day at Maurya's",
+  title: "Maurya's Craft Bar & Kitchen",
   description:
-    "Celebrate Valentine's Day at Maurya's with a romantic six-course dining experience. February 13th, 14th & 15th, 2026. Reserve your table now!",
+    "Experience exquisite dining at Maurya's Craft Bar & Kitchen in Kamloops. Reserve your table for an unforgettable meal, perfect for any special occasion.",
   keywords:
-    "valentines day, romantic dinner, six course meal, maurya's, restaurant, fine dining, kamloops, valentine's dinner, couples dinner, romantic restaurant, special occasion dining",
+    "maurya's, restaurant, fine dining, kamloops, craft bar, kitchen, couples dinner, romantic restaurant, special occasion dining, local restaurant",
   openGraph: {
-    title: "Valentine's Day at Maurya's",
+    title: "Maurya's Craft Bar & Kitchen",
     description:
-      "Celebrate Valentine's Day at Maurya's with a romantic six-course dining experience. February 13th, 14th & 15th, 2026. Reserve your table now!",
+      "Enjoy an exceptional dining experience at Maurya's Craft Bar & Kitchen in Kamloops. Reserve your table for outstanding cuisine, ambiance, and service.",
     url: "https://www.mauryasevents.com",
     siteName: "Maurya's Events",
     locale: "en_US",
@@ -20,17 +20,17 @@ export const metadata = {
         url: "https://www.mauryasevents.com/valentine's weekend.webp",
         width: 1920,
         height: 1080,
-        alt: "Valentine's Day at Maurya's - Romantic Six-Course Dining Experience",
+        alt: "Maurya's Craft Bar & Kitchen - Fine Dining Experience",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Valentine's Day at Maurya's",
+    title: "Maurya's Craft Bar & Kitchen",
     description:
-      "Celebrate Valentine's Day with a romantic six-course dining experience. February 13th, 14th & 15th, 2026.",
+      "Reserve your table at Maurya's Craft Bar & Kitchen in Kamloops for an outstanding culinary adventure.",
     images: [
-      "https://www.mauryasevents.com/valentine's weekend.webp",
+      "https://www.mauryasevents.com/logo.webp",
     ],
   },
 };
