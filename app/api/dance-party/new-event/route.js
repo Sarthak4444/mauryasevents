@@ -88,7 +88,7 @@ export async function POST(req) {
   <p style="font-size: 18px; margin-bottom: 20px;">Dear <strong>${ticketHoldersWithNumbers[0].firstName}</strong>,</p>
 
   <p>
-    Your payment has been confirmed! We look forward to seeing you at our event on <strong>Saturday, July 18th from 5:00 PM to 9:00 PM</strong>.
+    Your payment has been confirmed! We look forward to seeing you at our event on <strong>Saturday, July 18th from 5:00 PM to 10:00 PM</strong>.
   </p>
 
   <h3 style="color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 5px; display: inline-block; margin-bottom: 30px;">
@@ -100,7 +100,7 @@ export async function POST(req) {
     <strong>&nbsp; &bull; Phone:</strong> ${phone} <br />
     <strong>&nbsp; &bull; Total Tickets:</strong> ${tickets} <br />
     <strong>&nbsp; &bull; Total Amount:</strong> $${totalAmount.toFixed(2)} CAD <br />
-    <strong>&nbsp; &bull; Event Date:</strong> Saturday, July 18th, 5:00 PM – 9:00 PM <br />
+    <strong>&nbsp; &bull; Event Date:</strong> Saturday, July 18th, 5:00 PM – 10:00 PM <br />
   </p>
 
   <h3 style="color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 5px; display: inline-block; margin-bottom: 20px;">

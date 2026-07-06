@@ -27,7 +27,7 @@ export default function DancePartyPaymentSuccessful() {
           <div className="bg-gray-100 rounded-lg p-4 mb-6">
             <p className="text-gray-700 text-sm">
               <strong>Check your inbox</strong> for ticket numbers and event details.
-              We look forward to seeing you on <strong>Saturday, July 18th from 5:00 PM to 9:00 PM</strong>!
+              We look forward to seeing you on <strong>Saturday, July 18th from 5:00 PM to 10:00 PM</strong>!
             </p>
           </div>
 

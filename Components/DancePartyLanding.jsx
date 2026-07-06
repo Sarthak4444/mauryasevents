@@ -108,9 +108,9 @@ export default function DancePartyLanding() {
         <div className="text-center">
           <div className="flex justify-center mb-8">
             <img
-              src="/kdvposter.jpeg"
-              alt="Colombian Independence Night at Maurya's Craft Bar & Kitchen, Kamloops"
-              className="w-full max-w-md rounded-lg shadow-xl"
+              src="/Colombian_Dance_Poster.jpeg"
+              alt="Long Live Colombia! Celebrate Independence – July 18, 2026 at Maurya's Kamloops"
+              className="w-full max-w-2xl rounded-lg shadow-xl"
             />
           </div>
           <div>
@@ -118,7 +118,7 @@ export default function DancePartyLanding() {
               Colombian Independence Night
             </h1>
             <p className="text-xl md:text-2xl font-semibold text-gray-800 mb-2">
-              Saturday, July 18th &middot; 5:00 PM – 9:00 PM
+              Saturday, July 18th &middot; 5:00 PM – 10:00 PM
             </p>
             <p className="text-gray-600 mb-4">Maurya&apos;s Craft Bar &amp; Kitchen · Kamloops, BC</p>
             <div className="mt-6 text-center">
