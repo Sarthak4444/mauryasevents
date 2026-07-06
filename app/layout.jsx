@@ -2,36 +2,22 @@ import Script from "next/script";
 import "./globals.css";
 
 export const metadata = {
-  title: "Maurya's Craft Bar & Kitchen",
+  metadataBase: new URL("https://www.mauryasevents.com"),
+  title: {
+    default: "Maurya's Events",
+    template: "%s | Maurya's Events",
+  },
   description:
-    "Experience exquisite dining at Maurya's Craft Bar & Kitchen in Kamloops. Reserve your table for an unforgettable meal, perfect for any special occasion.",
+    "Events, celebrations, and ticketed experiences at Maurya's Craft Bar & Kitchen in Kamloops, BC.",
   keywords:
-    "maurya's, restaurant, fine dining, kamloops, craft bar, kitchen, couples dinner, romantic restaurant, special occasion dining, local restaurant",
+    "maurya's, kamloops events, craft bar, restaurant events, maurya's events, kamloops dining",
   openGraph: {
-    title: "Maurya's Craft Bar & Kitchen",
-    description:
-      "Enjoy an exceptional dining experience at Maurya's Craft Bar & Kitchen in Kamloops. Reserve your table for outstanding cuisine, ambiance, and service.",
-    url: "https://www.mauryasevents.com",
     siteName: "Maurya's Events",
-    locale: "en_US",
+    locale: "en_CA",
     type: "website",
-    images: [
-      {
-        url: "https://www.mauryasevents.com/valentine's weekend.webp",
-        width: 1920,
-        height: 1080,
-        alt: "Maurya's Craft Bar & Kitchen - Fine Dining Experience",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Maurya's Craft Bar & Kitchen",
-    description:
-      "Reserve your table at Maurya's Craft Bar & Kitchen in Kamloops for an outstanding culinary adventure.",
-    images: [
-      "https://www.mauryasevents.com/logo.webp",
-    ],
   },
 };
 

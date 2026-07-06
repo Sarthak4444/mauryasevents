@@ -7,7 +7,7 @@ export async function POST(req) {
   try {
     const { email, phone, tickets, ticketHolders } = await req.json();
 
-    // Kids tickets: $45 CAD + 5% GST = $47.25
+    // General admission: $45 CAD + 5% GST = $47.25
     const unitAmount = 4725;
 
     const line_items = [
@@ -15,8 +15,8 @@ export async function POST(req) {
         price_data: {
           currency: "cad",
           product_data: {
-            name: "Kids Dance Event Ticket",
-            description: "Kids admission ticket (includes 5% GST)",
+            name: "General Admission",
+            description: "Colombian Independence Night entry (includes 5% GST)",
           },
           unit_amount: unitAmount,
         },
