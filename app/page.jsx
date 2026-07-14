@@ -31,7 +31,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: `${siteUrl}/Colombian_Dance_Poster.jpeg`,
+        url: `${siteUrl}/Colombian_Dance.jpeg`,
         width: 1200,
         height: 630,
         alt: "Colombian Independence Night at Maurya's Craft Bar & Kitchen, Kamloops",
@@ -43,7 +43,7 @@ export const metadata = {
     title: "Colombian Independence Night at Maurya's | Kamloops",
     description:
       "July 18th · 5–10 PM. $45 admission · 3-course Colombian buffet · cultural music · kids under 12 free.",
-    images: [`${siteUrl}/Colombian_Dance_Poster.jpeg`],
+    images: [`${siteUrl}/Colombian_Dance.jpeg`],
   },
   robots: {
     index: true,
@@ -73,7 +73,7 @@ const eventJsonLd = {
       addressCountry: "CA",
     },
   },
-  image: [`${siteUrl}/Colombian_Dance_Poster.jpeg`],
+  image: [`${siteUrl}/Colombian_Dance.jpeg`],
   organizer: {
     "@type": "Organization",
     name: "Maurya's Craft Bar & Kitchen",

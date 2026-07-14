@@ -108,7 +108,7 @@ export default function DancePartyLanding() {
         <div className="text-center">
           <div className="flex justify-center mb-8">
             <img
-              src="/Colombian_Dance_Poster.jpeg"
+              src="/Colombian_Dance.jpeg"
               alt="Long Live Colombia! Celebrate Independence – July 18, 2026 at Maurya's Kamloops"
               className="w-full max-w-2xl rounded-lg shadow-xl"
             />
