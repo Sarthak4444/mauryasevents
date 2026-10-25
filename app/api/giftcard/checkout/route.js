@@ -1,5 +1,7 @@
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
+import { calculateGiftCardBonus } from "../../../../lib/giftCardBonus";
+import { createGiftCardOrderSignature } from "../../../../lib/giftCardOrderSignature";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -8,7 +10,7 @@ export async function POST(req) {
     const { buyerName, buyerEmail, cards, isGift } = await req.json();
 
     // Validate required fields
-    if (!buyerName || !buyerEmail || !cards || cards.length === 0) {
+    if (!buyerName || !buyerEmail || !Array.isArray(cards) || cards.length === 0) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
@@ -30,7 +32,7 @@ export async function POST(req) {
       const amount = parseFloat(card.amount);
       
       // Validate amount range
-      if (amount < 10 || amount > 500) {
+      if (!Number.isFinite(amount) || amount < 10 || amount > 500) {
         return NextResponse.json(
           { error: "Card amount must be between $10 and $500" },
           { status: 400 }
@@ -49,17 +51,7 @@ export async function POST(req) {
       );
     }
 
-    // BONUS FEATURE DISABLED - Uncomment to re-enable
-    // let bonusAmount = 0;
-    // for (const card of cards) {
-    //   const amount = parseFloat(card.amount);
-    //   if (amount >= 100) {
-    //     bonusAmount += 20;
-    //   } else if (amount >= 50) {
-    //     bonusAmount += 10;
-    //   }
-    // }
-    let bonusAmount = 0; // Bonus feature disabled
+    const bonusAmount = calculateGiftCardBonus(cards);
 
     // Generate a unique order ID
     const orderId = `GC-${Date.now()}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
@@ -74,6 +66,7 @@ export async function POST(req) {
       totalAmount,
       orderId
     };
+    const orderSignature = createGiftCardOrderSignature(orderData);
 
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
@@ -92,14 +85,15 @@ export async function POST(req) {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/giftcard/success?orderData=${encodeURIComponent(JSON.stringify(orderData))}`,
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/giftcard/success?orderData=${encodeURIComponent(JSON.stringify(orderData))}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/giftcard?cancelled=true`,
       customer_email: buyerEmail,
       metadata: {
         orderId,
         buyerEmail,
         totalCards: totalCards.toString(),
-        bonusAmount: bonusAmount.toString()
+        bonusAmount: bonusAmount.toString(),
+        orderSignature
       }
     });
 

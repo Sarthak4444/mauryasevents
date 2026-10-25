@@ -29,7 +29,10 @@ function SuccessContent() {
         const response = await fetch("/api/giftcard/complete", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(parsedOrderData),
+          body: JSON.stringify({
+            ...parsedOrderData,
+            sessionId: searchParams.get("session_id")
+          }),
         });
 
         const data = await response.json();

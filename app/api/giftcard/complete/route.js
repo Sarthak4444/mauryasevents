@@ -1,8 +1,13 @@
+import Stripe from "stripe";
 import nodemailer from "nodemailer";
 import mongoose from "mongoose";
 import QRCode from "qrcode";
 import GiftCard from "../../../../models/GiftCard";
 import { NextResponse } from "next/server";
+import { calculateGiftCardBonus, getGiftCardBonus } from "../../../../lib/giftCardBonus";
+import { verifyGiftCardOrderSignature } from "../../../../lib/giftCardOrderSignature";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Generate unique 8-character alphanumeric code
 const generateUniqueCode = async () => {
@@ -275,27 +280,62 @@ const sendRecipientEmail = async (transporter, card, buyerName, qrBuffer) => {
 export async function POST(req) {
   try {
     const orderData = await req.json();
-    const { buyerName, buyerEmail, cards, isGift, bonusAmount, totalAmount, orderId } = orderData;
-    
-    // Connect to database
-    await mongoose.connect(process.env.MONGODB_URI);
+    const { buyerName, buyerEmail, cards, isGift, orderId, sessionId } = orderData;
+    const { sessionId: ignoredSessionId, ...signedOrderData } = orderData;
     
     // Validate required fields
-    if (!buyerName || !buyerEmail || !cards || cards.length === 0 || !orderId) {
+    if (!buyerName || !buyerEmail || !Array.isArray(cards) || cards.length === 0 || !orderId || !sessionId) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
       );
     }
+
+    if (cards.length > 50 || cards.some(card => {
+      const amount = Number(card.amount);
+      return !card.recipientName || !card.recipientEmail || !Number.isFinite(amount) || amount < 10 || amount > 500;
+    })) {
+      return NextResponse.json({ error: "Invalid gift card order" }, { status: 400 });
+    }
+
+    const calculatedTotalAmount = cards.reduce((total, card) => total + Number(card.amount), 0);
+    const stripeSession = await stripe.checkout.sessions.retrieve(sessionId);
+    if (
+      stripeSession.payment_status !== "paid" ||
+      stripeSession.metadata?.orderId !== orderId ||
+      stripeSession.metadata?.buyerEmail?.toLowerCase() !== buyerEmail.toLowerCase() ||
+      stripeSession.metadata?.totalCards !== String(cards.length) ||
+      stripeSession.currency !== "cad" ||
+      stripeSession.amount_total !== Math.round(calculatedTotalAmount * 100) ||
+      !verifyGiftCardOrderSignature(signedOrderData, stripeSession.metadata?.orderSignature)
+    ) {
+      return NextResponse.json({ error: "Payment could not be verified" }, { status: 400 });
+    }
+
+    // Connect to database after confirming payment
+    await mongoose.connect(process.env.MONGODB_URI);
     
     // Check if order already processed
-    const existingOrder = await GiftCard.findOne({ orderId });
-    if (existingOrder) {
-      return NextResponse.json(
-        { error: "Order already processed" },
-        { status: 400 }
-      );
+    const existingCards = await GiftCard.find({ orderId }).sort({ createdAt: 1 });
+    if (existingCards.length > 0) {
+      return NextResponse.json({
+        success: true,
+        message: "Gift cards already created",
+        cards: existingCards.map(card => ({
+          code: card.code,
+          amount: card.originalAmount,
+          ownerName: card.ownerName,
+          ownerEmail: card.ownerEmail,
+          isBonus: card.isBonus
+        }))
+      }, { status: 200 });
     }
+
+    const bonusAmount = calculateGiftCardBonus(cards);
+    const processedOrderData = { ...orderData, bonusAmount, totalAmount: calculatedTotalAmount };
+    const stripePaymentId = typeof stripeSession.payment_intent === "string"
+      ? stripeSession.payment_intent
+      : stripeSession.payment_intent?.id || null;
     
     const allCreatedCards = [];
     const qrBuffers = {}; // Store QR code buffers by card code
@@ -322,6 +362,7 @@ export async function POST(req) {
         friendEmail: isGiftCard ? cardData.recipientEmail : null,
         status: 'active',
         orderId,
+        stripePaymentId,
         personalMessage: cardData.personalMessage || ''
       });
       
@@ -332,39 +373,32 @@ export async function POST(req) {
       const qrBuffer = await generateQRCodeBuffer(code);
       qrBuffers[code] = qrBuffer;
       
-      // BONUS FEATURE DISABLED - Uncomment to re-enable
-      // let bonusCardAmount = 0;
-      // if (amount >= 100) {
-      //   bonusCardAmount = 20;
-      // } else if (amount >= 50) {
-      //   bonusCardAmount = 10;
-      // }
-      // 
-      // if (bonusCardAmount > 0) {
-      //   const bonusCode = await generateUniqueCode();
-      //   const bonusCard = new GiftCard({
-      //     code: bonusCode,
-      //     originalAmount: bonusCardAmount,
-      //     remainingAmount: bonusCardAmount,
-      //     ownerEmail: buyerEmail, // Bonus always goes to buyer
-      //     ownerName: buyerName,
-      //     buyerEmail,
-      //     buyerName,
-      //     isBonus: true,
-      //     parentCardCode: code,
-      //     isGift: false,
-      //     status: 'active',
-      //     orderId,
-      //     personalMessage: ''
-      //   });
-      //   
-      //   await bonusCard.save();
-      //   allCreatedCards.push(bonusCard);
-      //   
-      //   // Generate QR code buffer for bonus card
-      //   const bonusQr = await generateQRCodeBuffer(bonusCode);
-      //   qrBuffers[bonusCode] = bonusQr;
-      // }
+      const bonusCardAmount = getGiftCardBonus(amount);
+      if (bonusCardAmount > 0) {
+        const bonusCode = await generateUniqueCode();
+        const bonusCard = new GiftCard({
+          code: bonusCode,
+          originalAmount: bonusCardAmount,
+          remainingAmount: bonusCardAmount,
+          ownerEmail: buyerEmail,
+          ownerName: buyerName,
+          buyerEmail,
+          buyerName,
+          isBonus: true,
+          parentCardCode: code,
+          isGift: false,
+          status: 'active',
+          orderId,
+          stripePaymentId,
+          personalMessage: ''
+        });
+
+        await bonusCard.save();
+        allCreatedCards.push(bonusCard);
+
+        const bonusQr = await generateQRCodeBuffer(bonusCode);
+        qrBuffers[bonusCode] = bonusQr;
+      }
       
       // Send email to recipient if it's a gift
       if (isGiftCard && cardData.recipientEmail !== buyerEmail) {
@@ -378,7 +412,7 @@ export async function POST(req) {
     
     // Send confirmation email to buyer
     try {
-      await sendBuyerEmail(transporter, orderData, allCreatedCards, qrBuffers);
+      await sendBuyerEmail(transporter, processedOrderData, allCreatedCards, qrBuffers);
     } catch (emailError) {
       console.error("Failed to send buyer email:", emailError);
     }
@@ -386,6 +420,7 @@ export async function POST(req) {
     return NextResponse.json({
       success: true,
       message: "Gift cards created successfully",
+      bonusAmount,
       cards: allCreatedCards.map(c => ({
         code: c.code,
         amount: c.originalAmount,
