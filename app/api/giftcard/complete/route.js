@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import Stripe from "stripe";
 import nodemailer from "nodemailer";
 import mongoose from "mongoose";
@@ -5,6 +7,7 @@ import QRCode from "qrcode";
 import GiftCard from "../../../../models/GiftCard";
 import { NextResponse } from "next/server";
 import { calculateGiftCardBonus, getGiftCardBonus } from "../../../../lib/giftCardBonus";
+import { getGiftCardBonusImage } from "../../../../lib/giftCardBonus";
 import { verifyGiftCardOrderSignature } from "../../../../lib/giftCardOrderSignature";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -60,13 +63,14 @@ const createTransporter = () => {
 };
 
 // Generate gift card HTML for email (using CID for QR code)
-const generateCardHTML = (card, qrCid, isBonus = false) => {
+const generateCardHTML = (card, qrCid, isBonus = false, bonusImageCid = null) => {
   const cardType = isBonus ? 'BONUS' : 'GIFT';
   const cardTitle = isBonus ? 'BONUS FOR YOU!' : 'GIFT FOR YOU!';
   const cardColor = '#d88728';
   
   return `
     <div style="border: 2px solid ${cardColor}; border-radius: 10px; padding: 20px; margin: 15px 0; background: linear-gradient(135deg, #fff 0%, #fef9f3 100%);">
+      ${isBonus && bonusImageCid ? `<img src="cid:${bonusImageCid}" alt="$${card.originalAmount} bonus gift card" style="display: block; width: 100%; height: auto; margin: 0 0 15px; border-radius: 6px;" />` : ''}
       <div style="display: flex; justify-content: space-between; align-items: flex-start;">
         <div>
           <h2 style="color: ${cardColor}; font-style: italic; font-weight: bold; font-size: 28px; margin: 0;">${cardTitle}</h2>
@@ -129,8 +133,23 @@ const sendBuyerEmail = async (transporter, orderData, allCards, qrBuffers) => {
     return generateCardHTML(card, qrBuffers[card.code] ? cid : null, false);
   });
   
-  // Generate HTML with QR code CIDs for bonus cards
-  const bonusCardsHTML = bonusCards.map(card => {
+  // Generate HTML with artwork and QR code CIDs for bonus cards
+  const bonusCardsHTML = [];
+  const bonusImageCids = new Map();
+  for (const card of bonusCards) {
+    const bonusImageCid = `bonus-card-$${card.originalAmount}@mauryas`;
+    if (!bonusImageCids.has(card.originalAmount)) {
+      const imagePath = getGiftCardBonusImage(card.originalAmount).slice(1);
+      const image = await readFile(join(process.cwd(), "public", imagePath));
+      attachments.push({
+        filename: imagePath,
+        content: image,
+        cid: bonusImageCid,
+        contentDisposition: "inline"
+      });
+      bonusImageCids.set(card.originalAmount, bonusImageCid);
+    }
+
     const cid = `qr-${card.code}@mauryas`;
     if (qrBuffers[card.code]) {
       attachments.push({
@@ -139,8 +158,8 @@ const sendBuyerEmail = async (transporter, orderData, allCards, qrBuffers) => {
         cid: cid
       });
     }
-    return generateCardHTML(card, qrBuffers[card.code] ? cid : null, true);
-  });
+    bonusCardsHTML.push(generateCardHTML(card, qrBuffers[card.code] ? cid : null, true, bonusImageCid));
+  }
   
   // Generate summary for gifted cards
   const giftedSummaryHTML = giftedCards.length > 0 ? `

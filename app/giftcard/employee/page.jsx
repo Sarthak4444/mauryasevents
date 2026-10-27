@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
+import { getGiftCardBonusImage } from "../../../lib/giftCardBonus";
 
 export default function EmployeePanelPage() {
   const [passcode, setPasscode] = useState("");
@@ -384,6 +385,13 @@ export default function EmployeePanelPage() {
         {/* Found Card Display */}
         {foundCard && (
           <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-4">
+            {foundCard.isBonus && (
+              <img
+                src={getGiftCardBonusImage(foundCard.originalAmount)}
+                alt={`$${foundCard.originalAmount} bonus gift card`}
+                className="w-full max-w-md h-auto mx-auto p-4 pb-0"
+              />
+            )}
             {/* Card Header */}
             <div className={`p-4 ${foundCard.status === 'active' ? 'bg-green-50' : 'bg-gray-100'}`}>
               <div className="flex justify-between items-start">

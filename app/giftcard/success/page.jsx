@@ -2,6 +2,7 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Footer from "../../../Components/Footer";
+import { getGiftCardBonusImage } from "../../../lib/giftCardBonus";
 
 function SuccessContent() {
   const searchParams = useSearchParams();
@@ -199,25 +200,22 @@ function SuccessContent() {
               </h3>
               <div className="space-y-4">
                 {bonusCards.map((card, index) => (
-                  <div key={index} className="flex items-center gap-4 p-4 bg-[#fef9f3] rounded-lg border border-[#d88728]">
-                    <div className="w-16 h-16 bg-gradient-to-br from-[#d88728] to-[#f5a623] rounded-lg flex items-center justify-center text-white">
-                      <i className="fas fa-star text-2xl"></i>
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-semibold text-gray-800">
-                        ${card.amount} Bonus Card
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Thank you bonus!
-                      </p>
-                    </div>
-                    {card.code && (
-                      <div className="text-right">
-                        <p className="text-xs text-gray-500">Code</p>
-                        <p className="font-mono font-bold text-[#d88728]">{card.code}</p>
+                    <div key={index} className="p-4 bg-[#fef9f3] rounded-lg border border-[#d88728]">
+                      <img
+                        src={getGiftCardBonusImage(card.amount)}
+                        alt={`$${card.amount} bonus gift card`}
+                        className="w-full max-w-2xl h-auto mx-auto rounded-md"
+                      />
+                      <div className="flex items-center justify-between gap-4 mt-4">
+                        <p className="font-semibold text-gray-800">${card.amount} Bonus Card</p>
+                        {card.code && (
+                          <div className="text-right">
+                            <p className="text-xs text-gray-500">Redemption Code</p>
+                            <p className="font-mono font-bold text-[#d88728]">{card.code}</p>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
+                    </div>
                 ))}
               </div>
             </div>

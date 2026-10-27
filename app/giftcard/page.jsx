@@ -4,7 +4,7 @@ import Footer from "../../Components/Footer";
 import { loadStripe } from "@stripe/stripe-js";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { calculateGiftCardBonus, getGiftCardBonus } from "../../lib/giftCardBonus";
+import { calculateGiftCardBonus, getGiftCardBonus, getGiftCardBonusImage } from "../../lib/giftCardBonus";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
@@ -599,16 +599,10 @@ function GiftCardContent() {
                         <div className="mt-3 relative">
                           <div className="bg-white rounded-xl overflow-hidden shadow-lg border border-[#d88728]">
                             <img
-                              src="/BonusCard.png"
-                              alt="Bonus Card"
-                              className="w-full"
+                              src={getGiftCardBonusImage(card.amount)}
+                              alt={`$${getGiftCardBonus(card.amount)} bonus gift card`}
+                              className="w-full h-auto"
                             />
-                            <div className="absolute top-4 right-4 bg-white border-2 border-[#d88728] px-4 py-2 rounded">
-                              <div className="text-xl font-bold">
-                                ${getGiftCardBonus(card.amount)}
-                              </div>
-                              <div className="text-xs text-[#d88728]">BONUS CARD</div>
-                            </div>
                           </div>
                           <div className="mt-2 p-3 bg-[#fef9f3] rounded-lg border border-[#d88728]">
                             <p className="text-sm text-[#d88728]">
@@ -759,6 +753,13 @@ function GiftCardContent() {
                 {cardBalance && (
                   <div className="max-w-md mx-auto mt-8">
                     <div className="bg-gradient-to-br from-[#d88728] to-[#f5a623] rounded-xl p-6 text-white">
+                      {cardBalance.isBonus && (
+                        <img
+                          src={getGiftCardBonusImage(cardBalance.originalAmount)}
+                          alt={`$${cardBalance.originalAmount} bonus gift card`}
+                          className="w-full h-auto rounded-md mb-4"
+                        />
+                      )}
                       <div className="flex justify-between items-start mb-4">
                         <div>
                           <p className="text-sm opacity-80">Card Balance</p>

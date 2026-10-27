@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import moment from "moment";
+import { getGiftCardBonusImage } from "../../../lib/giftCardBonus";
 
 export default function GiftCardAdminPage() {
   // Tab state
@@ -750,9 +751,11 @@ export default function GiftCardAdminPage() {
                         {card.bonusCard && (
                           <div className="ml-8 mt-2 flex flex-col md:flex-row md:items-center gap-4 p-4 border border-[#d88728] bg-[#fef9f3] rounded-lg">
                             <div className="flex-shrink-0">
-                              <div className="w-14 h-14 rounded-lg bg-[#d88728] text-white flex items-center justify-center">
-                                <i className="fas fa-star text-2xl"></i>
-                              </div>
+                              <img
+                                src={getGiftCardBonusImage(card.bonusCard.originalAmount)}
+                                alt=""
+                                className="w-36 h-auto rounded-md border border-[#d88728]"
+                              />
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex flex-wrap items-center gap-2 mb-1">
