@@ -11,6 +11,9 @@ function SuccessContent() {
   const [error, setError] = useState("");
   const [orderData, setOrderData] = useState(null);
   const [cards, setCards] = useState([]);
+  const [bonusEmailSent, setBonusEmailSent] = useState(null);
+  const [retryingBonusEmail, setRetryingBonusEmail] = useState(false);
+  const [bonusEmailError, setBonusEmailError] = useState("");
 
   useEffect(() => {
     const processOrder = async () => {
@@ -24,16 +27,17 @@ function SuccessContent() {
         }
 
         const parsedOrderData = JSON.parse(decodeURIComponent(orderDataParam));
-        setOrderData(parsedOrderData);
+        const completionOrderData = {
+          ...parsedOrderData,
+          sessionId: searchParams.get("session_id")
+        };
+        setOrderData(completionOrderData);
 
         // Call the complete API to create cards and send emails
         const response = await fetch("/api/giftcard/complete", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...parsedOrderData,
-            sessionId: searchParams.get("session_id")
-          }),
+          body: JSON.stringify(completionOrderData),
         });
 
         const data = await response.json();
@@ -51,6 +55,7 @@ function SuccessContent() {
           }
         } else {
           setCards(data.cards || []);
+          setBonusEmailSent(data.bonusEmailSent !== false);
         }
 
         setLoading(false);
@@ -63,6 +68,31 @@ function SuccessContent() {
 
     processOrder();
   }, [searchParams]);
+
+  const retryBonusEmail = async () => {
+    setRetryingBonusEmail(true);
+    setBonusEmailError("");
+
+    try {
+      const response = await fetch("/api/giftcard/complete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderData),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Could not resend bonus email");
+
+      setCards(data.cards || cards);
+      setBonusEmailSent(data.bonusEmailSent !== false);
+      if (data.bonusEmailSent === false) {
+        setBonusEmailError("The email still could not be sent. Please try again shortly.");
+      }
+    } catch (retryError) {
+      setBonusEmailError(retryError.message);
+    } finally {
+      setRetryingBonusEmail(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -198,6 +228,25 @@ function SuccessContent() {
                 <i className="fas fa-star mr-2"></i>
                 Your Bonus Cards
               </h3>
+              {bonusEmailSent === false && (
+                <div className="mb-4 p-4 bg-red-50 text-red-700 rounded-lg" role="alert">
+                  <p>Your bonus cards are shown below, but their email could not be sent.</p>
+                  <button
+                    type="button"
+                    onClick={retryBonusEmail}
+                    disabled={retryingBonusEmail}
+                    className="mt-3 px-4 py-2 bg-[#d88728] text-white rounded-lg disabled:opacity-60"
+                  >
+                    {retryingBonusEmail ? "Sending..." : "Retry bonus email"}
+                  </button>
+                  {bonusEmailError && <p className="mt-2 text-sm">{bonusEmailError}</p>}
+                </div>
+              )}
+              {bonusEmailSent === true && orderData?.buyerEmail && (
+                <p className="mb-4 text-sm text-gray-600">
+                  A separate bonus-card email was sent to {orderData.buyerEmail}.
+                </p>
+              )}
               <div className="space-y-4">
                 {bonusCards.map((card, index) => (
                     <div key={index} className="p-4 bg-[#fef9f3] rounded-lg border border-[#d88728]">

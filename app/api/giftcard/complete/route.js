@@ -71,15 +71,17 @@ const generateCardHTML = (card, qrCid, isBonus = false, bonusImageCid = null) =>
   return `
     <div style="border: 2px solid ${cardColor}; border-radius: 10px; padding: 20px; margin: 15px 0; background: linear-gradient(135deg, #fff 0%, #fef9f3 100%);">
       ${isBonus && bonusImageCid ? `<img src="cid:${bonusImageCid}" alt="$${card.originalAmount} bonus gift card" style="display: block; width: 100%; height: auto; margin: 0 0 15px; border-radius: 6px;" />` : ''}
-      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-        <div>
-          <h2 style="color: ${cardColor}; font-style: italic; font-weight: bold; font-size: 28px; margin: 0;">${cardTitle}</h2>
+      ${isBonus && bonusImageCid ? '' : `
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+          <div>
+            <h2 style="color: ${cardColor}; font-style: italic; font-weight: bold; font-size: 28px; margin: 0;">${cardTitle}</h2>
+          </div>
+          <div style="border: 2px solid ${cardColor}; padding: 10px 20px; text-align: center;">
+            <div style="font-size: 20px; font-weight: bold;">$${card.originalAmount}</div>
+            <div style="font-size: 12px; color: ${cardColor};">${cardType} CARD</div>
+          </div>
         </div>
-        <div style="border: 2px solid ${cardColor}; padding: 10px 20px; text-align: center;">
-          <div style="font-size: 20px; font-weight: bold;">$${card.originalAmount}</div>
-          <div style="font-size: 12px; color: ${cardColor};">${cardType} CARD</div>
-        </div>
-      </div>
+      `}
       <div style="margin-top: 15px; padding: 15px; background: #f5f5f5; border-radius: 5px;">
         <table width="100%" cellpadding="0" cellspacing="0" border="0">
           <tr>
@@ -93,7 +95,7 @@ const generateCardHTML = (card, qrCid, isBonus = false, bonusImageCid = null) =>
             <td style="vertical-align: top; text-align: right; width: 160px;">
               <div style="text-align: center;">
                 <img src="cid:${qrCid}" alt="QR Code" style="width: 140px; height: 140px; border: 2px solid ${cardColor}; border-radius: 8px;" />
-                <p style="margin: 5px 0 0 0; font-size: 10px; color: #888;">Scan to redeem</p>
+                <p style="margin: 5px 0 0 0; font-size: 11px; color: #666;">Show this QR code to restaurant staff to redeem. You do not need to scan it.</p>
               </div>
             </td>
             ` : ''}
@@ -133,34 +135,6 @@ const sendBuyerEmail = async (transporter, orderData, allCards, qrBuffers) => {
     return generateCardHTML(card, qrBuffers[card.code] ? cid : null, false);
   });
   
-  // Generate HTML with artwork and QR code CIDs for bonus cards
-  const bonusCardsHTML = [];
-  const bonusImageCids = new Map();
-  for (const card of bonusCards) {
-    const bonusImageCid = `bonus-card-$${card.originalAmount}@mauryas`;
-    if (!bonusImageCids.has(card.originalAmount)) {
-      const imagePath = getGiftCardBonusImage(card.originalAmount).slice(1);
-      const image = await readFile(join(process.cwd(), "public", imagePath));
-      attachments.push({
-        filename: imagePath,
-        content: image,
-        cid: bonusImageCid,
-        contentDisposition: "inline"
-      });
-      bonusImageCids.set(card.originalAmount, bonusImageCid);
-    }
-
-    const cid = `qr-${card.code}@mauryas`;
-    if (qrBuffers[card.code]) {
-      attachments.push({
-        filename: `qr-${card.code}.png`,
-        content: qrBuffers[card.code],
-        cid: cid
-      });
-    }
-    bonusCardsHTML.push(generateCardHTML(card, qrBuffers[card.code] ? cid : null, true, bonusImageCid));
-  }
-  
   // Generate summary for gifted cards
   const giftedSummaryHTML = giftedCards.length > 0 ? `
     <div style="background: #e8f5e9; padding: 15px; border-radius: 10px; margin: 15px 0;">
@@ -194,7 +168,7 @@ const sendBuyerEmail = async (transporter, orderData, allCards, qrBuffers) => {
           <p><strong>Order ID:</strong> ${orderData.orderId}</p>
           <p><strong>Total Cards:</strong> ${purchasedCards.length}</p>
           <p><strong>Total Amount Paid:</strong> $${orderData.totalAmount.toFixed(2)} CAD</p>
-          ${bonusCards.length > 0 ? `<p style="color: #d88728;"><strong>🎉 Bonus Cards Earned:</strong> ${bonusCards.length} (Worth $${bonusCards.reduce((sum, c) => sum + c.originalAmount, 0)} CAD)</p>` : ''}
+          ${bonusCards.length > 0 ? `<p style="color: #d88728;"><strong>🎉 Bonus Cards Earned:</strong> ${bonusCards.length} (Worth $${bonusCards.reduce((sum, c) => sum + c.originalAmount, 0)} CAD). They will arrive in a separate email.</p>` : ''}
         </div>
         
         ${selfCards.length > 0 ? `
@@ -204,17 +178,11 @@ const sendBuyerEmail = async (transporter, orderData, allCards, qrBuffers) => {
         
         ${giftedSummaryHTML}
         
-        ${bonusCards.length > 0 ? `
-          <h3 style="color: #d88728;">🎁 Your Bonus Cards</h3>
-          <p style="color: #666; font-size: 14px;">As a thank you for your purchase, here are your bonus cards!</p>
-          ${bonusCardsHTML.join('')}
-        ` : ''}
-        
         <div style="margin-top: 30px; padding: 20px; background: #fff3e0; border-radius: 10px;">
           <h4 style="margin-top: 0; color: #d88728;">How to Redeem</h4>
           <ol style="margin: 0; padding-left: 20px;">
             <li>Visit Maurya's Craft Bar & Kitchen</li>
-            <li>Present the card code or scan QR code when paying</li>
+            <li>Show the QR code to restaurant staff, or give them the card code. You do not need to scan it yourself.</li>
             <li>The amount will be deducted from your gift card when the bill is applied</li>
           </ol>
           <p style="margin-bottom: 0; font-size: 12px; color: #666;">Cards can be used for multiple visits until the balance is zero.</p>
@@ -233,6 +201,76 @@ const sendBuyerEmail = async (transporter, orderData, allCards, qrBuffers) => {
   };
   
   await transporter.sendMail(mailOptions);
+};
+
+const sendBonusCardsEmail = async (transporter, buyerEmail, buyerName, bonusCards) => {
+  const attachments = [];
+  const imageCids = new Map();
+  const cardsHTML = [];
+  const cardsText = [];
+
+  for (const card of bonusCards) {
+    const imageCid = `bonus-card-${card.originalAmount}@mauryas`;
+    if (!imageCids.has(card.originalAmount)) {
+      const imagePath = getGiftCardBonusImage(card.originalAmount).slice(1);
+      const image = await readFile(join(process.cwd(), "public", imagePath));
+      attachments.push({
+        filename: imagePath,
+        content: image,
+        contentType: "image/jpeg",
+        cid: imageCid,
+        contentDisposition: "inline"
+      });
+      imageCids.set(card.originalAmount, imageCid);
+    }
+
+    const qrCid = `qr-${card.code}@mauryas`;
+    const qrBuffer = card.qrBuffer || await generateQRCodeBuffer(card.code);
+    if (qrBuffer) {
+      attachments.push({
+        filename: `qr-${card.code}.png`,
+        content: qrBuffer,
+        cid: qrCid
+      });
+    }
+
+    cardsHTML.push(generateCardHTML(card, qrBuffer ? qrCid : null, true, imageCid));
+    cardsText.push(`$${card.originalAmount} bonus gift card. Code: ${card.code}`);
+  }
+
+  await transporter.sendMail({
+    from: process.env.GMAIL_USER,
+    to: buyerEmail,
+    subject: "Your Maurya's Bonus Gift Card is here",
+    text: `Dear ${buyerName},\n\nThank you for your purchase. Here are your bonus gift card(s):\n\n${cardsText.join("\n")}\n\nAt the restaurant, show the QR code to staff or give them the card code. You do not need to scan it yourself.`,
+    html: `
+      <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; max-width: 650px; line-height: 1.8;">
+        <h1 style="color: #1a1a1a; margin-bottom: 5px;">Maurya's</h1>
+        <p style="color: #d88728; margin-top: 0;">Craft Bar & Kitchen</p>
+        <p>Dear <strong>${buyerName}</strong>,</p>
+        <p>Thank you for your purchase. Your bonus gift card${bonusCards.length > 1 ? "s are" : " is"} ready:</p>
+        ${cardsHTML.join("")}
+        <div style="margin-top: 24px; padding: 16px; background: #fff3e0; border-radius: 8px;">
+          <strong>To redeem:</strong> Show the QR code to restaurant staff, or give them the card code. You do not need to scan it yourself.
+        </div>
+      </div>
+    `,
+    attachments
+  });
+};
+
+const sendPendingBonusCardsEmail = async (transporter, buyerEmail, buyerName, bonusCards) => {
+  const pendingCards = bonusCards.filter(card => !card.bonusEmailSentAt);
+  if (pendingCards.length === 0) return true;
+
+  const sentAt = new Date();
+  await sendBonusCardsEmail(transporter, buyerEmail, buyerName, pendingCards);
+  await GiftCard.updateMany(
+    { _id: { $in: pendingCards.map(card => card._id) }, isBonus: true, bonusEmailSentAt: null },
+    { $set: { bonusEmailSentAt: sentAt } }
+  );
+  pendingCards.forEach(card => { card.bonusEmailSentAt = sentAt; });
+  return true;
 };
 
 // Send email to gift recipient
@@ -275,7 +313,7 @@ const sendRecipientEmail = async (transporter, card, buyerName, qrBuffer) => {
           <h4 style="margin-top: 0; color: #d88728;">How to Redeem</h4>
           <ol style="margin: 0; padding-left: 20px;">
             <li>Visit Maurya's Craft Bar & Kitchen</li>
-            <li>Present the card code or scan QR code when paying</li>
+            <li>Show the QR code to restaurant staff, or give them the card code. You do not need to scan it yourself.</li>
             <li>The amount will be deducted from your bill</li>
           </ol>
           <p style="margin-bottom: 0; font-size: 12px; color: #666;">Cards can be used for multiple visits until the balance is exhausted.</p>
@@ -337,9 +375,23 @@ export async function POST(req) {
     // Check if order already processed
     const existingCards = await GiftCard.find({ orderId }).sort({ createdAt: 1 });
     if (existingCards.length > 0) {
+      let bonusEmailSent = true;
+      try {
+        bonusEmailSent = await sendPendingBonusCardsEmail(
+          createTransporter(),
+          buyerEmail,
+          buyerName,
+          existingCards.filter(card => card.isBonus)
+        );
+      } catch (emailError) {
+        console.error("Failed to send bonus card email:", emailError);
+        bonusEmailSent = false;
+      }
+
       return NextResponse.json({
         success: true,
         message: "Gift cards already created",
+        bonusEmailSent,
         cards: existingCards.map(card => ({
           code: card.code,
           amount: card.originalAmount,
@@ -435,11 +487,25 @@ export async function POST(req) {
     } catch (emailError) {
       console.error("Failed to send buyer email:", emailError);
     }
+
+    let bonusEmailSent = true;
+    try {
+      bonusEmailSent = await sendPendingBonusCardsEmail(
+        transporter,
+        buyerEmail,
+        buyerName,
+        allCreatedCards.filter(card => card.isBonus)
+      );
+    } catch (emailError) {
+      console.error("Failed to send bonus card email:", emailError);
+      bonusEmailSent = false;
+    }
     
     return NextResponse.json({
       success: true,
       message: "Gift cards created successfully",
       bonusAmount,
+      bonusEmailSent,
       cards: allCreatedCards.map(c => ({
         code: c.code,
         amount: c.originalAmount,

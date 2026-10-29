@@ -100,6 +100,12 @@ const GiftCardSchema = new mongoose.Schema({
     type: String,
     default: null
   },
+
+  // Timestamp for confirmed bonus-card email delivery
+  bonusEmailSentAt: {
+    type: Date,
+    default: null
+  },
   
   // Personal message (optional)
   personalMessage: {
